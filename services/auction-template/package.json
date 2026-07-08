@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "description": "Sealed-auction integration template — SDK + keeper + tlock end-to-end reference for integrators embedding a Decentralized Global Education & Skills Passport round into a Stellar app.",
   "scripts": {
     "fixture": "FIXTURE=1 node --import tsx sealed-auction.ts",
     "testnet": "node --import tsx sealed-auction.ts",
