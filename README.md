@@ -31,7 +31,7 @@ inputs before **R**.
 | **Appraisal** | `services/appraisal-api` | x402-gated deterministic valuation (USDC SAC) |
 | **Agent** | `services/agent` | Mandate + cap-checked sealed-bid agents |
 | **Template** | `services/auction-template` | Sealed-auction integration template (SDK + keeper + tlock end-to-end) |
-| **Drand harness** | `services/drand-tools` | Risk-2 validation: tlock ↔ Drand ↔ on-chain BLS, Soroban constant generator |
+| **Drand harness** | `services/drand-tools` | Risk-2 harness: validate tlock <-> Drand <-> on-chain BLS and generate Soroban constants |
 | **UI** | `apps/web` | Jury demo — embedded trace, observer, attack labs |
 | **Example** | `examples/grant-scoring` | Sealed grant scoring pilot template (projects, judges, ranked receipt) |
 | **Docs** | `docs/`, `ARCHITECTURE.md` | Design, threat model, integration, deploy, limitations |
