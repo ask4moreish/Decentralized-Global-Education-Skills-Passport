@@ -1,0 +1,17 @@
+[package]
+name = "skills-passport-round"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+description = "Decentralized Global Education & Skills Passport — confidential commit-reveal coordination round (Soroban primitive)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }

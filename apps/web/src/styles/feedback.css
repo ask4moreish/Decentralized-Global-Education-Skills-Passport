@@ -1,0 +1,188 @@
+/* Toast stack + confetti — every action sings */
+.toast-stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+@media (max-width: 680px) {
+  .toast-stack {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
+
+.toast {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px 1fr 28px;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 14px 16px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--surface-2);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  overflow: hidden;
+  transform-origin: bottom right;
+}
+
+.toast-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.toast-success {
+  border-color: rgba(91, 108, 255, 0.42);
+  background: linear-gradient(160deg, rgba(91, 108, 255, 0.1), var(--surface-2));
+}
+
+.toast-success .toast-icon {
+  color: #ffffff;
+  background: var(--green);
+  box-shadow: 0 0 18px rgba(91, 108, 255, 0.4);
+}
+
+.toast-error {
+  border-color: var(--alert-glow);
+  background: linear-gradient(160deg, rgba(217, 122, 115, 0.08), var(--surface-2));
+}
+
+.toast-error .toast-icon {
+  color: #1a0808;
+  background: var(--alert);
+}
+
+.toast-working {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.toast-working .toast-icon {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.toast-info {
+  border-color: rgba(91, 108, 255, 0.4);
+}
+
+.toast-info .toast-icon {
+  color: #ffffff;
+  background: var(--green);
+}
+
+.toast-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.toast-body strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.96rem;
+  letter-spacing: -0.01em;
+}
+
+.toast-body p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.toast-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--faint);
+  background: transparent;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: color 160ms var(--ease), background 160ms var(--ease);
+}
+
+.toast-close:hover {
+  color: var(--ink);
+  background: var(--surface-3);
+}
+
+.toast-bar {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  transform-origin: left;
+  opacity: 0.8;
+}
+
+.toast-success .toast-bar { color: var(--green); }
+.toast-error .toast-bar { color: var(--alert); }
+.toast-info .toast-bar { color: var(--green); }
+.toast-working .toast-bar { color: var(--ink-2); }
+
+.toast-bar-indeterminate {
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  animation: toast-scan 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes toast-scan {
+  0% { background-position: -50% 0; }
+  100% { background-position: 150% 0; }
+}
+
+/* Confetti layer */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-origin {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  will-change: transform, opacity;
+}
+
+.confetti-piece.circle {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}

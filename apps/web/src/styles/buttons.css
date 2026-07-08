@@ -1,0 +1,218 @@
+/* Buttons & action primitives */
+.primary-action,
+.secondary-action,
+.ghost-action,
+.btn,
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.96rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  background: transparent;
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 180ms var(--ease),
+    box-shadow 220ms var(--ease),
+    background 200ms var(--ease),
+    border-color 200ms var(--ease),
+    filter 200ms var(--ease);
+}
+
+.primary-action {
+  color: #00170c;
+  background: var(--grad-cta);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.32) inset,
+    0 0 0 1px rgba(91, 108, 255, 0.42),
+    0 14px 36px rgba(91, 108, 255, 0.22);
+}
+
+.primary-action::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.55), transparent 70%);
+  transform: translateX(-110%);
+  transition: transform 700ms var(--ease);
+}
+
+.primary-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: saturate(1.05) brightness(1.04);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.42) inset,
+    0 0 0 1px rgba(91, 108, 255, 0.6),
+    0 18px 50px rgba(91, 108, 255, 0.32);
+}
+
+.primary-action:hover:not(:disabled)::before {
+  transform: translateX(110%);
+}
+
+.primary-action:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.primary-action.compact {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.88rem;
+}
+
+.primary-action.large {
+  min-height: 56px;
+  padding: 0 30px;
+  font-size: 1.04rem;
+}
+
+.secondary-action {
+  color: var(--ink);
+  background: var(--surface-1);
+  border-color: var(--line-2);
+  backdrop-filter: blur(10px);
+}
+
+.secondary-action:hover:not(:disabled) {
+  border-color: rgba(91, 108, 255, 0.4);
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+
+.ghost-action {
+  color: var(--muted);
+  border-color: var(--line-1);
+  background: transparent;
+}
+
+.ghost-action:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--surface-0);
+}
+
+.primary-action:disabled,
+.secondary-action:disabled,
+.ghost-action:disabled,
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border-color: var(--line-2);
+  background: var(--surface-1);
+  font-size: 0.9rem;
+}
+
+.btn.primary {
+  border-color: transparent;
+  color: #00170c;
+  background: var(--grad-cta);
+  box-shadow: var(--shadow-glow-green);
+}
+
+.btn.primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.btn.ghost {
+  color: var(--muted);
+  background: transparent;
+  border-color: var(--line-1);
+}
+
+.btn.ghost:hover:not(:disabled) {
+  color: var(--ink);
+  background: var(--surface-0);
+}
+
+.icon-btn {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 999px;
+  border-color: var(--line-1);
+  background: var(--surface-1);
+  color: var(--muted);
+}
+
+.icon-btn:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Spinner used inside buttons / inline */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  background: transparent;
+  cursor: pointer;
+}
+
+.brand-link img {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--cream);
+  box-shadow:
+    0 0 0 1px rgba(91, 108, 255, 0.4),
+    0 8px 24px rgba(91, 108, 255, 0.18);
+}
+
+.brand-link span {
+  display: inline-block;
+}

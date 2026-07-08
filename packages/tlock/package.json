@@ -1,0 +1,42 @@
+{
+  "name": "@decentralized-global-education-skills-passport/tlock",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Off-chain seal for Decentralized Global Education & Skills Passport: tlock encrypt/decrypt to a Drand round + auditor identity blob, byte-compatible with the Round contract.",
+  "keywords": [
+    "drand",
+    "tlock",
+    "privacy",
+    "timelock-encryption",
+    "commit-reveal",
+    "stellar",
+    "soroban"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport.git",
+    "directory": "packages/tlock"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --import tsx --test src/commitment.test.ts src/auditor.test.ts src/auditor-recovery-cli.test.ts src/bls.test.ts src/seal.test.ts src/freshness.test.ts src/quicknet.test.ts",
+    "test:quicknet": "node --import tsx --test src/quicknet.test.ts",
+    "test:unit": "node --import tsx --test src/commitment.test.ts src/auditor.test.ts src/auditor-recovery-cli.test.ts src/bls.test.ts src/freshness.test.ts src/quicknet.test.ts",
+    "test:seal": "node --import tsx --test src/seal.test.ts",
+    "recover:identities": "node --import tsx src/recover-identities.cli.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^2.2.0",
+    "@noble/curves": "^2.2.0",
+    "@noble/hashes": "^2.2.0",
+    "drand-client": "^1.4.2",
+    "tlock-js": "^0.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

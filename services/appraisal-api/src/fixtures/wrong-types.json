@@ -1,0 +1,6 @@
+{
+  "itemRef": ["skills-passport://grant/42"],
+  "basePrice": "100",
+  "category": { "name": "grant" },
+  "attributes": "high"
+}

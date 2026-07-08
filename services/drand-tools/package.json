@@ -1,0 +1,19 @@
+{
+  "name": "@decentralized-global-education-skills-passport/drand-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Risk-2 harness: validate tlock <-> Drand <-> on-chain BLS and generate Soroban constants",
+  "scripts": {
+    "validate": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@noble/curves": "^2.2.0",
+    "@noble/hashes": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,15 @@
+packages:
+  - "packages/*"
+  - "services/*"
+  - "apps/*"
+  - "examples/*"
+
+# drand-client@1.2.5 imports `@noble/hashes/sha256` (a v1-only subpath) but does
+# not declare @noble/hashes as a dependency — it relied on it being hoisted.
+# Once @x402 pulled in @noble/hashes v2 (which removed `./sha256`), the hoisted
+# copy stopped satisfying it. Declare the missing dependency explicitly so
+# drand-client resolves its own v1 copy regardless of what else is installed.
+packageExtensions:
+  drand-client:
+    dependencies:
+      "@noble/hashes": "^1.8.0"

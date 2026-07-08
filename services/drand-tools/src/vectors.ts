@@ -1,0 +1,22 @@
+// Emit a frozen quicknet test vector for the contract's Rust BLS test.
+// Real network data captured at a fixed finalized round — not a mock.
+
+import { getBeacon, getChainInfo } from "./quicknet.js";
+import { pubkeyToSoroban, negatedG2Generator, encodeG1, toHex } from "./encode.js";
+import { bls12_381 as bls } from "@noble/curves/bls12-381.js";
+import { verifyBeacon } from "./parity.js";
+
+const ROUND = Number(process.env.VECTOR_ROUND ?? 29155653);
+
+const info = await getChainInfo();
+const b = await getBeacon(ROUND);
+
+console.log(`ROUND = ${ROUND}`);
+console.log(
+  `OFFCHAIN_VERIFY = ${verifyBeacon(ROUND, b.signature, info.public_key, "sha256(be8)")}`,
+);
+console.log(`SIG_G1 = ${toHex(encodeG1(bls.G1.Point.fromHex(b.signature)))}`);
+console.log(`PUBKEY_C0C1 = ${toHex(pubkeyToSoroban(info.public_key, "c0c1"))}`);
+console.log(`PUBKEY_C1C0 = ${toHex(pubkeyToSoroban(info.public_key, "c1c0"))}`);
+console.log(`NEGGEN_C0C1 = ${toHex(negatedG2Generator("c0c1"))}`);
+console.log(`NEGGEN_C1C0 = ${toHex(negatedG2Generator("c1c0"))}`);

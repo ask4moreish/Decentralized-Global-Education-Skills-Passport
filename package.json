@@ -1,0 +1,65 @@
+{
+  "name": "decentralized-global-education-skills-passport",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Verifiable allocation infrastructure for Stellar grants, hackathons, bounties, RFPs, and sealed auctions.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.13.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "packageExtensions": {
+      "drand-client": {
+        "dependencies": {
+          "@noble/hashes": "^1.8.0"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "contract:build": "stellar contract build",
+    "contract:test": "cargo test -p skills-passport-round",
+    "bindings:generate": "stellar contract build --out-dir artifacts && rm -rf tmp-bindings && stellar contract bindings typescript --wasm artifacts/skills_passport_round.wasm --output-dir tmp-bindings --overwrite && cp tmp-bindings/src/index.ts packages/round-bindings/src/index.ts && rm -rf tmp-bindings",
+    "bindings:check": "stellar contract build --out-dir artifacts && rm -rf tmp-bindings && stellar contract bindings typescript --wasm artifacts/skills_passport_round.wasm --output-dir tmp-bindings --overwrite && (diff tmp-bindings/src/index.ts packages/round-bindings/src/index.ts; diff_exit=$?; rm -rf tmp-bindings; if [ $diff_exit -ne 0 ]; then echo '❌ Round bindings are stale. Run pnpm bindings:generate to update them.'; exit 1; else echo '✅ Round bindings are up to date.'; fi)",
+    "sdk:test": "pnpm --filter @decentralized-global-education-skills-passport/sdk test",
+    "sdk:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/sdk typecheck",
+    "bindings:test": "pnpm --filter @decentralized-global-education-skills-passport/round-bindings test",
+    "bindings:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/round-bindings typecheck",
+    "sdk:smoke": "bash packages/sdk/scripts/live-smoke.sh",
+    "threat-model:check": "node scripts/check-threat-model-anchors.mjs docs/THREAT_MODEL.md",
+    "threat-model:test": "node --test scripts/check-threat-model-anchors.test.mjs",
+    "mainnet:deploy": "bash packages/sdk/scripts/mainnet-deploy.sh",
+    "mainnet:settle": "bash services/keeper/scripts/mainnet-settle.sh",
+    "mainnet:ready": "bash packages/sdk/scripts/mainnet-ready.sh",
+    "mainnet:verify": "bash packages/sdk/scripts/mainnet-verify.sh",
+    "mainnet:micro": "bash packages/sdk/scripts/mainnet-micro.sh",
+    "tlock:test": "pnpm --filter @decentralized-global-education-skills-passport/tlock test",
+    "keeper:test": "pnpm --filter @decentralized-global-education-skills-passport/keeper test",
+    "keeper:e2e": "bash services/keeper/scripts/keeper-e2e.sh",
+    "keeper:watch": "pnpm --filter @decentralized-global-education-skills-passport/keeper watch",
+    "lifecycle:e2e": "bash services/keeper/scripts/lifecycle-e2e.sh",
+    "appraisal:test": "pnpm --filter @decentralized-global-education-skills-passport/appraisal-api test",
+    "appraisal:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/appraisal-api typecheck",
+    "appraisal:start": "pnpm --filter @decentralized-global-education-skills-passport/appraisal-api start",
+    "appraisal:e2e": "bash services/appraisal-api/scripts/x402-e2e.sh",
+    "agent:test": "pnpm --filter @decentralized-global-education-skills-passport/agent test",
+    "agent:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/agent typecheck",
+    "agents:e2e": "bash services/agent/scripts/agents-e2e.sh",
+    "template:fixture": "pnpm --filter @decentralized-global-education-skills-passport/auction-template fixture",
+    "template:testnet": "bash services/auction-template/testnet.sh",
+    "template:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/auction-template typecheck",
+    "web:dev": "pnpm --filter @decentralized-global-education-skills-passport/web dev",
+    "web:build": "pnpm --filter @decentralized-global-education-skills-passport/web build",
+    "web:test": "pnpm --filter @decentralized-global-education-skills-passport/web test",
+    "web:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/web typecheck",
+    "grant-scoring:test": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot test",
+    "grant-scoring:start": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot start",
+    "snapshot:check": "node scripts/check-snapshots.mjs",
+    "docs:check": "node scripts/check-deploy-docs.mjs",
+    "docs:check-links": "node scripts/check-links.js"
+  }
+}

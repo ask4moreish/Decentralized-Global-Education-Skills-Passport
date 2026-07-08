@@ -1,0 +1,23 @@
+{
+  "name": "@decentralized-global-education-skills-passport/appraisal-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "x402-gated appraisal API. Agents pay per call in USDC (SEP-41) over Soroban; the server self-facilitates — verifies the signed payment and settles on-chain via RPC (no relayer, no mock) — then returns a deterministic valuation used to size a sealed bid.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node --import tsx src/run.ts",
+    "test": "node --import tsx --test src/appraisal.test.ts src/appraisal-fixtures.test.ts src/config.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^15.1.0",
+    "@x402/core": "^2.14.0",
+    "@x402/stellar": "^2.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

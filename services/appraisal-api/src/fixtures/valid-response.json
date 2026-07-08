@@ -1,0 +1,16 @@
+{
+  "model": "skills-passport-appraisal/v1",
+  "itemRef": "skills-passport://grant/42",
+  "inputsHash": "88f7acc424d47e09924e66cf2b27738384844b99dfbbd580e00443a2ad76d582",
+  "fairValue": 121.42,
+  "low": 121.42,
+  "high": 121.42,
+  "confidence": 1,
+  "suggestedMaxBid": 115.35,
+  "rationale": [
+    "base 100 USDC scaled by quality×1.3, demand×1.08, scarcity×0.94, risk×0.92",
+    "category 'grant' multiplier ×1",
+    "4/4 attributes supplied → confidence 1",
+    "suggested max bid is fair value × 0.95 to preserve margin"
+  ]
+}

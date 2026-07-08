@@ -1,0 +1,37 @@
+# Rust / Soroban
+/target
+**/target
+Cargo.lock.bak
+*.wasm.d
+
+# Node
+node_modules
+dist
+.turbo
+*.tsbuildinfo
+.pnpm-store
+
+# Env / secrets (NEVER commit live keys)
+.env
+.env.*
+!.env.example
+*.key
+identities/
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Build artifacts
+/artifacts
+/tmp-bindings
+deployments/*.local.json
+
+# Stellar CLI local identities/config (smoke keys live here — never commit)
+.stellar
+
+# Keeper
+.keeper-store.json
+.keeper-store.json.corrupted.*

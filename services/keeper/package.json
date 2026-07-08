@@ -1,0 +1,26 @@
+{
+  "name": "@decentralized-global-education-skills-passport/keeper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Permissionless reveal keeper: waits for Drand round R, opens the reveal window with R's real signature, then decrypts and reveals every sealed bid. Idempotent; no relayer, no agent, no mock.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node --import tsx src/run.ts",
+    "watch": "node --import tsx src/watch.ts",
+    "serve": "node --import tsx src/serve.ts",
+    "queue": "node --import tsx src/queue.ts",
+    "test": "node --import tsx --test src/dry-run.test.ts src/keeper.test.ts src/watch.test.ts src/store.test.ts src/watch-queue.test.ts src/settlement-guard.test.ts src/status.test.ts src/status-server.test.ts src/queue-replay.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@decentralized-global-education-skills-passport/sdk": "workspace:*",
+    "@decentralized-global-education-skills-passport/tlock": "workspace:*"
+  },
+  "devDependencies": {
+    "@stellar/stellar-sdk": "^15.1.0",
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

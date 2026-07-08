@@ -1,0 +1,26 @@
+{
+  "name": "@decentralized-global-education-skills-passport/agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Autonomous sealed-bid agents. Each agent holds a principal-signed session mandate (scoped caps), pays the x402 appraisal API per call, sizes a bid from the appraisal, and commits over Soroban RPC with its session key — no relayer, no mock.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node --import tsx src/run.ts",
+    "test": "node --import tsx --test src/mandate.test.ts src/bidder.test.ts src/mandate-cap-negative.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^15.1.0",
+    "@decentralized-global-education-skills-passport/appraisal-api": "workspace:*",
+    "@decentralized-global-education-skills-passport/keeper": "workspace:*",
+    "@decentralized-global-education-skills-passport/sdk": "workspace:*",
+    "@decentralized-global-education-skills-passport/tlock": "workspace:*",
+    "@x402/core": "^2.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

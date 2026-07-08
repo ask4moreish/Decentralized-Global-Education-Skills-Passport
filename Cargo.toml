@@ -1,0 +1,27 @@
+[workspace]
+resolver = "2"
+members = ["contracts/round"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Decentralized Global Education & Skills Passport"]
+
+[workspace.dependencies]
+soroban-sdk = "22"
+
+# Soroban release profile (size-optimized wasm, overflow checks ON for safety).
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true
+
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true

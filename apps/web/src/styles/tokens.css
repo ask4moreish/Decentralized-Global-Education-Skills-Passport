@@ -1,0 +1,80 @@
+/* Design tokens — Decentralized Global Education & Skills Passport corporate theme.
+ * Strict 3-color system:
+ *   1. Dark canvas (bg + surfaces)
+ *   2. Neutral ink (text + lines)
+ *   3. Brand accent: green (single chromatic accent)
+ *
+ * Legacy semantic names (--amber, --violet, --cyan, --red) are mapped to
+ * neutral/green tones so the UI never flashes additional hues. Real toast
+ * errors use --alert which is a muted desaturated rose used only inside
+ * Toast.tsx and nowhere in regular chrome.
+ */
+:root {
+  --bg-0: #06080d;
+  --bg-1: #090c12;
+  --bg-2: #0c1018;
+  --surface-0: rgba(14, 18, 26, 0.78);
+  --surface-1: rgba(18, 23, 31, 0.86);
+  --surface-2: rgba(24, 30, 40, 0.9);
+  --surface-3: rgba(32, 40, 52, 0.95);
+  --surface-glass: rgba(11, 16, 24, 0.55);
+
+  --line-0: rgba(255, 255, 255, 0.05);
+  --line-1: rgba(255, 255, 255, 0.09);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.22);
+
+  --ink: #f1efe8;
+  --ink-2: #d4d2ca;
+  --muted: #9099a3;
+  --faint: #5e6670;
+  --cream: #ece4d4;
+
+  /* Single brand accent — cobalt-indigo (blue with a subtle purple hint) */
+  --green: #5b6cff;
+  --green-2: #4258d6;
+  --green-deep: #2c3a96;
+  --green-dim: rgba(91, 108, 255, 0.55);
+  --green-soft: rgba(91, 108, 255, 0.12);
+  --green-glow: rgba(91, 108, 255, 0.32);
+
+  /* Legacy semantic aliases — all collapse onto neutral/brand tones so the
+   * palette stays at 3 colors. Do not introduce new hues here. */
+  --amber: var(--green);
+  --amber-glow: var(--green-glow);
+  --violet: var(--muted);
+  --violet-glow: rgba(255, 255, 255, 0.08);
+  --cyan: var(--green);
+  --cyan-glow: var(--green-glow);
+
+  /* Reserved exclusively for actual error toasts */
+  --alert: #d97a73;
+  --alert-glow: rgba(217, 122, 115, 0.22);
+  --red: var(--muted);
+  --red-glow: rgba(255, 255, 255, 0.06);
+
+  --grad-aurora:
+    radial-gradient(ellipse 70% 55% at 18% 0%, rgba(91, 108, 255, 0.14), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(91, 108, 255, 0.06), transparent 65%);
+
+  --grad-cta: linear-gradient(135deg, #8593ff 0%, #5b6cff 50%, #4258d6 100%);
+
+  --font: "Instrument Sans", system-ui, sans-serif;
+  --display: "Space Grotesk", "Instrument Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 28px 80px rgba(0, 0, 0, 0.5);
+  --shadow-glow-green: 0 0 0 1px rgba(110, 245, 176, 0.32), 0 16px 48px rgba(110, 245, 176, 0.18);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@decentralized-global-education-skills-passport/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SDK for integrating Decentralized Global Education & Skills Passport sealed coordination rounds into Stellar and Soroban apps.",
+  "keywords": [
+    "stellar",
+    "soroban",
+    "privacy",
+    "commit-reveal",
+    "drand",
+    "sealed-auctions",
+    "coordination"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport.git",
+    "directory": "packages/sdk"
+  },
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --import tsx --test src/client.test.ts src/encoding.test.ts src/errors.test.ts src/ids.test.ts src/mainnet-readiness.test.ts src/preflight.test.ts src/public-api-snapshot.test.ts src/redact.test.ts src/verify.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@openzeppelin/relayer-plugin-channels": "^0.20.0",
+    "@stellar/stellar-sdk": "^15.1.0",
+    "@decentralized-global-education-skills-passport/round-bindings": "workspace:*",
+    "@decentralized-global-education-skills-passport/tlock": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
