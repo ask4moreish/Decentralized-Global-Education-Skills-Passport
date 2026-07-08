@@ -41,6 +41,26 @@ function captureError(fn: () => void): Error {
   throw new Error("expected function to throw, but it returned normally");
 }
 
+describe("fixture drift guard", () => {
+  test("valid-response.inputsHash must match inputsHash(valid-request) — regenerate the fixture if this fails", () => {
+    // Drift guard: if the canonical serializer or the valid-request fixture
+    // changes, this test fails. Fix by recomputing the hash from the request
+    // and updating valid-response.json.
+    //
+    // Regenerate with:
+    //   node -e "import('./src/appraisal.js').then(m => { const r = JSON.parse(require('fs').readFileSync('src/fixtures/valid-request.json','utf8')); console.log(m.inputsHash(r)); })"
+    const expected = validResponse.value.inputsHash as string;
+    const computed = inputsHash(validRequest.value as never);
+    assert.equal(
+      expected,
+      computed,
+      `Fixture drift: valid-response.inputsHash (${expected}) does not match ` +
+        `inputsHash(valid-request) (${computed}). ` +
+        `Update src/fixtures/valid-response.json with the computed hash.`,
+    );
+  });
+});
+
 describe("appraisal schema fixtures load", () => {
   test("every fixture parses as JSON", () => {
     for (const f of [

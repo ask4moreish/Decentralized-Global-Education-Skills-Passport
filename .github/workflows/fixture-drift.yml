@@ -1,0 +1,46 @@
+name: Fixture drift guard
+
+# Guards against the category of bug where a committed fixture (e.g. the
+# `inputsHash` in services/appraisal-api/src/fixtures/valid-response.json)
+# drifts away from what the canonical serializer produces from the matching
+# request fixture. The test at
+# services/appraisal-api/src/appraisal-fixtures.test.ts > "fixture drift
+# guard" > "valid-response.inputsHash must match inputsHash(valid-request)"
+# is the authoritative check.
+
+on:
+  push:
+    paths:
+      - 'services/appraisal-api/**'
+      - 'services/appraisal-api/src/fixtures/**'
+      - '.github/workflows/fixture-drift.yml'
+  pull_request:
+    paths:
+      - 'services/appraisal-api/**'
+      - 'services/appraisal-api/src/fixtures/**'
+      - '.github/workflows/fixture-drift.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fixture-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run appraisal-fixtures drift guard
+        run: pnpm -F @decentralized-global-education-skills-passport/appraisal-api test

@@ -1,0 +1,48 @@
+name: Examples typecheck
+
+# Guards against the category of bug where an example's fixture-client
+# (e.g. examples/grant-scoring/src/fixture-client.ts) drifts out of sync
+# with the SDK's `BidState` contract. Runs `tsc --noEmit` against the
+# grant-scoring pilot so any contract-shape mismatch fails the build
+# deterministically.
+
+on:
+  push:
+    paths:
+      - 'examples/**'
+      - 'packages/sdk/**'
+      - 'packages/tlock/**'
+      - 'packages/round-bindings/**'
+      - '.github/workflows/examples-typecheck.yml'
+  pull_request:
+    paths:
+      - 'examples/**'
+      - 'packages/sdk/**'
+      - 'packages/tlock/**'
+      - 'packages/round-bindings/**'
+      - '.github/workflows/examples-typecheck.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  examples-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck examples workspace
+        run: pnpm examples:typecheck

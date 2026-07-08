@@ -57,6 +57,8 @@
     "web:test": "pnpm --filter @decentralized-global-education-skills-passport/web test",
     "web:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/web typecheck",
     "grant-scoring:test": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot test",
+    "grant-scoring:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot typecheck",
+    "examples:typecheck": "pnpm grant-scoring:typecheck",
     "grant-scoring:start": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot start",
     "snapshot:check": "node scripts/check-snapshots.mjs",
     "docs:check": "node scripts/check-deploy-docs.mjs",
