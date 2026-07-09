@@ -1,9 +1,12 @@
+import { ReceiptExplorer } from "../components/verify/ReceiptExplorer";
 import { ReceiptInputPanel } from "../components/verify/ReceiptInputPanel";
 import { VerdictPanel } from "../components/verify/VerdictPanel";
 import { useReceiptInput } from "../hooks/useReceiptInput";
+import { useVerification } from "../hooks/useVerification";
 
 export function VerifyPage({ goHome }: { goHome: () => void }) {
   const input = useReceiptInput();
+  const verification = useVerification(input.receipt);
 
   return (
     <main className="app-frame">
@@ -20,6 +23,10 @@ export function VerifyPage({ goHome }: { goHome: () => void }) {
       <div className="verify-layout">
         <ReceiptInputPanel input={input} />
         <VerdictPanel receipt={input.receipt} />
+      </div>
+
+      <div className="verify-extras">
+        <ReceiptExplorer receipt={input.receipt} verification={verification} />
       </div>
     </main>
   );
