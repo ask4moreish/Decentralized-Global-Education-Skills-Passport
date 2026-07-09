@@ -1,5 +1,9 @@
 # Track Answers — Build On Stellar / IBW 2026
 
+> **Read first — today's primitive-first narrative.** Today's Soroban sealed commit–reveal coordination primitive powers four verticals tracked in parallel: **Grants** (SCF-style judge panels), **RFPs** (procurement), **Auctions** (closed-bid books), and **Credentials** (planned, sealed issuer portfolios), with two pilots — OverBlock (internal) and a sealed credential portfolio (partner-led candidate).
+>
+> For today's hackathon-track mapping and proof pointers, see [../README.md](../../README.md), [../ARCHITECTURE.md](../../ARCHITECTURE.md), [../PILOT_PLAYBOOK.md](../PILOT_PLAYBOOK.md), and [../INTEGRATION.md](../INTEGRATION.md). The body below is the original Build On Stellar / IBW 2026 track-answer mapping preserved verbatim per [docs/historical/README.md](./README.md).
+
 Decentralized Global Education & Skills Passport won **1st Place in the Hack Privacy Track**. The multi-agent/x402,
 mainnet smoke, SDK, and ecosystem paths stay in the product as supporting
 evidence that the privacy primitive can become reusable Stellar infrastructure.
