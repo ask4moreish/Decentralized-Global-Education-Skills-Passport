@@ -3,6 +3,7 @@ import { DEMO_TRACE } from "../demo/trace";
 import { USE_CASES, type UseCaseId } from "../config/useCases";
 import { LOGO_SRC } from "../lib/chain";
 import { shortAddr } from "../lib/format";
+import { DOCS_BASE_URL, VERTICALS, verticalDocsUrl } from "../lib/docs";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -71,18 +72,19 @@ export function LandingPage({
         <motion.div className="hero-copy" variants={fadeUp} transition={transition}>
           <span className="hero-eyebrow">
             <span>SR</span>
-            Verifiable allocation on Stellar
+            Sealed commit–reveal primitive on Stellar
           </span>
           <motion.h1 variants={fadeUp} transition={transition}>
-            Verifiable allocation. <em>Sealed by design.</em>
+            Sealed commit–reveal coordination. <em>One primitive, four verticals.</em>
           </motion.h1>
           <motion.p className="lede" variants={fadeUp} transition={transition}>
-            Infrastructure for Stellar grants, bounties, hackathons, sealed auctions, and RFP
-            scoring.
+            A drop-in sealed commit–reveal primitive for judge panels, sealed bidding, sealed
+            RFPs, and sealed credential portfolios — every workflow runs on the same Soroban
+            contract, TypeScript SDK, tlock helpers, and permissionless keeper.
           </motion.p>
           <motion.p className="hero-infra-line" variants={fadeUp} transition={transition}>
-            Scores, bids, and allocation inputs stay unreadable until Drand R, then reveal and
-            settle publicly on Soroban.
+            Scores, bids, and allocation inputs stay unreadable until Drand R, then reveal
+            and settle publicly on Soroban.
           </motion.p>
 
           <motion.div className="hero-actions" variants={fadeUp} transition={transition}>
@@ -118,8 +120,8 @@ export function LandingPage({
               <strong>{DEMO_TRACE.keeper.contractBalanceFinal} USDC final</strong>
             </div>
             <div>
-              <span>First pilot</span>
-              <strong>OverBlock</strong>
+              <span>Verticals</span>
+              <strong>4 today</strong>
             </div>
           </motion.div>
         </motion.div>
@@ -186,6 +188,59 @@ export function LandingPage({
       </motion.section>
 
       <motion.section
+        className="landing-verticals-section"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-60px" }}
+        variants={staggerParent}
+        aria-label="Verticals powered by the same primitive"
+      >
+        <motion.div
+          className="landing-verticals-head"
+          variants={fadeUp}
+          transition={transition}
+        >
+          <div>
+            <span className="verticals-eyebrow">Verticals</span>
+            <h2>The same primitive powers every workflow.</h2>
+          </div>
+          <p>
+            One Soroban sealed-round contract, one tlock helper, one keeper. The vertical
+            changes &mdash; the primitive stays the same. Open any card for the full reference in{" "}
+            <a
+              href={`${DOCS_BASE_URL}/VERTICALS.md`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              docs/VERTICALS.md
+            </a>
+            .
+          </p>
+        </motion.div>
+
+        <motion.div className="landing-verticals-grid" variants={staggerParent}>
+          {VERTICALS.map((v) => (
+            <motion.a
+              key={v.id}
+              className="verticals-card-link"
+              href={verticalDocsUrl(v)}
+              target="_blank"
+              rel="noreferrer"
+              variants={fadeUp}
+              transition={transition}
+              whileHover={reduce ? undefined : { y: -3 }}
+              whileTap={reduce ? undefined : { scale: 0.98 }}
+              aria-label={`Read about ${v.title} in docs/VERTICALS.md`}
+            >
+              <span className="verticals-card-pill">{v.pill}</span>
+              <strong>{v.title}</strong>
+              <p>{v.body}</p>
+            </motion.a>
+          ))}
+        </motion.div>
+      </motion.section>
+
+      <motion.section
         className="pilot-banner"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -193,16 +248,13 @@ export function LandingPage({
         transition={transition}
       >
         <div>
-          <span>First internal pilot</span>
+          <span>Pilot 1 · Internal</span>
           <h2>OverBlock</h2>
         </div>
         <p>
-          OverBlock will be Decentralized Global Education & Skills Passport&apos;s first internal pilot environment for sealed judging,
-          bounty allocation, and grant-style scoring workflows.
-        </p>
-        <p>
-          We are also preparing small external pilot conversations with Stellar ecosystem teams,
-          hackathon organizers, DAOs, and grant/RFP programs.
+          OverBlock is our internal &mdash; sealed judging, bounty allocation, and grant-style
+          scoring on the same primitive. Pilot&nbsp;2 (sealed credential portfolios) and a parallel
+          outreach track live alongside it.
         </p>
       </motion.section>
 

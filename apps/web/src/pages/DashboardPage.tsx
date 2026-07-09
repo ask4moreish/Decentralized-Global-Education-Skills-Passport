@@ -86,8 +86,8 @@ export function DashboardPage({ goHome }: { goHome: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={transition}
       >
-        <h1>Monitoring Dashboard</h1>
-        <p>Real-time keeper actions and settlement status</p>
+        <h1>Sealed round monitor</h1>
+        <p>Round state, keeper actions, and settlement — across every vertical that runs on the primitive.</p>
       </motion.header>
 
       {stale && data && <StaleBanner fetchedAt={data.meta.fetchedAt} />}
