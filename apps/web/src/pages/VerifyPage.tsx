@@ -1,13 +1,27 @@
+import { useEffect } from "react";
+import { ExportReportPanel } from "../components/verify/ExportReportPanel";
 import { ReceiptExplorer } from "../components/verify/ReceiptExplorer";
 import { ReceiptInputPanel } from "../components/verify/ReceiptInputPanel";
 import { SampleControls } from "../components/verify/SampleControls";
 import { VerdictPanel } from "../components/verify/VerdictPanel";
 import { useReceiptInput } from "../hooks/useReceiptInput";
 import { useVerification } from "../hooks/useVerification";
+import { readDataParam, decodePermalink } from "../verify/permalink";
 
 export function VerifyPage({ goHome }: { goHome: () => void }) {
   const input = useReceiptInput();
   const verification = useVerification(input.receipt);
+
+  // Pull a receipt straight out of a shared permalink (?d=...). Runs once on
+  // mount so manually pasting after the fact still wins.
+  useEffect(() => {
+    const data = readDataParam(window.location.hash);
+    const decoded = decodePermalink(data);
+    if (decoded && decoded !== input.rawJson) {
+      input.load(decoded);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="app-frame">
@@ -28,6 +42,7 @@ export function VerifyPage({ goHome }: { goHome: () => void }) {
 
       <div className="verify-extras">
         <ReceiptExplorer receipt={input.receipt} verification={verification} />
+        <ExportReportPanel receipt={input.receipt} verification={verification} />
       </div>
     </main>
   );
