@@ -50,6 +50,9 @@ export function LandingPage({
           <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport" target="_blank" rel="noreferrer">
             GitHub
           </a>
+          <a href="#/verify" className="secondary-action compact" title="Paste a receipt and run verifyReceipt in your browser">
+            Verify a receipt
+          </a>
           <a href="#/dashboard" className="secondary-action compact">
             Dashboard
           </a>
