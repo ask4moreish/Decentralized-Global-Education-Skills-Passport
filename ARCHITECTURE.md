@@ -255,6 +255,6 @@ The web UI is **read-mostly**: embedded trace + optional live RPC poll. No walle
 | [docs/THREAT_MODEL.md](./docs/THREAT_MODEL.md) | Adversaries and mitigations |
 | [docs/DEPLOY.md](./docs/DEPLOY.md) | UI build vs runtime secrets |
 | [docs/DEMO_SCRIPT.md](./docs/DEMO_SCRIPT.md) | 5-minute jury walkthrough |
-| [docs/TRACK_ANSWERS.md](./docs/TRACK_ANSWERS.md) | Hackathon track mapping |
+| [`docs/historical/TRACK_ANSWERS.md`](./docs/historical/TRACK_ANSWERS.md) | Hackathon track mapping (historical submission doc — see [`docs/historical/README.md`](./docs/historical/README.md)) |
 | [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) | Honest scope boundaries |
 | [docs/ECOSYSTEM.md](./docs/ECOSYSTEM.md) | Passkey, Smart Account Kit, OZ Relayer |

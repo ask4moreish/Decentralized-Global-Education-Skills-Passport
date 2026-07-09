@@ -163,10 +163,10 @@ project's positioning, roadmap, or commercial wedge.
 
 | Doc | Purpose |
 | --- | --- |
-| [docs/SCF_PLAN.md](./docs/SCF_PLAN.md) | SCF #44 Build framing, tranches, deliverables, ecosystem value |
-| [docs/SCF_TRANCHE_PLAN.md](./docs/SCF_TRANCHE_PLAN.md) | SCF tranche plan with verification artifacts and acceptance criteria |
-| [docs/TRACK_ANSWERS.md](./docs/TRACK_ANSWERS.md) | Build On Stellar track mapping and proof pointers |
-| [docs/CV_LABS_APPLICATION.md](./docs/CV_LABS_APPLICATION.md) | Stellar x CV Labs Accelerator application draft |
+| [docs/historical/SCF_PLAN.md](./docs/historical/SCF_PLAN.md) | SCF #44 Build framing, tranches, deliverables, ecosystem value |
+| [docs/historical/SCF_TRANCHE_PLAN.md](./docs/historical/SCF_TRANCHE_PLAN.md) | SCF tranche plan with verification artifacts and acceptance criteria |
+| [docs/historical/TRACK_ANSWERS.md](./docs/historical/TRACK_ANSWERS.md) | Build On Stellar track mapping and proof pointers |
+| [docs/historical/CV_LABS_APPLICATION.md](./docs/historical/CV_LABS_APPLICATION.md) | Stellar x CV Labs Accelerator application draft |
 
 ## Status
 

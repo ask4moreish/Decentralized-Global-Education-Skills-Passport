@@ -152,7 +152,7 @@ The plan fits naturally into the SCF three-tranche structure with:
    on hardening, audit, and governance readiness as required by SCF.
 
 5. **No duplication**: This document adds new tranche structure without
-duplicating large sections from existing docs like `docs/SCF_PLAN.md`; link
+duplicating large sections from existing docs like `./SCF_PLAN.md`; link
 out for detailed background.
 
 ## Version Control
