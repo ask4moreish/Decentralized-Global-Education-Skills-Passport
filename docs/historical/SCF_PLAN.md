@@ -1,5 +1,9 @@
 # Decentralized Global Education & Skills Passport — SCF Build Plan
 
+> **Read first — today's primitive-first narrative.** Today's Soroban sealed commit–reveal coordination primitive powers four verticals tracked in parallel: **Grants** (SCF-style judge panels), **RFPs** (procurement), **Auctions** (closed-bid books), and **Credentials** (planned, sealed issuer portfolios), with two pilots — OverBlock (internal) and a sealed credential portfolio (partner-led candidate).
+>
+> For today's project narrative, architecture, current pilot scope, and proof surface, see [../README.md](../../README.md), [../ARCHITECTURE.md](../../ARCHITECTURE.md), [../PILOT_PLAYBOOK.md](../PILOT_PLAYBOOK.md), and [../INTEGRATION.md](../INTEGRATION.md). The body below is the original SCF #44 Build Award submission text, preserved verbatim per [docs/historical/README.md](./README.md).
+
 Decentralized Global Education & Skills Passport won **1st Place in the Hack Privacy Track at Build On Stellar Hackathon
 — IBW 2026** (Rise In × Stellar Development Foundation).
 The next milestone is to turn the working prototype into production-ready
