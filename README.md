@@ -4,10 +4,20 @@
 
 # Decentralized Global Education & Skills Passport
 
-**Verifiable, sealed commit–reveal allocation for Stellar.** A drop-in Soroban
-primitive, TypeScript SDK, keeper, and demo UI that lets any app run sealed
-judging, sealed bidding, or sealed allocation rounds — without trusting the
-operator.
+Soroban sealed commit–reveal **coordination primitive** — verifiable,
+deterministic, fair rounds for sealed scoring, sealed bidding, sealed RFPs, and
+sealed credential portfolios on Stellar. A drop-in contract, TypeScript SDK,
+tlock helpers, permissionless keeper, and demo UI let any app run the same
+primitive without trusting an operator.
+
+The SDK and contract ship under the legacy
+`@decentralized-global-education-skills-passport/*` npm scope and
+`skills-passport-round` Rust crate. The brand survives in code identifiers
+because renaming the Rust crate would invalidate the Stellar mainnet
+contract hash, and the Build On Stellar / IBW 2026 win plus the SCF #44 /
+CV Labs submission cycle reference these names in public materials — see
+[`docs/VERTICALS.md` § On namespaces](./docs/VERTICALS.md#on-namespaces) for
+the full rationale.
 
 Participants submit sealed scores, bids, or allocation decisions **now**. A
 public, unbiased Drand round **R** unseals them later, verifiably and all at
@@ -85,6 +95,24 @@ adversary analysis.
 
 ---
 
+## Verticals supported by the same primitive
+
+The same Soroban primitive supplies sealed commit–reveal fairness for any
+workflow where leaking inputs mid-decision creates an unfair advantage. Five
+verticals ship, are scoped, or are documented:
+
+- **Sealed grants / scoring** — `examples/grant-scoring` (offline fixture pilot) + `pnpm lifecycle:e2e` (generic 2-bidder USDC sealed-bidder primitive e2e, settle → 0)
+- **Sealed RFPs / procurement** — `pnpm appraisal:e2e` (x402 appraisal micro-payment rail) + `pnpm agents:e2e` (multi-agent flow: appraisal → sealed commit → settle)
+- **Sealed auctions** — `services/auction-template` (end-to-end SDK + keeper + tlock wiring)
+- **Sealed credential portfolios** *— planned, application layer; no example ships in this repo yet*
+- **Sealed DAO voting** *— submission-era reference only; same primitive, no in-tree proof, see `docs/VERTICALS.md`*
+
+For the layer each vertical lives at, today's proof, and the components it
+exercises, see **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** — the
+authoritative reference.
+
+---
+
 ## Proof at a glance
 
 | Layer | Command | Network | What it proves |
@@ -144,6 +172,7 @@ pnpm mainnet:verify         # mainnet read-only proof
 | Doc | Purpose |
 | --- | --- |
 | **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System overview, lifecycle, trust boundaries, repo map |
+| [`docs/VERTICALS.md`](./docs/VERTICALS.md) | Authoritative verticals reference — sealed grants / RFPS / auctions / credentials / DAO voting |
 | [docs/INTEGRATION.md](./docs/INTEGRATION.md) | How another Stellar app embeds Decentralized Global Education & Skills Passport |
 | [docs/TECH_DESIGN.md](./docs/TECH_DESIGN.md) | Cryptography, storage, settlement rails |
 | [docs/THREAT_MODEL.md](./docs/THREAT_MODEL.md) | Adversaries, mitigations, honest limits |
@@ -163,10 +192,12 @@ project's positioning, roadmap, or commercial wedge.
 
 | Doc | Purpose |
 | --- | --- |
-| [docs/SCF_PLAN.md](./docs/SCF_PLAN.md) | SCF #44 Build framing, tranches, deliverables, ecosystem value |
-| [docs/SCF_TRANCHE_PLAN.md](./docs/SCF_TRANCHE_PLAN.md) | SCF tranche plan with verification artifacts and acceptance criteria |
-| [docs/TRACK_ANSWERS.md](./docs/TRACK_ANSWERS.md) | Build On Stellar track mapping and proof pointers |
-| [docs/CV_LABS_APPLICATION.md](./docs/CV_LABS_APPLICATION.md) | Stellar x CV Labs Accelerator application draft |
+| [`docs/historical/SCF_PLAN.md`](./docs/historical/SCF_PLAN.md) | SCF #44 Build framing, tranches, deliverables, ecosystem value (historical submission doc) |
+| [`docs/historical/SCF_TRANCHE_PLAN.md`](./docs/historical/SCF_TRANCHE_PLAN.md) | SCF tranche plan with verification artifacts and acceptance criteria (historical submission doc) |
+| [`docs/historical/TRACK_ANSWERS.md`](./docs/historical/TRACK_ANSWERS.md) | Build On Stellar track mapping and proof pointers (historical submission doc) |
+| [`docs/historical/CV_LABS_APPLICATION.md`](./docs/historical/CV_LABS_APPLICATION.md) | Stellar × CV Labs Accelerator application draft (historical submission doc) |
+
+See [`docs/historical/README.md`](./docs/historical/README.md) for the on-folder index and pointers to the current source-of-truth docs.
 
 ## Status
 
