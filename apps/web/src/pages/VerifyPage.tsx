@@ -1,5 +1,6 @@
 import { ReceiptExplorer } from "../components/verify/ReceiptExplorer";
 import { ReceiptInputPanel } from "../components/verify/ReceiptInputPanel";
+import { SampleControls } from "../components/verify/SampleControls";
 import { VerdictPanel } from "../components/verify/VerdictPanel";
 import { useReceiptInput } from "../hooks/useReceiptInput";
 import { useVerification } from "../hooks/useVerification";
@@ -21,7 +22,7 @@ export function VerifyPage({ goHome }: { goHome: () => void }) {
       </nav>
 
       <div className="verify-layout">
-        <ReceiptInputPanel input={input} />
+        <ReceiptInputPanel input={input} toolbar={<SampleControls input={input} />} />
         <VerdictPanel receipt={input.receipt} />
       </div>
 
