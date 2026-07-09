@@ -71,7 +71,7 @@ the WASM at `contracts/round` is a generic sealed-commit–reveal state machine.
   Labs accelerator application — see
   [`./historical/CV_LABS_APPLICATION.md`](./historical/CV_LABS_APPLICATION.md).
 
-## Sealed credential portfolios *(planned)*
+## Sealed credential portfolios *(planned — partner-led pilot)*
 
 - **Layer:** Application (the on-chain contract stays generic — no change)
 - **Proof today:** **None in-tree.** No `examples/credentials-portfolio`
@@ -82,9 +82,14 @@ the WASM at `contracts/round` is a generic sealed-commit–reveal state machine.
   receipts exported by the core primitive.
 - **Planned components used:** `packages/tlock` · `packages/sdk` ·
   `services/keeper` (unchanged from any other vertical).
-- **Note:** First pilot candidate is outlined in
-  [`PILOT_PLAYBOOK.md`](./PILOT_PLAYBOOK.md); see the plan section for scope
-  and partners.
+- **Pilot:** [`PILOT_PLAYBOOK.md` § Pilot 2 — Sealed credential portfolio
+  (partner-led candidate)](./PILOT_PLAYBOOK.md) outlines the workflow
+  sketch (issuer → holder → verifier), the partner-sketch categories
+  (skills/credentials platforms, LMS / course providers, education
+  consortia), and what's in scope vs. what's reserved for a follow-on
+  tranche (W3C Verifiable Credentials **data-model alignment**, native
+  issuer onboarding, revocation registries). **No partner confirmed
+  yet** — section is scope-only.
 
 ## Sealed DAO voting *(submission-era reference)*
 
