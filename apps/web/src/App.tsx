@@ -8,6 +8,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { DemoPage } from "./pages/DemoPage";
 import { LandingPage } from "./pages/LandingPage";
 import { ToastProvider } from "./ui/Toast";
+import { VerifyPage } from "./pages/VerifyPage";
 
 export default function App() {
   const [route, setRoute] = useState<RouteState>(routeFromHash);
@@ -34,6 +35,8 @@ export default function App() {
         />
       ) : route.page === "dashboard" ? (
         <DashboardPage goHome={() => navigate("landing")} />
+      ) : route.page === "verify" ? (
+        <VerifyPage goHome={() => navigate("landing")} />
       ) : (
         <>
           <ConfigBanner />
