@@ -1,20 +1,46 @@
-# Sealed grant scoring pilot template
+<p align="center">
+  <img src="https://raw.githubusercontent.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/main/assets/decentralized-global-education-skills-passport-readme.png" width="180" alt="Decentralized Global Education & Skills Passport" />
+</p>
 
-Integration template for **grant and hackathon allocation** workflows. It maps
-judges, projects, scoring criteria, sealed score submission, reveal readiness,
-and ranked settlement/receipt output into one repeatable flow.
+<h1 align="center">
+  <code>@decentralized-global-education-skills-passport/grant-scoring-pilot</code>
+</h1>
+
+<p align="center">
+  <a href="../../LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license" />
+  </a>
+  <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/actions/workflows/examples-typecheck.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/examples-typecheck.yml" alt="typecheck" />
+  </a>
+</p>
+
+**Sealed grant scoring pilot template.** Integration template for grant and
+hackathon allocation workflows. Maps judges, projects, scoring criteria, sealed
+score submission, reveal readiness, and ranked settlement/receipt output into
+one repeatable flow.
 
 This template is **separate from the jury demo trace** in `services/agent` and
 `apps/web`. Those paths prove autonomous sealed bidding; this package shows how
-a pilot partner wires **multi-project grant scoring** with `@decentralized-global-education-skills-passport/sdk` and
-`@decentralized-global-education-skills-passport/tlock`.
+a pilot partner wires **multi-project grant scoring** with
+[`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) and
+[`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock).
 
-## Quick start (no live credentials)
+---
+
+## Quick start
 
 ```bash
 pnpm install
-pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot test
-pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot start
+
+# Fixture mode — full lifecycle offline (no RPC, no secrets)
+pnpm grant-scoring:start
+
+# Tests — fixture lifecycle, reveal readiness, ranking, tlock commitment
+pnpm grant-scoring:test
+
+# Typecheck
+pnpm grant-scoring:typecheck
 ```
 
 The default **fixture mode** runs the full sealed-score lifecycle offline:
@@ -27,10 +53,12 @@ The default **fixture mode** runs the full sealed-score lifecycle offline:
 
 Fixture data lives in `src/fixtures.ts` (`PILOT_FIXTURE_PROGRAM`).
 
+---
+
 ## Model
 
 | Concept | Template type | On-chain mapping |
-| --- | --- | --- |
+|---|---|---|
 | Grant program | `GrantPilotProgram` | Operator config + shared `revealRound` |
 | Project | `GrantProject` | One round per project (`item_ref` = sha256 of `itemRef`) |
 | Judge | `GrantJudge` | Bidder address committing a sealed score |
@@ -40,9 +68,29 @@ Fixture data lives in `src/fixtures.ts` (`PILOT_FIXTURE_PROGRAM`).
 | Final output | `GrantPilotReceipt` | Ranked projects + per-round settlement snapshot |
 
 Scores use `scoreToStroops()` (1 display point = 1_000_000 stroops). Rankings
-aggregate **revealed judge scores** per project; contract clearing rule
+aggregate **revealed judge scores** per project; the contract's clearing rule
 (`HighestBid`) is not used for grant ordering — settlement refunds nominal
 escrow after reveal.
+
+---
+
+## API surface
+
+```ts
+import { GrantScoringPilot, PILOT_FIXTURE_PROGRAM } from "@decentralized-global-education-skills-passport/grant-scoring-pilot";
+```
+
+Key exports:
+
+| Export | Description |
+|---|---|
+| `GrantScoringPilot` | Orchestrates the full lifecycle (fixture or live) |
+| `sealJudgeScore` / `commitSealedJudgeScore` | tlock seal + SDK commit path |
+| `assessRevealReadiness` | Commit progress and phase tracking |
+| `buildGrantReceipt` | Organizer-facing ranked output |
+| `PILOT_FIXTURE_PROGRAM` | 2 judges × 3 projects with weighted criteria |
+
+---
 
 ## Live Stellar testnet adaptation
 
@@ -83,10 +131,10 @@ await commitSealedJudgeScore({
 ### Required testnet env
 
 | Variable | Role |
-| --- | --- |
+|---|---|
 | `RPC_URL` | Soroban RPC (default testnet) |
 | `NETWORK_PASSPHRASE` | Stellar network passphrase |
-| `ROUND_CONTRACT_ID` | Deployed Decentralized Global Education & Skills Passport round contract |
+| `ROUND_CONTRACT_ID` | Deployed round contract |
 | `OPERATOR_SECRET` | Creates project rounds |
 | `JUDGE_*_SECRET` | One funded key per judge for commits |
 | `USDC_SAC` | Token for nominal escrow (see `services/keeper/scripts/usdc-setup.ts`) |
@@ -99,25 +147,35 @@ Then call `pilot.finalizeRankings(client)` to produce the organizer receipt.
 See also [docs/INTEGRATION.md](../../docs/INTEGRATION.md) and
 [docs/PILOT_PLAYBOOK.md](../../docs/PILOT_PLAYBOOK.md).
 
-## API surface
-
-```ts
-import { GrantScoringPilot, PILOT_FIXTURE_PROGRAM } from "@decentralized-global-education-skills-passport/grant-scoring-pilot";
-```
-
-Key exports:
-
-- `GrantScoringPilot` — orchestrates the lifecycle
-- `sealJudgeScore` / `commitSealedJudgeScore` — `@decentralized-global-education-skills-passport/tlock` + SDK commit path
-- `assessRevealReadiness` — commit progress and phase tracking
-- `buildGrantReceipt` — organizer-facing ranked output
-- `PILOT_FIXTURE_PROGRAM` — 2 judges × 3 projects with weighted criteria
+---
 
 ## Tests
 
 ```bash
-pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot test
+pnpm grant-scoring:test
 ```
 
 Covers the full fixture lifecycle, reveal readiness, ranking, and tlock
-commitment verification at reveal time.
+commitment verification at reveal time (3 test files).
+
+---
+
+## Key dependencies
+
+| Package | Purpose |
+|---|---|
+| [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) | `SkillsPassportClient`, types, receipt verification |
+| [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) | `sealBid`, `commitment`, `quicknet` — score sealing and on-chain binding |
+
+---
+
+## Related
+
+- [Integration guide](../../docs/INTEGRATION.md) — how another Stellar app embeds the protocol
+- [Pilot playbook](../../docs/PILOT_PLAYBOOK.md) — outreach strategy, SCF demo narrative, pilot plan
+- [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) — client SDK
+- [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) — timelock encryption
+
+## License
+
+MIT — see the root [LICENSE](../../LICENSE).

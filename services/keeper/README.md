@@ -115,8 +115,6 @@ Response shape (typed in `@decentralized-global-education-skills-passport/sdk` a
 
 ## Persisted Queue / Store
 
-## Persisted Queue / Store
-
 In watch mode, the keeper maintains a small local JSON store (by default `.keeper-store.json`) to remember which rounds it is tracking across restarts. The store allows the keeper to survive container restarts and resume watching exactly where it left off.
 
 ### Store Format
