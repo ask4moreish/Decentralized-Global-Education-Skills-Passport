@@ -52,6 +52,7 @@ export interface KeeperRoundStatusView {
 export interface KeeperServiceHealth {
   rpc: KeeperHealthState;
   drand: KeeperHealthState;
+  overall: KeeperHealthState;
   reason?: string;
   checkedAt: string;
 }
