@@ -41,17 +41,23 @@ export function readDataParam(hash: string): string | null {
   return params.get("d");
 }
 
+export interface PermalinkUrl {
+  /** Full permalink URL including origin, path, and #/verify?d=... */
+  url: string;
+  /** Whether the raw JSON payload exceeds the 4KB soft limit. */
+  oversized: boolean;
+}
+
 /** Build a `#/verify?d=<encoded raw>`-shaped URL on the current origin. */
-export function buildPermalinkUrl(raw: string): string {
+export function buildPermalinkUrl(raw: string): PermalinkUrl {
   const data = encodeURIComponent(raw);
   const base = `${window.location.origin}${window.location.pathname}`;
-  return `${base}#/verify?d=${data}`;
+  const url = `${base}#/verify?d=${data}`;
+  const oversized = byteLengthUtf8(raw) > SOFT_LIMIT_BYTES;
+  return { url, oversized };
 }
 
 /** UTF-8 byte length using the platform's TextEncoder. */
 export function byteLengthUtf8(str: string): number {
-  // TextEncoder is available across all evergreen browsers and Node 18+.
-  // The browser bundle already polyfills Buffer + process; TextEncoder ships
-  // natively on every target we ship to.
   return new TextEncoder().encode(str).length;
 }
