@@ -15,6 +15,11 @@ on:
 
 # Required for changesets/action to push branches, create commits,
 # and open pull requests.
+#
+# NOTE: Some organizations restrict the built-in GITHUB_TOKEN from creating
+# PRs even with pull-requests: write set. If you hit that, create a classic
+# PAT with `repo` scope at https://github.com/settings/tokens and save it as
+# a GH_TOKEN secret in Settings > Secrets and variables > Actions.
 permissions:
   contents: write
   pull-requests: write
@@ -54,5 +59,7 @@ jobs:
           commit: 'chore(release): version packages'
           title: 'Version Packages'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use a Personal Access Token if set (bypasses org-level PR
+          # restrictions); otherwise fall back to the built-in GITHUB_TOKEN.
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
