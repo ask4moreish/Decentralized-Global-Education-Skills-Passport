@@ -1,0 +1,754 @@
+/* Drand Beacon Monitor page styles */
+
+.drand-page {
+  min-height: 100vh;
+  background: var(--bg-0);
+  padding: 1.25rem clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+/* Navigation */
+.drand-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line-1);
+}
+
+.drand-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Header */
+.drand-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+  padding: 1.5rem 0 2rem;
+  margin-bottom: 1rem;
+}
+
+.drand-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border: 1px solid rgba(91, 108, 255, 0.32);
+  border-radius: 999px;
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  background: rgba(91, 108, 255, 0.06);
+  margin-bottom: 12px;
+}
+
+.drand-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.025em;
+  margin: 0 0 0.75rem;
+}
+
+.drand-lede {
+  max-width: 64ch;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.drand-lede strong {
+  color: var(--green);
+  font-family: var(--mono);
+}
+
+.drand-hero-metrics {
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.drand-hero-metrics > div {
+  padding: 12px 16px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.drand-hero-metrics span {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.drand-hero-metrics strong {
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+/* Error banner */
+.drand-error-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 18px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(217, 122, 115, 0.35);
+  border-radius: var(--radius-sm);
+  background: rgba(217, 122, 115, 0.06);
+  color: var(--alert);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.drand-error-banner p {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* Main grid */
+.drand-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.drand-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (max-width: 960px) {
+  .drand-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .drand-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards */
+.drand-card {
+  position: relative;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius);
+  background: var(--surface-1);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.drand-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--line-0);
+  background: var(--surface-0);
+}
+
+.drand-card-header h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.drand-card-body {
+  padding: 1.25rem;
+}
+
+/* Beacon card */
+.drand-beacon-card {
+  border-color: rgba(91, 108, 255, 0.25);
+  background: linear-gradient(160deg, rgba(91, 108, 255, 0.04), var(--surface-1));
+}
+
+.drand-beacon-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.drand-beacon-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.drand-beacon-dot.published {
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green-glow);
+  animation: drand-dot-pulse 2s var(--ease-in-out) infinite;
+}
+
+.drand-beacon-dot.waiting {
+  background: var(--muted);
+  animation: drand-dot-pulse 1.6s var(--ease-in-out) infinite;
+}
+
+@keyframes drand-dot-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+
+.drand-current-round {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius);
+  background: var(--bg-1);
+}
+
+.drand-round-label {
+  display: block;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.drand-round-label strong {
+  color: var(--green);
+}
+
+.drand-round-number {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.drand-countdown-section {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius);
+  background: var(--bg-1);
+}
+
+.drand-countdown-value {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--green);
+  line-height: 1.2;
+  margin: 6px 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.drand-countdown-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line-1);
+  overflow: hidden;
+  margin: 0 0 10px;
+}
+
+.drand-countdown-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), rgba(91, 108, 255, 0.6));
+  transition: width 0.3s ease;
+}
+
+.drand-latest-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-sm);
+  background: var(--surface-0);
+}
+
+.drand-kv {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 0.85rem;
+}
+
+.drand-kv dt {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.drand-kv dd {
+  margin: 0;
+  color: var(--ink-2);
+  word-break: break-all;
+}
+
+.drand-hex {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--green);
+  background: rgba(91, 108, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.drand-muted {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Chain info card */
+.drand-chain-body {
+  padding: 0.75rem 1.25rem;
+}
+
+.drand-kv-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-0);
+}
+
+.drand-kv-row:last-child {
+  border-bottom: 0;
+}
+
+.drand-kv-label {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.drand-kv-value {
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  text-align: right;
+  word-break: break-all;
+}
+
+.drand-kv-value code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  background: var(--surface-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Search card */
+.drand-search-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drand-search-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.drand-search-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 48px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--bg-1);
+  transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.drand-search-input:focus-within {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(91, 108, 255, 0.18);
+}
+
+.drand-search-prefix {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+.drand-search-input input {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  background: transparent;
+  font-variant-numeric: tabular-nums;
+}
+
+.drand-search-input input:focus {
+  outline: 0;
+}
+
+.drand-search-input input::placeholder {
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.drand-search-error {
+  padding: 10px 14px;
+  border: 1px solid rgba(217, 122, 115, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(217, 122, 115, 0.06);
+  color: var(--alert);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.drand-search-result {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(91, 108, 255, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(91, 108, 255, 0.04);
+}
+
+.drand-result-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid rgba(91, 108, 255, 0.35);
+  border-radius: 999px;
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(91, 108, 255, 0.06);
+  width: fit-content;
+}
+
+.drand-result-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drand-status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.drand-status-tag.published {
+  color: var(--green);
+  background: rgba(91, 108, 255, 0.1);
+}
+
+.drand-status-tag.future {
+  color: var(--muted);
+  background: var(--surface-2);
+}
+
+/* Round history / timeline */
+.drand-history-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drand-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.drand-timeline::before {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  content: "";
+  background: linear-gradient(180deg, var(--green), var(--line-1));
+  border-radius: 999px;
+  opacity: 0.4;
+}
+
+.drand-timeline-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-sm);
+  background: var(--surface-0);
+  transition: border-color 200ms var(--ease);
+}
+
+.drand-timeline-row:hover {
+  border-color: var(--line-strong);
+}
+
+.drand-timeline-row.current {
+  border-color: rgba(91, 108, 255, 0.35);
+  background: rgba(91, 108, 255, 0.05);
+}
+
+.drand-timeline-row.future {
+  border-color: rgba(91, 108, 255, 0.2);
+  border-style: dashed;
+}
+
+.drand-timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--faint);
+  align-self: center;
+  justify-self: center;
+}
+
+.drand-timeline-row.current .drand-timeline-dot {
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green-glow);
+}
+
+.drand-timeline-row.past .drand-timeline-dot {
+  background: var(--muted);
+  opacity: 0.6;
+}
+
+.drand-timeline-row.future .drand-timeline-dot {
+  background: transparent;
+  border: 2px solid var(--muted);
+  opacity: 0.5;
+}
+
+.drand-timeline-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.drand-timeline-info strong {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.drand-timeline-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.drand-timeline-hash {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--green-dim);
+  background: var(--surface-2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Latency chart ────────────────────────────────────────────────── */
+.drand-latency-card {
+  margin-top: 1.25rem;
+}
+
+.drand-latency-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drand-latency-legend {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.drand-latency-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.drand-latency-chart-wrap {
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.drand-latency-chart-wrap svg {
+  display: block;
+  min-width: 200px;
+}
+
+.drand-latency-chart-wrap svg text {
+  font-family: var(--mono);
+  dominant-baseline: auto;
+}
+
+/* Info section */
+.drand-info-section {
+  margin-top: 2rem;
+  max-width: 800px;
+}
+
+.drand-info-card {
+  padding: 1.5rem;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius);
+  background: var(--surface-1);
+}
+
+.drand-info-card h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.drand-info-card p {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 0.75rem;
+}
+
+.drand-info-card p:last-child {
+  margin-bottom: 0;
+}
+
+.drand-info-card strong {
+  color: var(--green);
+  font-family: var(--mono);
+}
+
+/* Loading state */
+.drand-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  gap: 1rem;
+}
+
+.drand-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--line-2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: drand-spin 0.8s linear infinite;
+}
+
+@keyframes drand-spin {
+  to { transform: rotate(360deg); }
+}
+
+.drand-loading-state p {
+  color: var(--muted);
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+}
+
+.drand-skeleton {
+  display: inline-block;
+  border-radius: 8px;
+  background: var(--surface-2);
+  animation: drand-skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes drand-skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Mobile responsive */
+@media (max-width: 680px) {
+  .drand-page {
+    padding: 1rem;
+  }
+
+  .drand-nav {
+    flex-wrap: wrap;
+  }
+
+  .drand-header {
+    padding: 0.75rem 0 1.5rem;
+  }
+
+  .drand-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .drand-search-row {
+    flex-direction: column;
+  }
+
+  .drand-search-row .primary-action {
+    width: 100%;
+  }
+
+  .drand-hero-metrics {
+    min-width: 0;
+  }
+}

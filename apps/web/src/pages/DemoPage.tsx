@@ -912,6 +912,12 @@ export function DemoPage({
             </>
           ) : null}
 
+          <div className="case-nav-section-label">Tools</div>
+          <a href="#/drand" className="case-link">
+            <span aria-hidden="true" />
+            Drand beacon
+          </a>
+
           <DrandCountdownChip mode={sidebarDrand.mode} targetRound={sidebarDrand.targetRound} />
         </aside>
 
