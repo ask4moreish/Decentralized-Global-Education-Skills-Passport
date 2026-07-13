@@ -6,6 +6,7 @@ import { defineConfig } from "vite";
 const require = createRequire(import.meta.url);
 
 export default defineConfig({
+  base: "/Decentralized-Global-Education-Skills-Passport/",
   plugins: [
     react(),
     {
