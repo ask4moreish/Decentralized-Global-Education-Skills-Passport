@@ -27,6 +27,52 @@
   box-shadow: var(--shadow-soft);
 }
 
+/* === Architecture intro (primitive-first h1 above the raw ARCHITECTURE.md) === */
+.architecture-intro {
+  max-width: 52rem;
+  margin: 0 auto 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--bg-1) 92%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+.architecture-intro .architecture-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.architecture-intro h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.architecture-intro p {
+  margin: 0;
+  max-width: 64ch;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .architecture-intro {
+    margin-bottom: 1rem;
+  }
+}
+
 .architecture-doc pre {
   margin: 0;
   overflow-x: auto;
