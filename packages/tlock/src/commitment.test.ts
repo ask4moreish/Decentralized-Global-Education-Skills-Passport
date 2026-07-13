@@ -6,6 +6,7 @@ import {
   commitment,
   decodeBidPreimage,
   encodeBidPreimage,
+  fromHex,
   i128ToBeBytes,
   toHex,
 } from "./commitment.js";
@@ -50,4 +51,25 @@ test("rejects out-of-range and malformed inputs", () => {
   assert.throws(() => i128ToBeBytes(1n << 127n)); // > i128 max
   assert.throws(() => encodeBidPreimage(1n, new Uint8Array(31)));
   assert.throws(() => decodeBidPreimage(new Uint8Array(47)));
+});
+
+test('i128 negative values: encode/decode roundtrip', () => {
+  for (const v of [-1n, -100n, -700n, -(1n << 126n), -(1n << 127n)]) {
+    assert.equal(beBytesToI128(i128ToBeBytes(v)), v);
+  }
+});
+
+test('i128ToBeBytes: i128 min/max boundary', () => {
+  const min = -(1n << 127n);
+  const max = (1n << 127n) - 1n;
+  assert.equal(beBytesToI128(i128ToBeBytes(min)), min);
+  assert.equal(beBytesToI128(i128ToBeBytes(max)), max);
+  assert.throws(() => i128ToBeBytes(min - 1n));
+  assert.throws(() => i128ToBeBytes(max + 1n));
+});
+
+test('fromHex accepts uppercase hex', () => {
+  const lower = 'deadbeefcafe1234';
+  const upper = 'DEADBEEFCAFE1234';
+  assert.deepEqual([...fromHex(upper)], [...fromHex(lower)]);
 });

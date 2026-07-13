@@ -78,7 +78,7 @@ export function toHex(bytes: Uint8Array): string {
 }
 
 export function fromHex(hex: string): Uint8Array {
-  const clean = hex.startsWith("0x") ? hex.slice(2) : hex;
+  const clean = (hex.startsWith("0x") ? hex.slice(2) : hex).toLowerCase();
   if (clean.length % 2 !== 0) throw new Error("odd hex length");
   const out = new Uint8Array(clean.length / 2);
   for (let i = 0; i < out.length; i++) {
