@@ -3,11 +3,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - "apps/web/**"
-      - "packages/**"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 # Grants the GITHUB_TOKEN the permissions needed for Pages deployment
