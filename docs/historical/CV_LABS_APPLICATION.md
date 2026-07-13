@@ -1,5 +1,9 @@
 # Stellar x CV Labs Accelerator Application
 
+> **Read first — today's primitive-first narrative.** Today's Soroban sealed commit–reveal coordination primitive powers four verticals tracked in parallel: **Grants** (SCF-style judge panels), **RFPs** (procurement), **Auctions** (closed-bid books), and **Credentials** (planned), with two pilots — OverBlock (internal) and a sealed credential portfolio (partner-led candidate).
+>
+> For today's commercial wedge, GTM scope, and pilot portfolio, see [../README.md](../../README.md), [../ARCHITECTURE.md](../../ARCHITECTURE.md), [../PILOT_PLAYBOOK.md](../PILOT_PLAYBOOK.md), and [../INTEGRATION.md](../INTEGRATION.md). The body below is the original 2026 CV Labs Accelerator application draft, preserved verbatim per [docs/historical/README.md](./README.md).
+
 Working draft for the 2026 Stellar x CV Labs Accelerator application.
 
 ## Recommendation

@@ -116,5 +116,5 @@ pnpm keeper:watch
 
 - [TECH_DESIGN.md](./TECH_DESIGN.md)
 - [THREAT_MODEL.md](./THREAT_MODEL.md)
-- [TRACK_ANSWERS.md](./TRACK_ANSWERS.md)
+- [`TRACK_ANSWERS.md`](./historical/TRACK_ANSWERS.md) (historical submission doc)
 - [ECOSYSTEM.md](./ECOSYSTEM.md)

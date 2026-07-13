@@ -20,8 +20,10 @@ export default defineConfig({
     alias: {
       buffer: require.resolve("buffer/"),
       crypto: require.resolve("crypto-browserify"),
-      stream: require.resolve("stream-browserify"),
-      events: require.resolve("events/"),
+      // stream-browserify: uncommented if a dependency requires Node.js `stream`
+      // stream: require.resolve("stream-browserify"),
+      // events: uncommented if a dependency requires Node.js `events`
+      // events: require.resolve("events/"),
       "node:crypto": require.resolve("crypto-browserify"),
       "node:buffer": require.resolve("buffer/"),
     },
@@ -32,12 +34,15 @@ export default defineConfig({
     "process.version": JSON.stringify("v22.0.0"),
   },
   optimizeDeps: {
-    include: ["buffer", "crypto-browserify", "stream-browserify", "process/browser", "events"],
+    include: ["buffer", "crypto-browserify", "process/browser"],
   },
   server: {
     port: 5173,
-    fs: {
-      allow: ["..", "../..", "../../..", "../../../.."],
+    headers: {
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
     },
   },
 });

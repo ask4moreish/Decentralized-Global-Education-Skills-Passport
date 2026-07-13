@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "@decentralized-global-education-skills-passport/round-bindings",
+      "@decentralized-global-education-skills-passport/tlock",
+      "@decentralized-global-education-skills-passport/sdk"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@decentralized-global-education-skills-passport/appraisal-api",
+    "@decentralized-global-education-skills-passport/agent",
+    "@decentralized-global-education-skills-passport/keeper",
+    "@decentralized-global-education-skills-passport/drand-tools",
+    "@decentralized-global-education-skills-passport/receipt-cli",
+    "@decentralized-global-education-skills-passport/auction-template",
+    "@decentralized-global-education-skills-passport/web",
+    "@decentralized-global-education-skills-passport/grant-scoring-pilot"
+  ]
+}

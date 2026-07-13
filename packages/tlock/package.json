@@ -1,7 +1,7 @@
 {
   "name": "@decentralized-global-education-skills-passport/tlock",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "description": "Off-chain seal for Decentralized Global Education & Skills Passport: tlock encrypt/decrypt to a Drand round + auditor identity blob, byte-compatible with the Round contract.",
   "keywords": [
@@ -18,14 +18,43 @@
     "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport.git",
     "directory": "packages/tlock"
   },
+  "license": "MIT",
+  "homepage": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport#readme",
+  "bugs": {
+    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/issues"
+  },
+  "sideEffects": false,
   "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
   "scripts": {
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "node --import tsx --test src/commitment.test.ts src/auditor.test.ts src/auditor-recovery-cli.test.ts src/bls.test.ts src/seal.test.ts src/freshness.test.ts src/quicknet.test.ts",
     "test:quicknet": "node --import tsx --test src/quicknet.test.ts",
     "test:unit": "node --import tsx --test src/commitment.test.ts src/auditor.test.ts src/auditor-recovery-cli.test.ts src/bls.test.ts src/freshness.test.ts src/quicknet.test.ts",
     "test:seal": "node --import tsx --test src/seal.test.ts",
-    "recover:identities": "node --import tsx src/recover-identities.cli.ts",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "recover:identities": "node --import tsx src/recover-identities.cli.ts"
   },
   "dependencies": {
     "@noble/ciphers": "^2.2.0",

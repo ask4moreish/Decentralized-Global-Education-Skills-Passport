@@ -1,16 +1,51 @@
 {
   "name": "@decentralized-global-education-skills-passport/round-bindings",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "description": "Generated TypeScript bindings for the Decentralized Global Education & Skills Passport Round contract (spec-accurate; do not hand-edit).",
+  "keywords": [
+    "stellar",
+    "soroban",
+    "bindings",
+    "smart-contract"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport.git",
+    "directory": "packages/round-bindings"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport#readme",
+  "bugs": {
+    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/issues"
+  },
+  "sideEffects": false,
   "main": "src/index.ts",
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && tsc",
+    "prepublishOnly": "pnpm build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "node --import tsx --test src/event-snapshot.test.ts"
   },

@@ -42,6 +42,7 @@ export interface RoundStatusView {
 export interface KeeperServiceHealth {
   rpc: "ok" | "degraded" | "down";
   drand: "ok" | "degraded" | "down";
+  overall: "ok" | "degraded" | "down";
   reason?: string;
   checkedAt: string;
 }
@@ -289,10 +290,16 @@ export async function checkHealth(
     reasons.push(`drand: ${e instanceof Error ? e.message : String(e)}`);
   }
 
-  const worst = rpc === "down" || drandStatus === "down" ? "down" : "ok";
+  const worst =
+    rpc === "down" || drandStatus === "down"
+      ? "down"
+      : rpc === "degraded" || drandStatus === "degraded"
+        ? "degraded"
+        : "ok";
   return {
     rpc,
     drand: drandStatus,
+    overall: worst,
     ...(reasons.length ? { reason: reasons.join("; ") } : {}),
     checkedAt: new Date().toISOString(),
   };
