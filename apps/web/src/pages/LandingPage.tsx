@@ -57,6 +57,9 @@ export function LandingPage({
           <a href="#/dashboard" className="secondary-action compact">
             Dashboard
           </a>
+          <a href="#/drand" className="secondary-action compact">
+            Drand beacon
+          </a>
           <button type="button" className="primary-action compact" onClick={onDemo}>
             Open demo
           </button>

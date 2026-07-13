@@ -62,6 +62,16 @@
     "grant-scoring:start": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot start",
     "snapshot:check": "node scripts/check-snapshots.mjs",
     "docs:check": "node scripts/check-deploy-docs.mjs",
-    "docs:check-links": "node scripts/check-links.js"
+    "docs:check-links": "node scripts/check-links.js",
+    "publish:tlock": "pnpm --filter @decentralized-global-education-skills-passport/tlock publish",
+    "publish:bindings": "pnpm --filter @decentralized-global-education-skills-passport/round-bindings publish",
+    "publish:sdk": "pnpm --filter @decentralized-global-education-skills-passport/sdk publish",
+    "publish:all": "echo 'Publishing in dependency order: bindings → tlock → sdk' && pnpm publish:bindings && pnpm publish:tlock && pnpm publish:sdk",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm version-packages && pnpm publish:all"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0"
   }
 }

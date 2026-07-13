@@ -268,6 +268,7 @@ describe("buildKeeperStatus — upstream failure", () => {
     const health = await checkHealth(source.reader, source.drand);
     assert.equal(health.rpc, "down");
     assert.match(String(health.reason ?? ""), /rpc/);
+    assert.equal(health.overall, "down");
   });
 
   it("marks drand as down when chain info throws", async () => {
@@ -275,6 +276,13 @@ describe("buildKeeperStatus — upstream failure", () => {
     const health = await checkHealth(source.reader, source.drand);
     assert.equal(health.drand, "down");
     assert.match(String(health.reason ?? ""), /drand/);
+    assert.equal(health.overall, "down");
+  });
+
+  it("overall is ok when both rpc and drand are ok", async () => {
+    const source = makeSource();
+    const health = await checkHealth(source.reader, source.drand);
+    assert.equal(health.overall, "ok");
   });
 
   it("does not crash when a tracked round is missing on-chain", async () => {

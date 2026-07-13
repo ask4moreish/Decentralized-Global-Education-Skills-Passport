@@ -1,6 +1,22 @@
-# `@decentralized-global-education-skills-passport/appraisal-api`
+<p align="center">
+  <img src="https://raw.githubusercontent.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/main/assets/decentralized-global-education-skills-passport-readme.png" width="180" alt="Decentralized Global Education & Skills Passport" />
+</p>
 
-x402-gated appraisal API. Agents pay per call in **USDC (SEP-41)** over Soroban;
+<h1 align="center">
+  <code>@decentralized-global-education-skills-passport/appraisal-api</code>
+</h1>
+
+<p align="center">
+  <a href="../../LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license" />
+  </a>
+  <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/actions/workflows/fixture-drift.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/fixture-drift.yml" alt="fixture drift" />
+  </a>
+</p>
+
+**x402-gated appraisal API.** Agents pay per call in **USDC (SEP-41)** over Soroban;
+ Agents pay per call in **USDC (SEP-41)** over Soroban;
 the server self-facilitates — verifies the signed payment and settles on-chain
 via RPC (no relayer, no mock) — then returns a **deterministic** valuation used
 to size a sealed bid.
@@ -8,6 +24,12 @@ to size a sealed bid.
 This package is an **integration boundary**. The HTTP shape, validation rules,
 and error strings are part of the public contract. Anything documented here is
 covered by fixtures in `src/fixtures/`.
+
+This service depends on the [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk)
+for Soroban client setup and uses the
+[`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock)
+helpers for bid sealing. Both are workspace dependencies and are installed
+automatically when bootstrapping from the monorepo root.
 
 ## Request / response
 

@@ -6,6 +6,7 @@ import { ArchitecturePage } from "./pages/ArchitecturePage";
 import { ConfigBanner } from "./components/ConfigBanner";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DemoPage } from "./pages/DemoPage";
+import { DrandPage } from "./pages/DrandPage";
 import { LandingPage } from "./pages/LandingPage";
 import { ToastProvider } from "./ui/Toast";
 import { VerifyPage } from "./pages/VerifyPage";
@@ -37,6 +38,8 @@ export default function App() {
         <DashboardPage goHome={() => navigate("landing")} />
       ) : route.page === "verify" ? (
         <VerifyPage goHome={() => navigate("landing")} />
+      ) : route.page === "drand" ? (
+        <DrandPage goHome={() => navigate("landing")} />
       ) : (
         <>
           <ConfigBanner />

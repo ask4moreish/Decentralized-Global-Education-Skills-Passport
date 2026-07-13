@@ -1,5 +1,9 @@
 # Decentralized Global Education & Skills Passport — SCF Tranche Plan
 
+> **Read first — today's primitive-first narrative.** Today's Soroban sealed commit–reveal coordination primitive powers four verticals tracked in parallel: **Grants** (SCF-style judge panels), **RFPs** (procurement), **Auctions** (closed-bid books), and **Credentials** (planned, sealed issuer portfolios), with two pilots — OverBlock (internal) and a sealed credential portfolio (partner-led candidate).
+>
+> For today's tranche rollout reference and the verification artifacts that the SCF plan called for, see [../README.md](../../README.md), [../ARCHITECTURE.md](../../ARCHITECTURE.md), [../PILOT_PLAYBOOK.md](../PILOT_PLAYBOOK.md), and [../INTEGRATION.md](../INTEGRATION.md). The body below is the original SCF #44 tranche plan preserved verbatim per [docs/historical/README.md](./README.md).
+
 This document defines a focused three-tranche plan for Decentralized Global Education & Skills Passport's SCF Build Award,
 structured around funding tranches, measurable outcomes, verification artifacts,
 and explicit acceptance criteria. Mainnet launch remains explicitly gated on
@@ -152,7 +156,7 @@ The plan fits naturally into the SCF three-tranche structure with:
    on hardening, audit, and governance readiness as required by SCF.
 
 5. **No duplication**: This document adds new tranche structure without
-duplicating large sections from existing docs like `docs/SCF_PLAN.md`; link
+duplicating large sections from existing docs like `./SCF_PLAN.md`; link
 out for detailed background.
 
 ## Version Control

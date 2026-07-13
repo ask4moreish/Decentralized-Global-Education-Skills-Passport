@@ -30,29 +30,35 @@ inputs before **R**.
 
 ## What's in the box
 
-| Layer | Path | Purpose |
-| --- | --- | --- |
-| **Contract** | `contracts/round` | Soroban primitive: sealed commit, BLS-verified reveal, SAC settle |
-| **Crypto** | `packages/tlock` | Drand tlock seal + auditor blob, byte-compatible with the contract |
-| **Bindings** *(generated, used by SDK)* | `packages/round-bindings` | TypeScript bindings generated from the contract WASM |
-| **SDK** | `packages/sdk` | `SkillsPassportClient`, encoding, optional OpenZeppelin Channels submitter |
-| **Receipts** | `services/receipt-cli` | Export and offline-verify round receipts (no RPC, no secrets) |
-| **Keeper** | `services/keeper` | Permissionless reveal/clear/settle + watch mode + status HTTP API |
-| **Appraisal** | `services/appraisal-api` | x402-gated deterministic valuation (USDC SAC) |
-| **Agent** | `services/agent` | Mandate + cap-checked sealed-bid agents |
-| **Template** | `services/auction-template` | Sealed-auction integration template (SDK + keeper + tlock end-to-end) |
-| **Drand harness** | `services/drand-tools` | Risk-2 harness: validate tlock <-> Drand <-> on-chain BLS and generate Soroban constants |
-| **UI** | `apps/web` | Jury demo — embedded trace, observer, attack labs |
-| **Example** | `examples/grant-scoring` | Sealed grant scoring pilot template (projects, judges, ranked receipt) |
-| **Docs** | `docs/`, `ARCHITECTURE.md` | Design, threat model, integration, deploy, limitations |
+| Layer | Path | npm | Purpose |
+| --- | --- | --- | --- |
+| **Contract** | `contracts/round` | — | Soroban primitive: sealed commit, BLS-verified reveal, SAC settle |
+| **Crypto** | [`packages/tlock`](packages/tlock) | [![npm](https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/tlock)](https://www.npmjs.com/package/@decentralized-global-education-skills-passport/tlock) | Drand tlock seal + auditor blob, byte-compatible with the contract |
+| **Bindings** *(generated)* | [`packages/round-bindings`](packages/round-bindings) | [![npm](https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/round-bindings)](https://www.npmjs.com/package/@decentralized-global-education-skills-passport/round-bindings) | TypeScript bindings generated from the contract WASM |
+| **SDK** | [`packages/sdk`](packages/sdk) | [![npm](https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/sdk)](https://www.npmjs.com/package/@decentralized-global-education-skills-passport/sdk) | `SkillsPassportClient`, encoding, optional OpenZeppelin Channels submitter |
+| **Receipts** | `services/receipt-cli` | — | Export and offline-verify round receipts (no RPC, no secrets) |
+| **Keeper** | `services/keeper` | — | Permissionless reveal/clear/settle + watch mode + status HTTP API |
+| **Appraisal** | `services/appraisal-api` | — | x402-gated deterministic valuation (USDC SAC) |
+| **Agent** | `services/agent` | — | Mandate + cap-checked sealed-bid agents |
+| **Template** | `services/auction-template` | — | Sealed-auction integration template (SDK + keeper + tlock end-to-end) |
+| **Drand harness** | `services/drand-tools` | — | Risk-2 harness: validate tlock <-> Drand <-> on-chain BLS and generate Soroban constants |
+| **UI** | `apps/web` | — | Jury demo — embedded trace, observer, attack labs |
+| **Example** | `examples/grant-scoring` | — | Sealed grant scoring pilot template (projects, judges, ranked receipt) |
+| **Docs** | `docs/`, `ARCHITECTURE.md` | — | Design, threat model, integration, deploy, limitations |
 
 ## Install
 
-```bash
-npm install \
-  @decentralized-global-education-skills-passport/sdk \
-  @decentralized-global-education-skills-passport/tlock
-```
+Three packages are published to npm:
+
+| Package | Install | Pulls in |
+| --- | --- | --- |
+| [`@decentralized-global-education-skills-passport/sdk`](packages/sdk) | `npm install @decentralized-global-education-skills-passport/sdk` | ✅ tlock · ✅ round-bindings |
+| [`@decentralized-global-education-skills-passport/tlock`](packages/tlock) | `npm install @decentralized-global-education-skills-passport/tlock` | — |
+| [`@decentralized-global-education-skills-passport/round-bindings`](packages/round-bindings) | `npm install @decentralized-global-education-skills-passport/round-bindings` | — |
+
+**In most cases, just install the SDK** — it declares `tlock` and `round-bindings` as
+dependencies and installs them automatically. Install `tlock` separately only if
+you need direct access to the seal/unseal APIs without the client.
 
 ```ts
 import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
@@ -192,12 +198,10 @@ project's positioning, roadmap, or commercial wedge.
 
 | Doc | Purpose |
 | --- | --- |
-| [`docs/historical/SCF_PLAN.md`](./docs/historical/SCF_PLAN.md) | SCF #44 Build framing, tranches, deliverables, ecosystem value (historical submission doc) |
-| [`docs/historical/SCF_TRANCHE_PLAN.md`](./docs/historical/SCF_TRANCHE_PLAN.md) | SCF tranche plan with verification artifacts and acceptance criteria (historical submission doc) |
-| [`docs/historical/TRACK_ANSWERS.md`](./docs/historical/TRACK_ANSWERS.md) | Build On Stellar track mapping and proof pointers (historical submission doc) |
-| [`docs/historical/CV_LABS_APPLICATION.md`](./docs/historical/CV_LABS_APPLICATION.md) | Stellar × CV Labs Accelerator application draft (historical submission doc) |
-
-See [`docs/historical/README.md`](./docs/historical/README.md) for the on-folder index and pointers to the current source-of-truth docs.
+| [docs/historical/SCF_PLAN.md](./docs/historical/SCF_PLAN.md) | SCF #44 Build framing, tranches, deliverables, ecosystem value |
+| [docs/historical/SCF_TRANCHE_PLAN.md](./docs/historical/SCF_TRANCHE_PLAN.md) | SCF tranche plan with verification artifacts and acceptance criteria |
+| [docs/historical/TRACK_ANSWERS.md](./docs/historical/TRACK_ANSWERS.md) | Build On Stellar track mapping and proof pointers |
+| [docs/historical/CV_LABS_APPLICATION.md](./docs/historical/CV_LABS_APPLICATION.md) | Stellar x CV Labs Accelerator application draft |
 
 ## Status
 

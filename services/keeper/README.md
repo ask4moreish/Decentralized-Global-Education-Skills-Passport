@@ -1,6 +1,18 @@
-# Keeper Service
+<p align="center">
+  <img src="https://raw.githubusercontent.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/main/assets/decentralized-global-education-skills-passport-readme.png" width="180" alt="Decentralized Global Education & Skills Passport" />
+</p>
 
-The Decentralized Global Education & Skills Passport keeper service is a permissionless TypeScript node application that can run single-shot lifecycle operations or run in watch mode to automatically monitor and drive in-flight rounds to completion. A built-in status HTTP API exposes keeper-observed round state for pilots and dashboards.
+<h1 align="center">
+  <code>@decentralized-global-education-skills-passport/keeper</code>
+</h1>
+
+<p align="center">
+  <a href="../../LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license" />
+  </a>
+</p>
+
+**Permissionless keeper service.** A permissionless TypeScript node application that can run single-shot lifecycle operations or run in watch mode to automatically monitor and drive in-flight rounds to completion. A built-in status HTTP API exposes keeper-observed round state for pilots and dashboards.
 
 ## Quick start
 
@@ -112,8 +124,6 @@ Response shape (typed in `@decentralized-global-education-skills-passport/sdk` a
 5. **The status API does not require `KEEPER_SECRET`.** It only reads on-chain state. If you run the keeper in a separate process from the status API, give the status process a read-only `SkillsPassportClient` (no `secretKey`).
 6. **Failure states are visible, not hidden.** A round whose on-chain lookup fails is surfaced with `status: "Unknown"` or `status: "NotFound"` and the `lastError` field populated. The process does not crash on upstream errors.
 7. **Secrets in responses: none.** The status API never emits secret keys, signed transactions, or bidder private data. Bidder *addresses* (public on-chain identifiers) are included so dashboards can show bidder counts.
-
-## Persisted Queue / Store
 
 ## Persisted Queue / Store
 
