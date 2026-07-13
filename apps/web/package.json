@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --import tsx --test src/demo/trace-health-check.test.ts src/lib/config.test.ts src/dashboard/fixture-health-check.test.ts src/lib/round-status.test.ts src/verify/buildJsonOutput.test.ts",
+    "test": "node --import tsx --test src/demo/trace-health-check.test.ts src/lib/config.test.ts src/dashboard/fixture-health-check.test.ts src/lib/round-status.test.ts src/verify/buildJsonOutput.test.ts src/verify/buildExportBundle.test.ts src/verify/permalink.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
