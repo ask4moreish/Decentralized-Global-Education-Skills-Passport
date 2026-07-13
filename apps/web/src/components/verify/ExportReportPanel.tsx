@@ -1,9 +1,12 @@
 import { useMemo, useState } from "react";
+import { redactReceipt } from "@decentralized-global-education-skills-passport/sdk";
 import { useToast } from "../../ui/Toast";
 import { buildJsonOutput, type JsonVerifyOutput } from "../../verify/buildJsonOutput";
 import type { UseVerificationResult } from "../../hooks/useVerification";
 import type { RoundReceipt } from "@decentralized-global-education-skills-passport/sdk";
 import { buildPermalinkUrl, byteLengthUtf8 } from "../../verify/permalink";
+import { buildExportBundle } from "../../verify/buildExportBundle";
+import { serializeReceipt } from "@decentralized-global-education-skills-passport/sdk";
 
 export interface ExportReportPanelProps {
   receipt: RoundReceipt | null;
@@ -18,6 +21,28 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
   const [copyState, setCopyState] = useState<CopyState>("idle");
   const [permalink, setPermalink] = useState<string | null>(null);
   const [permalinkSize, setPermalinkSize] = useState<number>(0);
+  const [sanitise, setSanitise] = useState<boolean>(false);
+
+  // Sanitised receipts come from the SDK's redactReceipt helper. We default to
+  // its default keep-list (operator/winner/bidder addresses and audit blobs
+  // become <redacted> placeholders) — the verification card stays based on
+  // the unmodified receipt because redacted fields cannot be re-verified.
+  const exportedReceipt = useMemo<RoundReceipt | null>(() => {
+    if (!receipt) return null;
+    if (!sanitise) return receipt;
+    try {
+      return redactReceipt(receipt);
+    } catch (e) {
+      // Fallback: if redaction fails for any reason, export the full receipt
+      // and notify the user so we never silently ship raw PII in this code path.
+      toast.push(
+        "error",
+        "Redaction failed",
+        e instanceof Error ? e.message : String(e),
+      );
+      return receipt;
+    }
+  }, [receipt, sanitise, toast]);
 
   const report = useMemo<JsonVerifyOutput | null>(() => {
     if (!receipt) return null;
@@ -35,21 +60,35 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
     };
   }, [receipt, verification.result, verification.fingerprint]);
 
+  const exportedPayload = useMemo<{ json: string; bytes: number } | null>(() => {
+    if (!exportedReceipt) return null;
+    const json = `${serializeReceipt(exportedReceipt)}\n`;
+    return { json, bytes: byteLengthUtf8(json) };
+  }, [exportedReceipt]);
+
   const reportJson = useMemo(() => {
     if (!report) return null;
     return `${JSON.stringify(report, null, 2)}\n`;
   }, [report]);
 
   async function handleCopy() {
-    if (!reportJson) return;
+    if (!exportedPayload || !reportJson) return;
     setCopyState("copying");
+    // Bundle: bundled.json (canonical, possibly redacted receipt)
+    //                     + report.json (verification metadata, NOT redacted).
+    // The bundle shape (indent + trailing newline + `{receipt, report}` keys) is
+    // owned by buildExportBundle() so the panel stays declarative and the test
+    // suite can lock the format independently.
+    const bundledJson = buildExportBundle(
+      exportedPayload.json.trim(),
+      JSON.parse(reportJson),
+    );
     try {
       if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(reportJson);
+        await navigator.clipboard.writeText(bundledJson);
       } else {
-        // Fallback for browsers / webviews without async clipboard.
         const ta = document.createElement("textarea");
-        ta.value = reportJson;
+        ta.value = bundledJson;
         ta.style.position = "fixed";
         ta.style.opacity = "0";
         document.body.appendChild(ta);
@@ -59,7 +98,13 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
         document.body.removeChild(ta);
       }
       setCopyState("copied");
-      toast.push("success", "Report copied", "Paste it anywhere — the JSON is canonical.");
+      toast.push(
+        "success",
+        sanitise ? "Sanitised bundle copied" : "Bundle copied",
+        sanitise
+          ? "Receipt addresses are redacted; verification metadata is unmodified."
+          : "Paste it anywhere — the bundle is canonical.",
+      );
       window.setTimeout(() => setCopyState("idle"), 1800);
     } catch (e) {
       setCopyState("idle");
@@ -68,12 +113,13 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
   }
 
   function handleDownload() {
-    if (!receipt || !report || !reportJson) return;
-    const blob = new Blob([reportJson], { type: "application/json" });
+    if (!exportedPayload || !receipt || !report) return;
+    const payloadName = sanitise ? "redacted.json" : "receipt.json";
+    const blob = new Blob([exportedPayload.json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `round-${receipt.roundId}-verify-${report.checkedAt.slice(0, 10)}.json`;
+    a.download = `round-${receipt.roundId}-${payloadName}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -82,10 +128,10 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
 
   async function handlePermalink() {
     if (!receipt) return;
-    const raw = JSON.stringify(receipt, null, 2);
-    const size = byteLengthUtf8(raw);
-    setPermalinkSize(size);
-    const url = buildPermalinkUrl(raw);
+    const source = sanitise && exportedReceipt ? exportedReceipt : receipt;
+    const raw = JSON.stringify(source, null, 2);
+    setPermalinkSize(byteLengthUtf8(raw));
+    const { url, oversized } = buildPermalinkUrl(raw);
     setPermalink(url);
     try {
       if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -93,10 +139,10 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
       }
       toast.push(
         "success",
-        "Permalink copied",
-        size > 4 * 1024
-          ? `${size} bytes — may be too long for some shared link strips. Consider downloading instead.`
-          : `${size} bytes — paste this URL to share the receipt with anyone.`,
+        sanitise ? "Sanitised permalink copied" : "Permalink copied",
+        oversized
+          ? `${raw.length} bytes — may be too long for some shared link strips. Consider downloading instead.`
+          : `${raw.length} bytes — paste this URL to share ${sanitise ? "the redacted receipt" : "the receipt"} with anyone.`,
       );
     } catch {
       toast.push("info", "Permalink ready", "Copy it from the link below.");
@@ -137,6 +183,15 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
               Receipt id:&nbsp;<code>{report.receiptId.slice(0, 16)}…</code>
             </span>
           ) : null}
+          <span
+            className={`export-pill ${sanitise ? "active" : ""}`}
+            title="Sanitised view replaces operator/winner/bidder addresses and audit blobs with <redacted> placeholders; verification metadata stays based on the unmodified receipt."
+          >
+            <span className="export-pill-dot" aria-hidden="true" />
+            {sanitise
+              ? "Exporting sanitised view"
+              : "Exporting full view (toggle for sanitised)"}
+          </span>
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
@@ -144,25 +199,31 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
             type="button"
             className="primary-action"
             onClick={handleCopy}
-            disabled={!reportJson}
+            disabled={!exportedPayload || !reportJson}
           >
             {copyState === "copying" ? <span className="spinner" aria-hidden="true" /> : null}
-            {copyState === "copied" ? "Copied ✓" : "Copy JSON report"}
+            {copyState === "copied"
+              ? sanitise
+                ? "Sanitised bundle copied ✓"
+                : "Bundle copied ✓"
+              : sanitise
+                ? "Copy sanitised bundle"
+                : "Copy full bundle"}
           </button>
           <button
             type="button"
             className="secondary-action"
             onClick={handleDownload}
-            disabled={!reportJson}
+            disabled={!exportedPayload}
           >
-            Download .json
+            {sanitise ? "Download redacted.json" : "Download receipt.json"}
           </button>
           <button
             type="button"
             className="secondary-action"
             onClick={handlePermalink}
           >
-            Copy shareable permalink
+            {sanitise ? "Copy sanitised permalink" : "Copy full permalink"}
           </button>
           <button
             type="button"
@@ -180,10 +241,27 @@ export function ExportReportPanel({ receipt, verification }: ExportReportPanelPr
           </button>
         </div>
 
+        <label className="export-toggle">
+          <input
+            type="checkbox"
+            checked={sanitise}
+            onChange={(e) => setSanitise(e.target.checked)}
+            aria-label="Sanitise on export — replace operator/winner/bidder addresses and audit blobs with placeholder text"
+          />
+          <span>
+            <strong>Sanitise on export</strong>
+            <small>
+              Switches copy / download / permalink to the redacted JSON produced by
+              {" "}<code>redactReceipt()</code>. Verification stays based on the
+              unmodified receipt.
+            </small>
+          </span>
+        </label>
+
         {permalink ? (
           <div className="export-permalink">
             <span className="export-permalink-ok">
-              ✓ Permalink ready ({permalinkSize} bytes)
+              ✓ Permalink ready ({permalinkSize} bytes{sanitise ? " · sanitised" : ""})
             </span>
             <pre className="field-kv" style={{ wordBreak: "break-all" }}>
               {permalink}

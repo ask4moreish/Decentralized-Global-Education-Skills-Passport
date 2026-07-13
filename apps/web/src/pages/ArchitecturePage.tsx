@@ -16,7 +16,17 @@ export function ArchitecturePage({ goHome }: { goHome: () => void }) {
         </div>
       </nav>
 
-      <article className="architecture-doc" aria-label="Decentralized Global Education & Skills Passport architecture">
+      <section className="architecture-intro" aria-label="Primitive overview">
+        <span className="architecture-eyebrow">Soroban sealed commit–reveal architecture</span>
+        <h1>The primitive, end-to-end.</h1>
+        <p>
+          One Soroban contract, one Drand reveal round, one tlock-encrypted value.
+          <br />
+          The document below names the contracts, the message flow, the on-chain state machine,
+          and the verifier receipt — the same surface regardless of which vertical you map onto it.
+        </p>
+      </section>
+      <article className="architecture-doc" aria-label="ARCHITECTE.md content">
         <pre>{architectureMd}</pre>
       </article>
     </main>
