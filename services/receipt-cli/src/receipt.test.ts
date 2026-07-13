@@ -251,3 +251,22 @@ test("CLI: --verify-artifact-checksum with missing artifact file fails", () => {
     try { unlinkSync(receiptPath); } catch {}
   }
 });
+
+test("tampered version: unsupported version number fails", () => {
+  const receipt = loadFixture("tampered-version.json");
+  const result = verifyReceipt(receipt);
+  assert.equal(result.valid, false);
+  const versionIssues = result.issues.filter((i) => i.code === "unsupported_version");
+  assert.equal(versionIssues.length, 1);
+  assert.match(versionIssues[0].message, /version 99 is not supported/);
+});
+
+test("CLI: tampered-version fixture fails with non-zero exit", () => {
+  const receiptPath = resolve(DIR, "fixtures", "tampered-version.json");
+  assert.throws(() => {
+    execSync(`node --import tsx ${resolve(DIR, "index.ts")} verify ${receiptPath}`, { stdio: "pipe" });
+  }, (err: any) => {
+    assert.equal(err.status, 1);
+    return true;
+  });
+});
