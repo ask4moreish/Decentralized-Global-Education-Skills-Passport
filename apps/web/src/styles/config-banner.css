@@ -1,0 +1,105 @@
+/* Config banner — alert bar for public config issues.
+ *
+ * Lives above the page content (rendered inside Suspense, between nav and
+ * the page shell). Matches the app's dark theme with a subtle left-border
+ * accent and alert-toned icon. */
+.config-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(100%, 1480px);
+  margin: 0 auto 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--line-1);
+  border-left: 3px solid var(--alert);
+  border-radius: var(--radius-sm);
+  background: var(--surface-0);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  transition: opacity 220ms var(--ease);
+}
+
+.config-banner-body {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  min-width: 0;
+  flex: 1;
+}
+
+.config-banner-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(217, 122, 115, 0.12);
+  color: var(--alert);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.config-banner-content {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.config-banner-content strong {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.config-banner-content ul {
+  margin: 0;
+  padding: 0 0 0 18px;
+  list-style: disc;
+  display: grid;
+  gap: 3px;
+}
+
+.config-banner-content li {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.config-banner-content li::marker {
+  color: var(--alert);
+}
+
+.config-banner-dismiss {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  color: var(--faint);
+  font-size: 1.15rem;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    color 160ms var(--ease),
+    background 160ms var(--ease),
+    border-color 160ms var(--ease);
+}
+
+.config-banner-dismiss:hover {
+  color: var(--ink);
+  background: var(--surface-1);
+  border-color: var(--line-1);
+}
+
+.config-banner-dismiss:active {
+  transform: scale(0.92);
+}

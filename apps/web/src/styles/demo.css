@@ -21,6 +21,7 @@
 @import "./collapsible.css";
 @import "./network-status.css";
 @import "./app-bar.css";
+@import "./config-banner.css";
 
 /* Route-level code-split loading skeletons */
 .page-skeleton {
