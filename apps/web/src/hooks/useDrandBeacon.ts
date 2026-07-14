@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { quicknet, fetchRoundBeacon } from "@decentralized-global-education-skills-passport/tlock";
+import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
 import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
 
 export interface DrandChainInfo {
@@ -62,7 +63,7 @@ export function useDrandBeacon(): DrandBeaconState {
 
   const [refreshIntervalSec] = useLocalStorage<number>(
     "refresh-interval",
-    30,
+    DEFAULT_REFRESH_INTERVAL_SEC,
     () => migrateAutoRefresh(),
   );
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Round, BidState } from "@decentralized-global-education-skills-passport/sdk";
+import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
 import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
 
 const RPC = import.meta.env.VITE_RPC_URL ?? "https://soroban-testnet.stellar.org";
@@ -16,9 +17,6 @@ export interface LiveSnapshot {
   bidStates: Record<string, BidState>;
   polledAt: number;
 }
-
-/** Default refresh interval in seconds when no preference is stored. */
-const DEFAULT_REFRESH_INTERVAL_SEC = 30;
 
 export function useLiveRound(enabled: boolean, pollMs?: number) {
   const [live, setLive] = useState<LiveSnapshot | null>(null);

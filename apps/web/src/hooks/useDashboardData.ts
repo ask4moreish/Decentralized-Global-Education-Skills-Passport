@@ -2,12 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import type { DashboardData } from "../dashboard/types";
 import { DASHBOARD_FIXTURE } from "../dashboard/fixture";
 import { assertDashboardData } from "../dashboard/fixture-health-check";
+import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
 import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
 
 const STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
-
-/** Default refresh interval in seconds when no preference is stored. */
-const DEFAULT_REFRESH_INTERVAL_SEC = 30;
 
 export interface UseDashboardDataResult {
   data: DashboardData | null;
