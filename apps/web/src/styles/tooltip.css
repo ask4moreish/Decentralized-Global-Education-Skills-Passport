@@ -1,0 +1,64 @@
+/* Tooltip wrapper and content */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+  cursor: help;
+}
+
+.tooltip-content {
+  position: absolute;
+  z-index: 9000;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--surface-3);
+  border: 1px solid var(--line-1);
+  box-shadow: var(--shadow-md);
+  white-space: normal;
+  word-break: break-all;
+  pointer-events: none;
+  animation: tooltip-in 150ms var(--ease) both;
+}
+
+@keyframes tooltip-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Position: top (default) */
+.tooltip-top {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  animation-name: tooltip-in-top;
+}
+
+@keyframes tooltip-in-top {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Position: bottom */
+.tooltip-bottom {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Position: left */
+.tooltip-left {
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Position: right */
+.tooltip-right {
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}

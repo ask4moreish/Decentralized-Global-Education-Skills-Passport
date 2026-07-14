@@ -1,0 +1,70 @@
+/* Copy button — stand-alone button with label */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-xs);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line-1);
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease);
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--surface-1);
+}
+
+.copy-btn:active {
+  transform: scale(0.97);
+}
+
+.copy-btn.copied {
+  color: var(--green);
+  border-color: rgba(91, 108, 255, 0.4);
+  background: rgba(91, 108, 255, 0.06);
+}
+
+.copy-btn.error {
+  color: var(--alert);
+  border-color: rgba(217, 122, 115, 0.3);
+}
+
+/* Inline copy button — icon-only, for addresses & hashes */
+.inline-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  color: var(--faint);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: color 140ms var(--ease), background 140ms var(--ease), border-color 140ms var(--ease);
+  flex-shrink: 0;
+}
+
+.inline-copy-btn:hover {
+  color: var(--muted);
+  background: var(--surface-2);
+  border-color: var(--line-1);
+}
+
+.inline-copy-btn:active {
+  transform: scale(0.92);
+}
+
+.inline-copy-btn.copied {
+  color: var(--green);
+  border-color: rgba(91, 108, 255, 0.35);
+  background: rgba(91, 108, 255, 0.08);
+}
