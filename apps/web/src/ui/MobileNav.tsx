@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import type { RouteState } from "../config/routing";
 import type { UseCaseId } from "../config/useCases";
 
@@ -12,53 +13,15 @@ export function MobileNav({ route, onNavigate }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  useFocusTrap(menuRef, {
+    active: open,
+    onEscape: () => setOpen(false),
+  });
+
   // Close on route change
   useEffect(() => {
     setOpen(false);
   }, [route]);
-
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  // Trap focus
-  useEffect(() => {
-    if (!open || !menuRef.current) return;
-    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    function trap(e: KeyboardEvent) {
-      if (e.key !== "Tab") return;
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
-    }
-
-    document.addEventListener("keydown", trap);
-    first?.focus();
-    return () => document.removeEventListener("keydown", trap);
-  }, [open]);
 
   const isDemo = route.page === "demo" || route.page === "architecture";
 
