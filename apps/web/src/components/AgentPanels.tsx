@@ -16,9 +16,9 @@ export function AgentActivity({ trace }: { trace: DemoTrace }) {
             <h3>{a.name}</h3>
             <dl className="kv">
               <dt>Principal</dt>
-              <dd><code>{shortAddr(a.principal, 8)}</code></dd>
+              <dd><Tooltip content={a.principal}><code>{shortAddr(a.principal, 8)}</code></Tooltip></dd>
               <dt>Session key (signer)</dt>
-              <dd><code>{shortAddr(a.sessionKey, 8)}</code></dd>
+              <dd><Tooltip content={a.sessionKey}><code>{shortAddr(a.sessionKey, 8)}</code></Tooltip></dd>
               <dt>Mandate max bid</dt>
               <dd>{usdc(a.mandate.maxBidUsdc)} USDC</dd>
               <dt>Appraisal fair value</dt>
@@ -66,9 +66,11 @@ export function X402Logs({ trace }: { trace: DemoTrace }) {
                 <td className="nowrap">{usdc(a.x402.priceUsdc)} USDC</td>
                 <td className="nowrap">{a.x402.settled ? "✓ on-chain" : "—"}</td>
                 <td className="col-hash">
-                  <code className="tiny" title={a.appraisal.inputsHash}>
-                    {shortHash(a.appraisal.inputsHash)}
-                  </code>
+                  <Tooltip content={a.appraisal.inputsHash}>
+                    <code className="tiny">
+                      {shortHash(a.appraisal.inputsHash)}
+                    </code>
+                  </Tooltip>
                 </td>
               </tr>
             ))}            </tbody>
