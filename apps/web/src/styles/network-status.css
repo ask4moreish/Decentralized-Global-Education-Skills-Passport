@@ -1,0 +1,69 @@
+/* Network status indicator */
+.network-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  background: var(--surface-1);
+  border: 1px solid var(--line-1);
+  white-space: nowrap;
+}
+
+.network-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  font-size: 0;
+  line-height: 0;
+}
+
+.network-status-dot.connected {
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(91, 108, 255, 0.15);
+  animation: pulse-dot 2.4s var(--ease-in-out) infinite;
+}
+
+.network-status-dot.slow {
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(255, 211, 106, 0.15);
+}
+
+.network-status-dot.disconnected {
+  background: var(--alert);
+  box-shadow: 0 0 0 3px rgba(217, 122, 115, 0.15);
+}
+
+.network-status-dot.checking {
+  background: var(--faint);
+  animation: pulse 0.8s ease infinite;
+}
+
+.network-status-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.network-status-close {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  color: var(--faint);
+  font-size: 0.85rem;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 160ms var(--ease);
+}
+
+.network-status-close:hover {
+  opacity: 1;
+}

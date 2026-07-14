@@ -1,0 +1,90 @@
+/* Global mobile nav bar — visible on small screens */
+.mobile-nav-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-1);
+    background: var(--bg-1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .mobile-nav-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-nav-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+/* Settings button (gear icon) */
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-xs);
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line-1);
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease);
+}
+
+.settings-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--surface-1);
+}
+
+.settings-btn:active {
+  transform: scale(0.95);
+}
+
+/* Shortcuts help button (keyboard icon) */
+.shortcuts-help-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-xs);
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line-1);
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease);
+}
+
+.shortcuts-help-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--surface-1);
+}
+
+.shortcuts-help-btn:active {
+  transform: scale(0.95);
+}
+
+/* Hide the desktop navigation on mobile */
+@media (max-width: 768px) {
+  .landing-nav-actions .theme-toggle,
+  .landing-nav-actions .settings-btn,
+  .landing-nav-actions .shortcuts-help-btn {
+    display: none;
+  }
+}
