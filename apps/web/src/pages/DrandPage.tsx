@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { InlineCopyButton } from "../ui/CopyButton";
+
 import { LOGO_SRC } from "../lib/chain";
 import { shortHash } from "../lib/format";
 import {

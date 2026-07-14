@@ -116,14 +116,14 @@ export default function App() {
         scope: "global",
       },
     ],
-    [shortcuts, navigate, route.useCase],
+    [navigate, route.useCase],
   );
 
-  // Dummy register to ensure shortcuts hook stays active
+  // Register global shortcuts — stable across renders
   useEffect(() => {
     const unsubs = globalShortcuts.map((s) => shortcuts.register(s));
     return () => unsubs.forEach((u) => u());
-  }, [globalShortcuts, shortcuts]);
+  }, [globalShortcuts]);
 
   // Determine current page scope for keyboard shortcut modal highlighting
   const currentScope = useMemo(() => {
