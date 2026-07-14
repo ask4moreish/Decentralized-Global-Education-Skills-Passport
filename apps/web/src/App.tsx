@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getUseCase } from "./config/useCases";
 import type { UseCaseId } from "./config/useCases";
 import { hashFor, routeFromHash, type RouteState } from "./config/routing";
