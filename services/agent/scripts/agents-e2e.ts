@@ -31,6 +31,7 @@ import { buildAppraisalServer } from "../../appraisal-api/src/server.js";
 
 import {
   createSessionMandate,
+  DEFAULT_BASE_PRICE_USDC,
   runBidderAgent,
   stroopsToUsdc,
   usdcToStroops,
@@ -259,7 +260,7 @@ async function main() {
       contractId,
       roundId,
       itemRef: itemRefStr,
-      basePriceUsdc: 500,
+      basePriceUsdc: DEFAULT_BASE_PRICE_USDC,
       category: "spectrum" as const,
       maxBidStroops: usdcToStroops(700),
       maxEscrowStroops: usdcToStroops(700),

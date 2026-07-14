@@ -32,6 +32,8 @@ const reqEnv = (n: string): string => {
   if (!v) throw new Error(`missing required env var ${n}`);
   return v;
 };
+const BASE_PRICE = 500;
+
 const fail = (m: string): never => {
   throw new Error(`x402 e2e assertion failed: ${m}`);
 };
@@ -84,7 +86,7 @@ async function main() {
   try {
     const item = {
       itemRef: "skills-passport://rfp/spectrum-block-7",
-      basePrice: 500,
+      basePrice: BASE_PRICE,
       category: "spectrum",
       attributes: { quality: 82, demand: 74, scarcity: 91, risk: 18 },
     };

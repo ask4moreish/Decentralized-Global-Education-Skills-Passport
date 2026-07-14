@@ -46,11 +46,14 @@ const TONE_ICON: Record<ToastTone, ReactNode> = {
   error: "!",
 };
 
+const TOAST_DEFAULT_DURATION_MS = 5_000;
+const TOAST_ERROR_DURATION_MS = 8_000;
+
 const TONE_DURATION: Record<ToastTone, number> = {
-  info: 5000,
+  info: TOAST_DEFAULT_DURATION_MS,
   working: 0,
-  success: 5000,
-  error: 8000,
+  success: TOAST_DEFAULT_DURATION_MS,
+  error: TOAST_ERROR_DURATION_MS,
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {

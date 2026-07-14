@@ -12,6 +12,7 @@ import {
   assertBidWithinMandate,
   bidFromAppraisal,
   createSessionMandate,
+  DEFAULT_BASE_PRICE_USDC,
   MandateCapError,
   usdcToStroops,
 } from "./mandate.js";
@@ -21,7 +22,7 @@ const base = () => ({
   contractId: "CDEMOCONTRACT",
   roundId: 1,
   itemRef: "demo-item",
-  basePriceUsdc: 500,
+  basePriceUsdc: DEFAULT_BASE_PRICE_USDC,
   maxBidStroops: usdcToStroops(100),
   maxEscrowStroops: usdcToStroops(100),
   maxAppraisalSpendStroops: usdcToStroops(0.5),

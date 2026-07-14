@@ -1,4 +1,5 @@
 export {
+  DEFAULT_BASE_PRICE_USDC,
   MANDATE_VERSION,
   createSessionMandate,
   verifySessionMandate,

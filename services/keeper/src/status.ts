@@ -1,6 +1,7 @@
 import type { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
 import { fetchRoundSignature, type DrandClient } from "@decentralized-global-education-skills-passport/tlock";
 
+import { VOID_GRACE_SECONDS } from "./keeper.js";
 import { decideKeeperDryRunAction, type KeeperDryRunPhase } from "./dry-run.js";
 import type { WatchedRound } from "./store.js";
 
@@ -77,8 +78,6 @@ export interface BuildStatusSource {
   nowSeconds?: number;
   settleIndicator?: (roundId: bigint) => SettlementIndicator;
 }
-
-const VOID_GRACE_SECONDS = 3600;
 
 async function countRevealed(
   reader: StatusReader,

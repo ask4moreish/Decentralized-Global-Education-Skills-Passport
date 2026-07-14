@@ -13,6 +13,9 @@ import { Keypair } from "@stellar/stellar-sdk";
 
 export const MANDATE_VERSION = 1;
 
+/** Default base price in USDC used in mandate creation across demos and tests. */
+export const DEFAULT_BASE_PRICE_USDC = 500;
+
 export interface SessionMandatePayload {
   version: typeof MANDATE_VERSION;
   /** Master account (G…) that signed this mandate. */

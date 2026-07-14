@@ -3,14 +3,14 @@ import { test } from "node:test";
 
 import { Keypair } from "@stellar/stellar-sdk";
 
-import { bidFromAppraisal, createSessionMandate, usdcToStroops } from "./mandate.js";
+import { bidFromAppraisal, createSessionMandate, DEFAULT_BASE_PRICE_USDC, usdcToStroops } from "./mandate.js";
 
 test("two agents with different appraisal inputs produce different bid sizes under same cap", () => {
   const common = {
     contractId: "CCONTRACT123456789012345678901234567890123456789012345678901234",
     roundId: 7n,
     itemRef: "skills-passport://rfp/x",
-    basePriceUsdc: 500,
+    basePriceUsdc: DEFAULT_BASE_PRICE_USDC,
     category: "spectrum" as const,
     maxBidStroops: usdcToStroops(200),
     maxEscrowStroops: usdcToStroops(200),
