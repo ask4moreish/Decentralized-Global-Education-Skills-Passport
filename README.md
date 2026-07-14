@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions?query=branch%3Amain"><img src="https://img.shields.io/github/checks-status/ask4moreish/Decentralized-Global-Education-Skills-Passport/main?label=CI" alt="CI status" /></a>
+</p>
+
+<p align="center">
   <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/bindings-check.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/bindings-check.yml/badge.svg" alt="Bindings check" /></a>
   <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/examples-typecheck.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/examples-typecheck.yml/badge.svg" alt="Examples typecheck" /></a>
   <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/fixture-drift.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/fixture-drift.yml/badge.svg" alt="Fixture drift guard" /></a>
