@@ -54,7 +54,7 @@
     "template:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/auction-template typecheck",
     "web:dev": "pnpm --filter @decentralized-global-education-skills-passport/web dev",
     "web:build": "pnpm --filter @decentralized-global-education-skills-passport/web build",
-    "web:test": "pnpm --filter @decentralized-global-education-skills-passport/web test",
+    "web:test": "pnpm css:check-tokens && pnpm --filter @decentralized-global-education-skills-passport/web test",
     "web:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/web typecheck",
     "grant-scoring:test": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot test",
     "grant-scoring:typecheck": "pnpm --filter @decentralized-global-education-skills-passport/grant-scoring-pilot typecheck",
