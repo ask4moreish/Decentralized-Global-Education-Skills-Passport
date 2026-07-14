@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check CSS tokens & class names
+        run: node scripts/check-css-tokens.mjs
+
       - name: Build web app
         run: pnpm web:build
 
