@@ -1737,6 +1737,15 @@
   line-height: 1.5;
 }
 
+/* Outcome variant containers — grid wrappers for the inner layouts */
+.outcome-tally,
+.outcome-leaderboard,
+.outcome-highest,
+.outcome-distribution {
+  display: grid;
+  gap: 16px;
+}
+
 /* Tally bars */
 .tally-bars {
   display: grid;

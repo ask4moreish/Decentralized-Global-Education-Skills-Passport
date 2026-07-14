@@ -1,0 +1,135 @@
+/* Round-status badge — compact inline status indicator */
+.round-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--line-1);
+  border-radius: 999px;
+  background: var(--surface-1);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  transition:
+    border-color 200ms var(--ease),
+    background 200ms var(--ease);
+}
+
+.round-status-badge.loading {
+  border-color: var(--line-2);
+  color: var(--muted);
+}
+
+.round-status-badge.empty {
+  border-color: var(--line-2);
+  color: var(--faint);
+}
+
+.round-status-badge.error {
+  border-color: rgba(217, 122, 115, 0.4);
+  background: rgba(217, 122, 115, 0.06);
+  color: var(--alert);
+}
+
+.round-status-badge.stale {
+  border-color: rgba(255, 224, 138, 0.28);
+  background: rgba(255, 224, 138, 0.05);
+  color: var(--cream);
+}
+
+.round-status-badge.found {
+  border-color: rgba(91, 108, 255, 0.4);
+  background: rgba(91, 108, 255, 0.06);
+  color: var(--green);
+}
+
+/* Spinner — shown during loading */
+.round-status-spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--line-2);
+  border-top-color: var(--muted);
+  border-radius: 50%;
+  animation: rs-spin 0.6s linear infinite;
+}
+
+/* Icon — shown for error (!) and stale (~) */
+.round-status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.round-status-badge.error .round-status-icon {
+  background: rgba(217, 122, 115, 0.2);
+  color: var(--alert);
+}
+
+.round-status-badge.stale .round-status-icon {
+  background: rgba(255, 224, 138, 0.15);
+  color: var(--cream);
+}
+
+/* Label — state name */
+.round-status-label {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Tag — optional metadata chip */
+.round-status-tag {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+/* Error message — shown inline when present */
+.round-status-err {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+/* Retry / Refresh button */
+.round-status-retry {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid var(--line-1);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s var(--ease),
+    background 0.15s var(--ease),
+    color 0.15s var(--ease);
+}
+
+.round-status-retry:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-1);
+  color: var(--ink);
+}
+
+@keyframes rs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

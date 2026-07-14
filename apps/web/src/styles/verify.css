@@ -658,3 +658,85 @@
   font-family: var(--mono);
   font-size: 0.78rem;
 }
+
+/* —— app-frame —— */
+.app-frame {
+  width: min(100%, 1480px);
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+}
+
+/* —— receipt-input wrap + label —— */
+.receipt-input-textarea-wrap {
+  display: grid;
+  gap: 8px;
+}
+
+.receipt-input-textarea-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* —— export pill dot —— */
+.export-pill-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--faint);
+  vertical-align: middle;
+}
+
+.export-pill.active .export-pill-dot {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green-glow);
+}
+
+/* —— export toggle —— */
+.export-toggle {
+  flex: 1 1 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease), background 0.18s var(--ease);
+}
+
+.export-toggle:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-1);
+}
+
+.export-toggle input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--green);
+  flex-shrink: 0;
+}
+
+.export-toggle strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
+.export-toggle small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.export-toggle small code {
+  color: var(--green);
+}
