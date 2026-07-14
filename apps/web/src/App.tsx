@@ -1,15 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { getUseCase } from "./config/useCases";
 import type { UseCaseId } from "./config/useCases";
 import { hashFor, routeFromHash, type RouteState } from "./config/routing";
-import { ArchitecturePage } from "./pages/ArchitecturePage";
 import { ConfigBanner } from "./components/ConfigBanner";
-import { DashboardPage } from "./pages/DashboardPage";
-import { DemoPage } from "./pages/DemoPage";
-import { DrandPage } from "./pages/DrandPage";
-import { LandingPage } from "./pages/LandingPage";
 import { ToastProvider } from "./ui/Toast";
-import { VerifyPage } from "./pages/VerifyPage";
 import { ErrorBoundary } from "./ui/ErrorBoundary";
 import { SkipToContent } from "./ui/SkipToContent";
 import { ScrollToTop } from "./hooks/useScrollToTop";
@@ -20,6 +14,36 @@ import { NetworkStatus } from "./ui/NetworkStatus";
 import { KeyboardShortcutsModal } from "./ui/KeyboardShortcutsModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import type { Shortcut } from "./hooks/useKeyboardShortcuts";
+
+/* Route-level code splitting — each page loads only when navigated to.
+   React.lazy requires a default export, so we map named exports with .then(). */
+const ArchitecturePage = lazy(() =>
+  import("./pages/ArchitecturePage").then((m) => ({ default: m.ArchitecturePage })),
+);
+const DashboardPage = lazy(() =>
+  import("./pages/DashboardPage").then((m) => ({ default: m.DashboardPage })),
+);
+const DemoPage = lazy(() =>
+  import("./pages/DemoPage").then((m) => ({ default: m.DemoPage })),
+);
+const DrandPage = lazy(() =>
+  import("./pages/DrandPage").then((m) => ({ default: m.DrandPage })),
+);
+const LandingPage = lazy(() =>
+  import("./pages/LandingPage").then((m) => ({ default: m.LandingPage })),
+);
+const VerifyPage = lazy(() =>
+  import("./pages/VerifyPage").then((m) => ({ default: m.VerifyPage })),
+);
+
+function PageFallback() {
+  return (
+    <div className="page-skeleton">
+      <div className="page-skeleton-spinner" aria-hidden="true" />
+      <span>Loading section…</span>
+    </div>
+  );
+}
 
 export default function App() {
   const [route, setRoute] = useState<RouteState>(routeFromHash);
@@ -182,31 +206,34 @@ export default function App() {
           </div>
         </div>
 
-        {route.page === "landing" ? (
-          <LandingPage
-            onDemo={() => navigate("demo", "grants")}
-            onCase={(id) => navigate("demo", id)}
-          />
-        ) : route.page === "dashboard" ? (
-          <DashboardPage goHome={() => navigate("landing")} />
-        ) : route.page === "verify" ? (
-          <VerifyPage goHome={() => navigate("landing")} />
-        ) : route.page === "drand" ? (
-          <DrandPage goHome={() => navigate("landing")} />
-        ) : (
-          <>
-            <ConfigBanner />
-            {route.page === "architecture" ? (
-              <ArchitecturePage goHome={() => navigate("landing")} />
-            ) : (
-              <DemoPage
-                active={active}
-                setActive={(id) => navigate("demo", id)}
-                goHome={() => navigate("landing")}
-              />
-            )}
-          </>
-        )}
+        {/* Single Suspense boundary covers all lazy-loaded pages */}
+        <Suspense fallback={<PageFallback />}>
+          {route.page === "landing" ? (
+            <LandingPage
+              onDemo={() => navigate("demo", "grants")}
+              onCase={(id) => navigate("demo", id)}
+            />
+          ) : route.page === "dashboard" ? (
+            <DashboardPage goHome={() => navigate("landing")} />
+          ) : route.page === "verify" ? (
+            <VerifyPage goHome={() => navigate("landing")} />
+          ) : route.page === "drand" ? (
+            <DrandPage goHome={() => navigate("landing")} />
+          ) : (
+            <>
+              <ConfigBanner />
+              {route.page === "architecture" ? (
+                <ArchitecturePage goHome={() => navigate("landing")} />
+              ) : (
+                <DemoPage
+                  active={active}
+                  setActive={(id) => navigate("demo", id)}
+                  goHome={() => navigate("landing")}
+                />
+              )}
+            </>
+          )}
+        </Suspense>
 
         {/* Global overlay components */}
         <KeyboardShortcutsModal

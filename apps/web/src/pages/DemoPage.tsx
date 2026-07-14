@@ -1,19 +1,26 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AgentActivity, KeeperPanel, X402Logs } from "../components/AgentPanels";
-import { AttackDemo } from "../components/AttackDemo";
-import { AuditorView } from "../components/AuditorView";
 import { CohortPanel } from "../components/CohortPanel";
 import { DrandCountdownChip } from "../components/DrandCountdownChip";
-import { LifecycleView } from "../components/LifecycleView";
-import { MainnetProofCard } from "../components/MainnetProofCard";
-import { MandateCapLab } from "../components/MandateCapLab";
-import { ObserverView } from "../components/ObserverView";
 import { OutcomePanel } from "../components/OutcomePanel";
-import { SettlementRail } from "../components/SettlementRail";
 import type { UseCase, UseCaseId } from "../config/useCases";
 import { USE_CASES } from "../config/useCases";
 import { DEMO_TRACE } from "../demo/trace";
+
+/* EvidencePanel is lazy-loaded — its heavy deps (tlock, stellar-sdk, agent)
+   are only fetched when the user switches to Evidence mode. */
+const EvidencePanel = lazy(() =>
+  import("../components/EvidencePanel").then((m) => ({ default: m.EvidencePanel })),
+);
+
+function EvidencePanelFallback() {
+  return (
+    <div className="evidence-skeleton">
+      <div className="evidence-skeleton-spinner" aria-hidden="true" />
+      <span>Loading evidence panels…</span>
+    </div>
+  );
+}
 import {
   COMMIT_DURATION_PRESETS,
   CONTRACT_ID,
@@ -820,27 +827,6 @@ function ComparisonMini({ useCase, committed }: { useCase: UseCase; committed: b
   );
 }
 
-function EvidencePanel() {
-  return (
-    <div className="evidence-stack">
-      <p className="evidence-intro">
-        Recorded testnet proof from <code>pnpm agents:e2e</code>. Scroll for lifecycle, attack
-        demo, agents, and auditor tools.
-      </p>
-      <MainnetProofCard />
-      <LifecycleView trace={DEMO_TRACE} />
-      <AttackDemo />
-      <SettlementRail trace={DEMO_TRACE} />
-      <AgentActivity trace={DEMO_TRACE} />
-      <X402Logs trace={DEMO_TRACE} />
-      <KeeperPanel trace={DEMO_TRACE} />
-      <ObserverView trace={DEMO_TRACE} live={null} />
-      <AuditorView trace={DEMO_TRACE} />
-      <MandateCapLab />
-    </div>
-  );
-}
-
 export function DemoPage({
   active,
   setActive,
@@ -937,7 +923,9 @@ export function DemoPage({
                 onCelebrate={() => setConfettiTick((t) => t + 1)}
               />
             ) : (
-              <EvidencePanel />
+              <Suspense fallback={<EvidencePanelFallback />}>
+                <EvidencePanel />
+              </Suspense>
             )}
           </motion.section>
         </AnimatePresence>
