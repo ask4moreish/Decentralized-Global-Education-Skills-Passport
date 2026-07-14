@@ -1,0 +1,43 @@
+name: CSS tokens & class names
+
+# Validates that every `var(--token-name)` reference in CSS has a matching
+# definition, that every defined token is referenced, and that every static
+# `className` in TSX/TS files has a matching `.classname` selector in the
+# stylesheet bundle.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/src/styles/**'
+      - 'apps/web/src/**/*.tsx'
+      - 'apps/web/src/**/*.ts'
+      - 'scripts/check-css-tokens.mjs'
+      - '.github/workflows/css-tokens-check.yml'
+  pull_request:
+    paths:
+      - 'apps/web/src/styles/**'
+      - 'apps/web/src/**/*.tsx'
+      - 'apps/web/src/**/*.ts'
+      - 'scripts/check-css-tokens.mjs'
+      - '.github/workflows/css-tokens-check.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No pnpm install needed — the script only uses Node.js built-in
+      # modules (fs, path, url).
+
+      - name: Run CSS token & class-name check
+        run: node scripts/check-css-tokens.mjs
