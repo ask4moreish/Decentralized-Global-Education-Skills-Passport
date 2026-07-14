@@ -2,6 +2,12 @@
   <img src="./assets/decentralized-global-education-skills-passport-readme.png" width="250" alt="Decentralized Global Education & Skills Passport logo" />
 </p>
 
+<p align="center">
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/css-tokens-check.yml">
+    <img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/css-tokens-check.yml/badge.svg" alt="CSS tokens & class names" />
+  </a>
+</p>
+
 # Decentralized Global Education & Skills Passport
 
 **Sealed commit–reveal allocation on Stellar Soroban.** Grants, bounties, sealed
