@@ -1,5 +1,6 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import type { Shortcut } from "../hooks/useKeyboardShortcuts";
 
 interface KeyboardShortcutsModalProps {
@@ -36,59 +37,7 @@ export function KeyboardShortcutsModal({
 }: KeyboardShortcutsModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
-  useEffect(() => {
-    if (open) {
-      document.addEventListener("keydown", handleKeyDown);
-      // Focus the modal for accessibility
-      panelRef.current?.focus();
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-    };
-  }, [open, handleKeyDown]);
-
-  // Trap focus inside the modal
-  useEffect(() => {
-    if (!open) return;
-    const panel = panelRef.current;
-    if (!panel) return;
-
-    const focusable = panel.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    function trap(e: KeyboardEvent) {
-      if (e.key !== "Tab") return;
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
-    }
-
-    document.addEventListener("keydown", trap);
-    first?.focus();
-    return () => document.removeEventListener("keydown", trap);
-  }, [open]);
+  useFocusTrap(panelRef, { active: open, onEscape: onClose });
 
   const groups = groupShortcuts(shortcuts);
   const scopeKeys = Object.keys(groups);
