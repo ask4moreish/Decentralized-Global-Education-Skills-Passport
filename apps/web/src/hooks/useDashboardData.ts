@@ -2,9 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import type { DashboardData } from "../dashboard/types";
 import { DASHBOARD_FIXTURE } from "../dashboard/fixture";
 import { assertDashboardData } from "../dashboard/fixture-health-check";
+import { useLocalStorage } from "./useLocalStorage";
 
 const STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
-const LIVE_POLL_INTERVAL_MS = 30 * 1000; // 30 seconds
+
+/** Default refresh interval in seconds when no preference is stored. */
+const DEFAULT_REFRESH_INTERVAL_SEC = 30;
 
 export interface UseDashboardDataResult {
   data: DashboardData | null;
@@ -22,6 +25,7 @@ function isStale(fetchedAt: string): boolean {
 export function useDashboardData(): UseDashboardDataResult {
   const endpoint = import.meta.env.VITE_DASHBOARD_ENDPOINT as string | undefined;
   const useFixture = !endpoint?.trim();
+  const [refreshIntervalSec] = useLocalStorage("refresh-interval", DEFAULT_REFRESH_INTERVAL_SEC);
 
   const [state, setState] = useState<UseDashboardDataResult>(() => ({
     data: null,
@@ -81,10 +85,11 @@ export function useDashboardData(): UseDashboardDataResult {
 
     void tick();
 
-    // Only poll when using live endpoint
+    // Poll at the user-selected interval (0 = off)
+    const pollMs = refreshIntervalSec > 0 ? refreshIntervalSec * 1000 : 0;
     let intervalId: number | undefined;
-    if (!useFixture) {
-      intervalId = window.setInterval(() => void tick(), LIVE_POLL_INTERVAL_MS);
+    if (!useFixture && pollMs > 0) {
+      intervalId = window.setInterval(() => void tick(), pollMs);
     }
 
     return () => {
@@ -93,7 +98,7 @@ export function useDashboardData(): UseDashboardDataResult {
         window.clearInterval(intervalId);
       }
     };
-  }, [fetchData, useFixture]);
+  }, [fetchData, useFixture, refreshIntervalSec]);
 
   // Update stale status periodically
   useEffect(() => {

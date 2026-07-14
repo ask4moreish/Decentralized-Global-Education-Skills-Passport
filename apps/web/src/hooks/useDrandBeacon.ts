@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { quicknet, fetchRoundBeacon } from "@decentralized-global-education-skills-passport/tlock";
+import { useLocalStorage } from "./useLocalStorage";
 
 export interface DrandChainInfo {
   publicKey: string;
@@ -44,7 +45,6 @@ export interface DrandBeaconState {
   latencyHistory: RoundLatencyEntry[];
 }
 
-const POLL_MS = 2_500;
 const MAX_LATENCY_ENTRIES = 30;
 
 export function useDrandBeacon(): DrandBeaconState {
@@ -59,6 +59,11 @@ export function useDrandBeacon(): DrandBeaconState {
     nextRoundTime: null,
     latencyHistory: [],
   });
+
+  const [refreshIntervalSec] = useLocalStorage("refresh-interval", 30);
+
+  // Resolve poll interval: use stored value; 0 = off
+  const pollMs = refreshIntervalSec > 0 ? refreshIntervalSec * 1000 : 0;
 
   useEffect(() => {
     let cancelled = false;
@@ -90,10 +95,6 @@ export function useDrandBeacon(): DrandBeaconState {
         // directly since fetchBeacon may not expose a "latest" convenience.
         let latest: DrandBeaconData | null = null;
         try {
-          // Use the drand-client's underlying fetch mechanism through the
-          // standard API endpoint. The quicknet client from tlock gives us
-          // fetchBeacon(round), but since we want the absolute latest, we
-          // query the API via the client's chain hash.
           const beacon = await fetch(
             `https://api.drand.sh/${info.hash}/public/latest`,
           );
@@ -157,12 +158,20 @@ export function useDrandBeacon(): DrandBeaconState {
     }
 
     void tick();
-    const id = window.setInterval(() => void tick(), POLL_MS);
+
+    // Poll at the user-selected interval (0 = off)
+    let id: number | undefined;
+    if (pollMs > 0) {
+      id = window.setInterval(() => void tick(), pollMs);
+    }
+
     return () => {
       cancelled = true;
-      window.clearInterval(id);
+      if (id !== undefined) {
+        window.clearInterval(id);
+      }
     };
-  }, []);
+  }, [pollMs]);
 
   return state;
 }

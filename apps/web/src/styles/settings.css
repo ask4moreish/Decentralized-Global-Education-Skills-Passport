@@ -151,6 +151,57 @@
 }
 
 /* Settings footer */
+/* Chip row for refresh interval presets */
+.settings-chip-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 0 8px;
+}
+
+.settings-chip {
+  flex: 1;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-1);
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 160ms var(--ease), background 160ms var(--ease), color 160ms var(--ease);
+}
+
+.settings-chip:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-3);
+}
+
+.settings-chip.selected {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--ink);
+}
+
+.settings-chip strong {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.settings-chip small {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.settings-chip.selected small {
+  color: var(--muted);
+}
+
 .settings-footer {
   padding: 14px 24px;
   border-top: 1px solid var(--line-0);

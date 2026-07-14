@@ -9,15 +9,28 @@ interface SettingsPanelProps {
   onClose: () => void;
 }
 
+/** Refresh interval presets in seconds. 0 = off. */
+const REFRESH_PRESETS = [
+  { seconds: 0, label: "Off", helper: "manual only" },
+  { seconds: 10, label: "10s", helper: "live" },
+  { seconds: 30, label: "30s", helper: "balanced" },
+  { seconds: 60, label: "1 min", helper: "relaxed" },
+  { seconds: 300, label: "5 min", helper: "sporadic" },
+] as const;
+
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const { isDark, toggle } = useTheme();
-  const [autoRefresh, setAutoRefresh] = useLocalStorage("auto-refresh", true);
+  const [refreshInterval, setRefreshInterval] = useLocalStorage(
+    "refresh-interval",
+    30, // seconds; 0 = off
+  );
   const [reduceMotion, setReduceMotion] = useLocalStorage("reduce-motion", false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useFocusTrap(panelRef, { active: open, onEscape: onClose });
 
-  // Reset reduced motion preference
+  // Export the raw seconds value for the consumer hook via the DOM
+  // so the hooks can read it from the shared localStorage key.
   useEffect(() => {
     if (reduceMotion) {
       document.documentElement.classList.add("user-reduce-motion");
@@ -28,6 +41,14 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
       document.documentElement.classList.remove("user-reduce-motion");
     };
   }, [reduceMotion]);
+
+  function formatLabel(seconds: number): string {
+    const preset = REFRESH_PRESETS.find((p) => p.seconds === seconds);
+    if (preset) return preset.label;
+    if (seconds <= 0) return "Off";
+    if (seconds < 60) return `${seconds}s`;
+    return `${Math.floor(seconds / 60)} min`;
+  }
 
   return (
     <AnimatePresence>
@@ -95,18 +116,33 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
                 <div className="settings-row">
                   <div className="settings-row-info">
                     <strong>Auto-refresh</strong>
-                    <span>Automatically refresh data on dashboard and live pages</span>
+                    <span>
+                      Poll interval for dashboard and live pages · current:{" "}
+                      {formatLabel(refreshInterval)}
+                    </span>
                   </div>
-                  <button
-                    type="button"
-                    className={`settings-toggle ${autoRefresh ? "active" : ""}`}
-                    onClick={() => setAutoRefresh((v) => !v)}
-                    role="switch"
-                    aria-checked={autoRefresh}
-                    aria-label="Toggle auto-refresh"
-                  >
-                    <span className="settings-toggle-handle" />
-                  </button>
+                </div>
+                <div
+                  className="settings-chip-row"
+                  role="radiogroup"
+                  aria-label="Refresh interval"
+                >
+                  {REFRESH_PRESETS.map((preset) => {
+                    const selected = refreshInterval === preset.seconds;
+                    return (
+                      <button
+                        key={preset.seconds}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        className={`settings-chip ${selected ? "selected" : ""}`}
+                        onClick={() => setRefreshInterval(preset.seconds)}
+                      >
+                        <strong>{preset.label}</strong>
+                        <small>{preset.helper}</small>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="settings-row">

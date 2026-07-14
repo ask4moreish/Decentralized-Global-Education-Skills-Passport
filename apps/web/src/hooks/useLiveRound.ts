@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Round, BidState } from "@decentralized-global-education-skills-passport/sdk";
+import { useLocalStorage } from "./useLocalStorage";
 
 const RPC = import.meta.env.VITE_RPC_URL ?? "https://soroban-testnet.stellar.org";
 const NETWORK =
@@ -16,9 +17,20 @@ export interface LiveSnapshot {
   polledAt: number;
 }
 
-export function useLiveRound(enabled: boolean, pollMs = 12_000) {
+/** Default refresh interval in seconds when no preference is stored. */
+const DEFAULT_REFRESH_INTERVAL_SEC = 30;
+
+export function useLiveRound(enabled: boolean, pollMs?: number) {
   const [live, setLive] = useState<LiveSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshIntervalSec] = useLocalStorage(
+    "refresh-interval",
+    DEFAULT_REFRESH_INTERVAL_SEC,
+  );
+
+  // Resolve pollMs: explicit parameter wins, otherwise use the setting
+  const effectivePollMs =
+    pollMs ?? (refreshIntervalSec > 0 ? refreshIntervalSec * 1000 : 0);
 
   useEffect(() => {
     if (!enabled || !CONTRACT || ROUND_ID === undefined) return;
@@ -49,13 +61,19 @@ export function useLiveRound(enabled: boolean, pollMs = 12_000) {
       }
     }
 
-    poll();
-    const id = setInterval(poll, pollMs);
+    void poll();
+
+    // Poll at the user-selected interval (0 = off)
+    let id: ReturnType<typeof setInterval> | undefined;
+    if (effectivePollMs > 0) {
+      id = setInterval(poll, effectivePollMs);
+    }
+
     return () => {
       cancelled = true;
-      clearInterval(id);
+      if (id !== undefined) clearInterval(id);
     };
-  }, [enabled, pollMs]);
+  }, [enabled, effectivePollMs]);
 
   return { live, error, configured: Boolean(CONTRACT && ROUND_ID !== undefined) };
 }
