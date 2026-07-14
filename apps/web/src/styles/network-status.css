@@ -67,3 +67,26 @@
 .network-status-close:hover {
   opacity: 1;
 }
+
+/* Mini dot indicator — always visible, click to expand */
+.network-status-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--line-1);
+  cursor: pointer;
+  transition: border-color 160ms var(--ease);
+}
+
+.network-status-mini:hover {
+  border-color: var(--line-strong);
+}
+
+.network-status-mini .network-status-dot {
+  width: 6px;
+  height: 6px;
+}

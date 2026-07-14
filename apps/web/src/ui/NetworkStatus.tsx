@@ -62,7 +62,21 @@ export function NetworkStatus({ rpcUrl, className = "" }: NetworkStatusProps) {
     return () => clearInterval(interval);
   }, [showDetails, check]);
 
-  if (!showDetails) return null;
+  // Always show a small persistent dot indicator; full details shown on click
+  if (!showDetails) {
+    const dotTone = state === "connected" ? "connected" : state === "slow" ? "slow" : state === "checking" ? "checking" : "disconnected";
+    return (
+      <button
+        type="button"
+        className={`network-status-mini ${dotTone}`}
+        onClick={() => setShowDetails(true)}
+        title={`Network: ${state}${latencyMs != null ? ` (${latencyMs}ms)` : ''}. Click for details.`}
+        aria-label={`Network status: ${state}. Click for details.`}
+      >
+        <span className={`network-status-dot ${dotTone}`} aria-hidden="true" />
+      </button>
+    );
+  }
 
   const icon = state === "connected" ? "●" : state === "checking" ? "○" : "○";
   const label =
