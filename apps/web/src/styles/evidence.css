@@ -22,6 +22,13 @@
   color: var(--green);
 }
 
+.panel-desc {
+  padding: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .panel {
   position: relative;
   padding: 22px;

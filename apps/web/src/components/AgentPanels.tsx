@@ -6,7 +6,7 @@ import { Tooltip } from "../ui/Tooltip";
 export function AgentActivity({ trace }: { trace: DemoTrace }) {
   return (
     <CollapsibleSection title="Agent activity" defaultOpen badge={trace.agents.length}>
-      <p className="panel-desc" style={{ padding: '0 0 16px', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+      <p className="panel-desc">
         Principals delegate session keys via signed mandates. Agents pay x402, size bids,
         and commit — never using the principal key on-chain.
       </p>
@@ -46,7 +46,7 @@ export function AgentActivity({ trace }: { trace: DemoTrace }) {
 export function X402Logs({ trace }: { trace: DemoTrace }) {
   return (
     <CollapsibleSection title="x402 appraisal log" badge={trace.agents.length}>
-      <p className="panel-desc" style={{ padding: '0 0 16px', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+      <p className="panel-desc">
         Agent-to-service payment: HTTP 402 → signed USDC auth entry → on-chain settle → appraisal.
       </p>
       <div className="table-wrap">
@@ -83,7 +83,7 @@ export function X402Logs({ trace }: { trace: DemoTrace }) {
 export function KeeperPanel({ trace }: { trace: DemoTrace }) {
   return (
     <CollapsibleSection title="Keeper · reveal · clear · settle" badge={trace.keeper.reveals.length}>
-      <p className="panel-desc" style={{ padding: '0 0 16px', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+      <p className="panel-desc">
         Permissionless third party — no operator privilege.
       </p>
       <ul className="keeper-list">
