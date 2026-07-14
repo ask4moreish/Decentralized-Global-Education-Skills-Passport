@@ -59,7 +59,17 @@ const DYNAMIC_TOKENS = new Set([
  * DO NOT add tokens here to silence the linter — prefer removing dead code.
  */
 const INTENTIONALLY_UNUSED = new Set([
-  // None currently. Add tokens here only with a comment explaining why.
+  // Palette design tokens — defined for the full color system even if the
+  // current UI doesn't reference every grade. Kept so the palette is
+  // complete for theming, future use, and design-system documentation.
+  "--bg-2",
+  "--green-deep",
+  "--amber-glow",
+  "--violet-glow",
+  "--cyan",
+  "--cyan-glow",
+  "--red-glow",
+  "--radius-xl",
 ]);
 
 // ---------------------------------------------------------------------------

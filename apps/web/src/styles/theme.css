@@ -49,6 +49,7 @@
 .theme-light {
   --bg-0: #f5f4f0;
   --bg-1: #eeede8;
+  --bg-2: #e8e7e1;
   --surface-0: rgba(255, 255, 255, 0.78);
   --surface-1: rgba(248, 247, 242, 0.86);
   --surface-2: rgba(240, 239, 233, 0.9);
@@ -68,6 +69,7 @@
 
   --green: #5b6cff;
   --green-2: #4258d6;
+  --green-deep: #2c3a96;
   --green-dim: rgba(91, 108, 255, 0.55);
   --green-soft: rgba(91, 108, 255, 0.1);
   --green-glow: rgba(91, 108, 255, 0.18);
