@@ -9,8 +9,9 @@ const require = createRequire(import.meta.url);
 /**
  * Split vendor libraries into separate chunks so browser caching stays
  * effective when app code changes.  Dependencies are grouped by
- * stability — React/framer (rarely change), SDK/tlock (change together),
- * crypto polyfills (pinned).
+ * stability — React/framer (rarely change), SDK/tlock (change together).
+ * All other node_modules (crypto polyfills, stellar-sdk, etc.) share a
+ * single generic vendor chunk to avoid circular references.
  */
 function manualChunks(id: string): string | undefined {
   // Node_modules check
@@ -23,35 +24,10 @@ function manualChunks(id: string): string | undefined {
     if (id.includes("framer-motion")) {
       return "vendor-animation";
     }
-    // Stellar SDK + crypto polyfills — large, change infrequently
-    if (
-      id.includes("@stellar/stellar-sdk") ||
-      id.includes("crypto-browserify") ||
-      id.includes("buffer") ||
-      id.includes("process") ||
-      id.includes("hash") ||
-      id.includes("browserify") ||
-      id.includes("bn.js") ||
-      id.includes("elliptic") ||
-      id.includes("minimalistic") ||
-      id.includes("asn1.js") ||
-      id.includes("parse-asn1") ||
-      id.includes("pbkdf2") ||
-      id.includes("public-encrypt") ||
-      id.includes("randombytes") ||
-      id.includes("safe-buffer") ||
-      id.includes("create-hash") ||
-      id.includes("create-hmac") ||
-      id.includes("cipher-base") ||
-      id.includes("readable-stream") ||
-      id.includes("evp_bytestokey") ||
-      id.includes("diffie-hellman") ||
-      id.includes("des.js") ||
-      id.includes("brorand")
-    ) {
-      return "vendor-crypto";
-    }
     // Everything else in node_modules lands in a shared vendor chunk
+    // (includes crypto polyfills, stellar-sdk, etc. — all npm deps that
+    //  change together, avoiding the circular-chunk warning from a
+    //  separate vendor-crypto chunk that cross-imports from vendor).
     return "vendor";
   }
 
