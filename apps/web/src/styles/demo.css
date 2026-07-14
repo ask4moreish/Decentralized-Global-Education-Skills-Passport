@@ -9,3 +9,15 @@
 @import "./dashboard.css";
 @import "./verify.css";
 @import "./drand.css";
+
+/* New UI feature styles */
+@import "./theme.css";
+@import "./shortcuts.css";
+@import "./copy.css";
+@import "./tooltip.css";
+@import "./error-boundary.css";
+@import "./settings.css";
+@import "./mobile-nav.css";
+@import "./collapsible.css";
+@import "./network-status.css";
+@import "./app-bar.css";
