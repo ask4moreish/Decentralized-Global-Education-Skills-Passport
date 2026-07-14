@@ -1,16 +1,15 @@
 import type { DemoTrace } from "../demo/trace";
 import { shortAddr, shortHash, usdc } from "../lib/format";
+import { CollapsibleSection } from "../ui/CollapsibleSection";
+import { Tooltip } from "../ui/Tooltip";
 
 export function AgentActivity({ trace }: { trace: DemoTrace }) {
   return (
-    <section className="panel">
-      <header className="panel-head">
-        <h2>Agent activity</h2>
-        <p>
-          Principals delegate session keys via signed mandates. Agents pay x402, size bids,
-          and commit — never using the principal key on-chain.
-        </p>
-      </header>
+    <CollapsibleSection title="Agent activity" defaultOpen badge={trace.agents.length}>
+      <p className="panel-desc" style={{ padding: '0 0 16px', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+        Principals delegate session keys via signed mandates. Agents pay x402, size bids,
+        and commit — never using the principal key on-chain.
+      </p>
       <div className="agent-cards">
         {trace.agents.map((a) => (
           <article key={a.name} className="agent-card">
@@ -40,17 +39,16 @@ export function AgentActivity({ trace }: { trace: DemoTrace }) {
           </article>
         ))}
       </div>
-    </section>
+    </CollapsibleSection>
   );
 }
 
 export function X402Logs({ trace }: { trace: DemoTrace }) {
   return (
-    <section className="panel">
-      <header className="panel-head">
-        <h2>x402 appraisal log</h2>
-        <p>Agent-to-service payment: HTTP 402 → signed USDC auth entry → on-chain settle → appraisal.</p>
-      </header>
+    <CollapsibleSection title="x402 appraisal log" badge={trace.agents.length}>
+      <p className="panel-desc" style={{ padding: '0 0 16px', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+        Agent-to-service payment: HTTP 402 → signed USDC auth entry → on-chain settle → appraisal.
+      </p>
       <div className="table-wrap">
         <table className="table table-x402">
           <thead>
@@ -73,21 +71,19 @@ export function X402Logs({ trace }: { trace: DemoTrace }) {
                   </code>
                 </td>
               </tr>
-            ))}
-          </tbody>
+            ))}            </tbody>
         </table>
       </div>
-    </section>
+    </CollapsibleSection>
   );
 }
 
 export function KeeperPanel({ trace }: { trace: DemoTrace }) {
   return (
-    <section className="panel">
-      <header className="panel-head">
-        <h2>Keeper · reveal · clear · settle</h2>
-        <p>Permissionless third party — no operator privilege.</p>
-      </header>
+    <CollapsibleSection title="Keeper · reveal · clear · settle" badge={trace.keeper.reveals.length}>
+      <p className="panel-desc" style={{ padding: '0 0 16px', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+        Permissionless third party — no operator privilege.
+      </p>
       <ul className="keeper-list">
         <li>
           <strong>Wait Drand R={trace.keeper.drandRound.toLocaleString()}</strong>
@@ -115,6 +111,6 @@ export function KeeperPanel({ trace }: { trace: DemoTrace }) {
           <span>{trace.settlement.note}</span>
         </li>
       </ul>
-    </section>
+    </CollapsibleSection>
   );
 }
