@@ -12,7 +12,6 @@
 :root {
   --bg-0: #06080d;
   --bg-1: #090c12;
-  --bg-2: #0c1018;
   --surface-0: rgba(14, 18, 26, 0.78);
   --surface-1: rgba(18, 23, 31, 0.86);
   --surface-2: rgba(24, 30, 40, 0.9);
@@ -33,7 +32,6 @@
   /* Single brand accent — cobalt-indigo (blue with a subtle purple hint) */
   --green: #5b6cff;
   --green-2: #4258d6;
-  --green-deep: #2c3a96;
   --green-dim: rgba(91, 108, 255, 0.55);
   --green-soft: rgba(91, 108, 255, 0.12);
   --green-glow: rgba(91, 108, 255, 0.32);
@@ -41,17 +39,12 @@
   /* Legacy semantic aliases — all collapse onto neutral/brand tones so the
    * palette stays at 3 colors. Do not introduce new hues here. */
   --amber: var(--green);
-  --amber-glow: var(--green-glow);
   --violet: var(--muted);
-  --violet-glow: rgba(255, 255, 255, 0.08);
-  --cyan: var(--green);
-  --cyan-glow: var(--green-glow);
 
   /* Reserved exclusively for actual error toasts */
   --alert: #d97a73;
   --alert-glow: rgba(217, 122, 115, 0.22);
   --red: var(--muted);
-  --red-glow: rgba(255, 255, 255, 0.06);
 
   --grad-aurora:
     radial-gradient(ellipse 70% 55% at 18% 0%, rgba(91, 108, 255, 0.14), transparent 60%),
@@ -67,7 +60,6 @@
   --radius-sm: 10px;
   --radius: 14px;
   --radius-lg: 20px;
-  --radius-xl: 28px;
 
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.35);
