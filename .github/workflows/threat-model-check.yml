@@ -1,0 +1,34 @@
+name: Threat model anchors
+
+# Verifies that docs/THREAT_MODEL.md still covers every required risk topic
+# (commit privacy, drand timing, escrow settlement, keeper permissionlessness,
+# receipt verification). If a section is accidentally removed during a doc
+# refactor, this workflow catches it.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/THREAT_MODEL.md'
+      - 'scripts/check-threat-model-anchors.mjs'
+      - '.github/workflows/threat-model-check.yml'
+  pull_request:
+    paths:
+      - 'docs/THREAT_MODEL.md'
+      - 'scripts/check-threat-model-anchors.mjs'
+      - '.github/workflows/threat-model-check.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check required threat model anchors
+        run: node scripts/check-threat-model-anchors.mjs docs/THREAT_MODEL.md

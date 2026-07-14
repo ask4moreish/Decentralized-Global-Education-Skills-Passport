@@ -1,0 +1,64 @@
+name: Deploy docs consistency
+
+# Verifies that every env var and pnpm command referenced in docs/DEPLOY.md
+# has a matching definition in the appropriate .env.example file and
+# package.json scripts. Catches stale documentation when the deploy flow
+# evolves but DEPLOY.md is not updated.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/DEPLOY.md'
+      - '.env.example'
+      - 'apps/web/.env.example'
+      - 'package.json'
+      # Workspace package.json files that check-deploy-docs.mjs reads
+      - 'packages/sdk/package.json'
+      - 'packages/round-bindings/package.json'
+      - 'packages/tlock/package.json'
+      - 'services/keeper/package.json'
+      - 'services/appraisal-api/package.json'
+      - 'services/receipt-cli/package.json'
+      - 'services/agent/package.json'
+      - 'services/drand-tools/package.json'
+      - 'services/auction-template/package.json'
+      - 'apps/web/package.json'
+      - 'examples/grant-scoring/package.json'
+      - 'scripts/check-deploy-docs.mjs'
+      - '.github/workflows/deploy-docs-check.yml'
+  pull_request:
+    paths:
+      - 'docs/DEPLOY.md'
+      - '.env.example'
+      - 'apps/web/.env.example'
+      - 'package.json'
+      # Workspace package.json files that check-deploy-docs.mjs reads
+      - 'packages/sdk/package.json'
+      - 'packages/round-bindings/package.json'
+      - 'packages/tlock/package.json'
+      - 'services/keeper/package.json'
+      - 'services/appraisal-api/package.json'
+      - 'services/receipt-cli/package.json'
+      - 'services/agent/package.json'
+      - 'services/drand-tools/package.json'
+      - 'services/auction-template/package.json'
+      - 'apps/web/package.json'
+      - 'examples/grant-scoring/package.json'
+      - 'scripts/check-deploy-docs.mjs'
+      - '.github/workflows/deploy-docs-check.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check deploy doc consistency
+        run: node scripts/check-deploy-docs.mjs

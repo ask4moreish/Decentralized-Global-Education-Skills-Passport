@@ -46,6 +46,9 @@ const KNOWN_NON_ENVS = new Set([
   // `VAR` is used in `inline 'VAR=... command'` prose as a placeholder
   // for any environment variable name. It is not a real environment variable.
   "VAR",
+  // `DENY` is the value of the `X-Frame-Options` response header on the
+  // Vercel deploy docs page, not an environment variable.
+  "DENY",
 ]);
 
 // `VAR=` style assignments in code blocks and inline. Captures the name on the

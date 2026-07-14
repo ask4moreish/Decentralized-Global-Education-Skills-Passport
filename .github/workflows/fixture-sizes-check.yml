@@ -1,0 +1,37 @@
+name: Fixture size budgets
+
+# Checks that committed fixtures and generated files (receipt JSON, contract
+# snapshots, demo traces) stay within per-file and total size budgets. Prevents
+# accidentally-large generated files from bloating the repo.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/receipt-cli/src/fixtures/**'
+      - 'contracts/round/test_snapshots/**'
+      - 'apps/web/src/demo/**'
+      - 'scripts/check-fixture-sizes.mjs'
+      - '.github/workflows/fixture-sizes-check.yml'
+  pull_request:
+    paths:
+      - 'services/receipt-cli/src/fixtures/**'
+      - 'contracts/round/test_snapshots/**'
+      - 'apps/web/src/demo/**'
+      - 'scripts/check-fixture-sizes.mjs'
+      - '.github/workflows/fixture-sizes-check.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check fixture size budgets
+        run: node scripts/check-fixture-sizes.mjs
