@@ -63,6 +63,7 @@
     "snapshot:check": "node scripts/check-snapshots.mjs",
     "docs:check": "node scripts/check-deploy-docs.mjs",
     "docs:check-links": "node scripts/check-links.js",
+    "css:check-tokens": "node scripts/check-css-tokens.mjs",
     "publish:tlock": "pnpm --filter @decentralized-global-education-skills-passport/tlock publish",
     "publish:bindings": "pnpm --filter @decentralized-global-education-skills-passport/round-bindings publish",
     "publish:sdk": "pnpm --filter @decentralized-global-education-skills-passport/sdk publish",
