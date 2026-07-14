@@ -20,6 +20,10 @@ import {
 import type { AttackStep, CapDemoResult } from "./demoTypes";
 
 export type { AttackStep, CapDemoResult };
+
+/** Default base price in USDC for demo mandate scenarios. */
+const DEMO_BASE_PRICE_USDC = 500;
+
 export function runCapSafetyDemos(): CapDemoResult[] {
   const results: CapDemoResult[] = [];
   const principal = Keypair.random();
@@ -31,7 +35,7 @@ export function runCapSafetyDemos(): CapDemoResult[] {
       contractId: "CDEMO",
       roundId: 1,
       itemRef: "demo",
-      basePriceUsdc: 500,
+      basePriceUsdc: DEMO_BASE_PRICE_USDC,
       maxBidStroops: usdcToStroops(100),
       maxEscrowStroops: usdcToStroops(100),
       maxAppraisalSpendStroops: usdcToStroops(0.5),
@@ -64,7 +68,7 @@ export function runCapSafetyDemos(): CapDemoResult[] {
     contractId: "CDEMO",
     roundId: 1,
     itemRef: "demo",
-    basePriceUsdc: 500,
+    basePriceUsdc: DEMO_BASE_PRICE_USDC,
     maxBidStroops: usdcToStroops(100),
     maxEscrowStroops: usdcToStroops(100),
     maxAppraisalSpendStroops: usdcToStroops(1),

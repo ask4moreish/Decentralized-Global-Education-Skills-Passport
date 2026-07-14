@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { STORAGE_KEY_PREFIX } from "../lib/settings";
 import { validatePublicConfig, type ConfigIssue } from "../lib/config";
 
-const BANNER_STORAGE_KEY = "skills-passport-config-banner-dismissed";
+const BANNER_STORAGE_KEY = `${STORAGE_KEY_PREFIX}config-banner-dismissed`;
 
 export function ConfigBanner() {
   const [issues, setIssues] = useState<ConfigIssue[]>([]);

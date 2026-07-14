@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { STORAGE_KEY_PREFIX } from "../lib/settings";
 
 // Legacy key name for the old binary auto-refresh setting (replaced by refresh-interval)
-const OLD_AUTO_REFRESH_KEY = "decentralized-global-education-skills-passport:auto-refresh";
+const OLD_AUTO_REFRESH_KEY = `${STORAGE_KEY_PREFIX}auto-refresh`;
 
 /**
  * One-time migration from the old binary `auto-refresh` key to the new
@@ -34,7 +35,7 @@ export function useLocalStorage<T>(
   migrate?: () => T | null,
 ): [T, (value: T | ((prev: T) => T)) => void] {
   const storageKey = useMemo(
-    () => `decentralized-global-education-skills-passport:${key}`,
+    () => `${STORAGE_KEY_PREFIX}${key}`,
     [key],
   );
 
