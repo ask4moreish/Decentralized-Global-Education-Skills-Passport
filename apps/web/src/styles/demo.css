@@ -21,3 +21,50 @@
 @import "./collapsible.css";
 @import "./network-status.css";
 @import "./app-bar.css";
+
+/* Route-level code-split loading skeletons */
+.page-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 60vh;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.page-skeleton-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--line-strong);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.evidence-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 40vh;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.evidence-skeleton-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--line-strong);
+  border-top-color: var(--violet);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

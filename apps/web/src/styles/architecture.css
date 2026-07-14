@@ -21,10 +21,10 @@
   max-width: 52rem;
   margin: 0 auto;
   padding: clamp(1.25rem, 3vw, 2rem);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-1);
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--bg-1) 88%, transparent);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-md);
 }
 
 /* === Architecture intro (primitive-first h1 above the raw ARCHITECTURE.md) === */
@@ -32,23 +32,23 @@
   max-width: 52rem;
   margin: 0 auto 1.5rem;
   padding: clamp(1.5rem, 3vw, 2.25rem);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-1);
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--bg-1) 92%, transparent);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-md);
 }
 
 .architecture-intro .architecture-eyebrow {
   display: inline-block;
   margin-bottom: 0.75rem;
   padding: 0.25rem 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line-1));
   border-radius: 999px;
-  color: var(--accent);
+  color: var(--green);
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  background: color-mix(in srgb, var(--green) 8%, transparent);
 }
 
 .architecture-intro h1 {
