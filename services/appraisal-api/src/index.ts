@@ -9,7 +9,6 @@ export {
   type AppraisalAttributes,
 } from "./appraisal.js";
 
-export { buildAppraisalServer } from "./server.js";
 export {
   AppraisalConfigError,
   configFromEnv,
