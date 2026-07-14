@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { quicknet, fetchRoundBeacon } from "@decentralized-global-education-skills-passport/tlock";
-import { useLocalStorage } from "./useLocalStorage";
+import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
 
 export interface DrandChainInfo {
   publicKey: string;
@@ -60,7 +60,11 @@ export function useDrandBeacon(): DrandBeaconState {
     latencyHistory: [],
   });
 
-  const [refreshIntervalSec] = useLocalStorage("refresh-interval", 30);
+  const [refreshIntervalSec] = useLocalStorage<number>(
+    "refresh-interval",
+    30,
+    () => migrateAutoRefresh(),
+  );
 
   // Resolve poll interval: use stored value; 0 = off
   const pollMs = refreshIntervalSec > 0 ? refreshIntervalSec * 1000 : 0;

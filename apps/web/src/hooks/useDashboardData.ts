@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { DashboardData } from "../dashboard/types";
 import { DASHBOARD_FIXTURE } from "../dashboard/fixture";
 import { assertDashboardData } from "../dashboard/fixture-health-check";
-import { useLocalStorage } from "./useLocalStorage";
+import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
 
 const STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -25,7 +25,11 @@ function isStale(fetchedAt: string): boolean {
 export function useDashboardData(): UseDashboardDataResult {
   const endpoint = import.meta.env.VITE_DASHBOARD_ENDPOINT as string | undefined;
   const useFixture = !endpoint?.trim();
-  const [refreshIntervalSec] = useLocalStorage("refresh-interval", DEFAULT_REFRESH_INTERVAL_SEC);
+  const [refreshIntervalSec] = useLocalStorage<number>(
+    "refresh-interval",
+    DEFAULT_REFRESH_INTERVAL_SEC,
+    () => migrateAutoRefresh(DEFAULT_REFRESH_INTERVAL_SEC),
+  );
 
   const [state, setState] = useState<UseDashboardDataResult>(() => ({
     data: null,

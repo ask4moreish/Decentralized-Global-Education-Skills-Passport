@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useTheme } from "../hooks/useTheme";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useLocalStorage, migrateAutoRefresh } from "../hooks/useLocalStorage";
 
 interface SettingsPanelProps {
   open: boolean;
@@ -20,9 +20,10 @@ const REFRESH_PRESETS = [
 
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const { isDark, toggle } = useTheme();
-  const [refreshInterval, setRefreshInterval] = useLocalStorage(
+  const [refreshInterval, setRefreshInterval] = useLocalStorage<number>(
     "refresh-interval",
-    30, // seconds; 0 = off
+    30,
+    () => migrateAutoRefresh(),
   );
   const [reduceMotion, setReduceMotion] = useLocalStorage("reduce-motion", false);
   const panelRef = useRef<HTMLDivElement>(null);
