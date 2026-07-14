@@ -3,9 +3,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/css-tokens-check.yml">
-    <img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/css-tokens-check.yml/badge.svg" alt="CSS tokens & class names" />
-  </a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/bindings-check.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/bindings-check.yml/badge.svg" alt="Bindings check" /></a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/examples-typecheck.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/examples-typecheck.yml/badge.svg" alt="Examples typecheck" /></a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/fixture-drift.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/fixture-drift.yml/badge.svg" alt="Fixture drift guard" /></a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/fixture-sizes-check.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/fixture-sizes-check.yml/badge.svg" alt="Fixture sizes" /></a>
+  <br>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/css-tokens-check.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/css-tokens-check.yml/badge.svg" alt="CSS tokens &amp; classes" /></a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/threat-model-check.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/threat-model-check.yml/badge.svg" alt="Threat model anchors" /></a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/deploy-docs-check.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/deploy-docs-check.yml/badge.svg" alt="Deploy docs consistency" /></a>
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/docs-links.yml"><img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/docs-links.yml/badge.svg" alt="Docs link check" /></a>
 </p>
 
 # Decentralized Global Education & Skills Passport
