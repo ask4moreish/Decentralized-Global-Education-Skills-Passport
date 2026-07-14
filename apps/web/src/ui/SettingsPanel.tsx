@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useTheme } from "../hooks/useTheme";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
@@ -9,56 +10,12 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
-  const { theme, isDark, toggle } = useTheme();
+  const { isDark, toggle } = useTheme();
   const [autoRefresh, setAutoRefresh] = useLocalStorage("auto-refresh", true);
   const [reduceMotion, setReduceMotion] = useLocalStorage("reduce-motion", false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    panelRef.current?.focus();
-    return () => {
-      document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [open, onClose]);
-
-  // Trap focus
-  useEffect(() => {
-    if (!open) return;
-    const panel = panelRef.current;
-    if (!panel) return;
-    const focusable = panel.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    function trap(e: KeyboardEvent) {
-      if (e.key !== "Tab") return;
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
-    }
-
-    document.addEventListener("keydown", trap);
-    first?.focus();
-    return () => document.removeEventListener("keydown", trap);
-  }, [open]);
+  useFocusTrap(panelRef, { active: open, onEscape: onClose });
 
   // Reset reduced motion preference
   useEffect(() => {
