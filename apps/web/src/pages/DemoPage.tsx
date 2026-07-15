@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSPropertie
 import { AnimatePresence, motion } from "framer-motion";
 import { CohortPanel } from "../components/CohortPanel";
 import { DrandCountdownChip } from "../components/DrandCountdownChip";
+import { NotificationPanel } from "../notifications";
 import { OutcomePanel } from "../components/OutcomePanel";
 import type { UseCase, UseCaseId } from "../config/useCases";
 import { USE_CASES } from "../config/useCases";
@@ -905,6 +906,9 @@ export function DemoPage({
           </a>
 
           <DrandCountdownChip mode={sidebarDrand.mode} targetRound={sidebarDrand.targetRound} />
+
+          <div className="case-nav-section-label">Activity</div>
+          <NotificationPanel />
         </aside>
 
         <AnimatePresence mode="wait">

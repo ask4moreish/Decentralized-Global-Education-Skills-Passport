@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useDashboardData } from "../hooks/useDashboardData";
 import { LOGO_SRC } from "../lib/chain";
+import { NotificationPanel } from "../notifications";
 import {
   RoundStatusCard,
   KeeperStatusCard,
@@ -66,6 +67,7 @@ export function DashboardPage({ goHome }: { goHome: () => void }) {
           <span>Decentralized Global Education & Skills Passport</span>
         </button>
         <div className="dashboard-nav-actions">
+          <NotificationPanel />
           <button
             type="button"
             className="secondary-action compact"

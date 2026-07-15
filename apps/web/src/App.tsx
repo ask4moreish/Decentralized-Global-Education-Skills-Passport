@@ -14,6 +14,8 @@ import { NetworkStatus } from "./ui/NetworkStatus";
 import { KeyboardShortcutsModal } from "./ui/KeyboardShortcutsModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import type { Shortcut } from "./hooks/useKeyboardShortcuts";
+import { NotificationProvider } from "./notifications";
+import { NotificationPanel } from "./notifications";
 
 /* Route-level code splitting — each page loads only when navigated to.
    React.lazy requires a default export, so we map named exports with .then(). */
@@ -139,6 +141,17 @@ export default function App() {
         handler: () => setSettingsOpen((v) => !v),
         scope: "global",
       },
+      {
+        id: "notifications",
+        label: "Toggle notifications",
+        keys: "N",
+        combo: "n",
+        handler: () => {
+          const bell = document.querySelector<HTMLButtonElement>(".notification-bell");
+          bell?.click();
+        },
+        scope: "global",
+      },
     ],
     [navigate, route.useCase],
   );
@@ -167,6 +180,7 @@ export default function App() {
   }, [route.page]);
 
   return (
+    <NotificationProvider>
     <ToastProvider>
       <SkipToContent />
       <ScrollToTop deps={[route.page, route.useCase]} />
@@ -178,6 +192,7 @@ export default function App() {
           </div>
           <div className="mobile-nav-bar-right">
             <NetworkStatus />
+            <NotificationPanel />
             <ThemeToggle />
             <button
               type="button"
@@ -245,5 +260,6 @@ export default function App() {
         <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </ErrorBoundary>
     </ToastProvider>
+    </NotificationProvider>
   );
 }
