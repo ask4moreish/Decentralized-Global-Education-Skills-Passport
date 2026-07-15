@@ -113,6 +113,7 @@ export function NotificationDropdown({
                     key={item.id}
                     item={item}
                     onMarkRead={onMarkRead}
+                    onDismiss={onClearByType ? (id) => onClearByType(item.type) : undefined}
                   />
                 ))
               )}
