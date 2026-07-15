@@ -354,3 +354,43 @@
 .receipt-tag-input::placeholder {
   color: var(--faint);
 }
+
+.receipt-notes-toggle {
+  display: block;
+  width: 100%;
+  padding: 4px 0 0;
+  border: none;
+  background: transparent;
+  color: var(--faint);
+  font-size: 0.74rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms var(--ease);
+}
+
+.receipt-notes-toggle:hover {
+  color: var(--muted);
+}
+
+.receipt-notes-editor {
+  padding: 6px 0 4px;
+}
+
+.receipt-notes-textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-xs);
+  background: var(--surface-0);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-family: inherit;
+  line-height: 1.4;
+  outline: none;
+  resize: vertical;
+  min-height: 54px;
+}
+
+.receipt-notes-textarea:focus {
+  border-color: var(--green-dim);
+}
