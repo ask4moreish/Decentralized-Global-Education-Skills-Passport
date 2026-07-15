@@ -125,9 +125,5 @@ Notable achievements at this stage:
 
 ---
 
-## Planned
-
-See [GitHub Issues](https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/issues) for active work items.
-
 [0.1.0]: https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/compare/v0.0.0...v0.1.0
 [0.0.0]: https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/releases/tag/v0.0.0
