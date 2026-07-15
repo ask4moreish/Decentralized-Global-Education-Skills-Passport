@@ -1,0 +1,396 @@
+/* ── Receipt History Panel ─────────────────────────────────────────────── */
+
+.receipt-history-panel {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-2);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+
+.receipt-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--line-1);
+  flex-wrap: wrap;
+}
+
+.receipt-history-header h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.receipt-history-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-xs);
+  background: var(--surface-0);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 180ms var(--ease);
+}
+
+.receipt-history-search::placeholder {
+  color: var(--faint);
+}
+
+.receipt-history-search:focus {
+  border-color: var(--green-dim);
+}
+
+/* ── Sort Bar ─────────────────────────────────────────────────────────── */
+
+.receipt-history-sort {
+  display: flex;
+  gap: 4px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line-1);
+  overflow-x: auto;
+}
+
+.receipt-sort-btn {
+  padding: 3px 10px;
+  border: 1px solid var(--line-1);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-family: var(--display);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 180ms var(--ease), border-color 180ms var(--ease), background 180ms var(--ease);
+}
+
+.receipt-sort-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.receipt-sort-btn.active {
+  color: var(--green);
+  border-color: var(--green-dim);
+  background: var(--green-soft);
+}
+
+/* ── List ─────────────────────────────────────────────────────────────── */
+
+.receipt-history-list {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.receipt-history-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  color: var(--faint);
+  text-align: center;
+}
+
+.receipt-history-empty p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.receipt-history-empty small {
+  font-size: 0.78rem;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+/* ── Item ─────────────────────────────────────────────────────────────── */
+
+.receipt-history-item {
+  display: flex;
+  border-bottom: 1px solid var(--line-0);
+  transition: background 180ms var(--ease);
+}
+
+.receipt-history-item:hover {
+  background: var(--surface-0);
+}
+
+.receipt-history-item.selected {
+  background: var(--green-soft);
+}
+
+.receipt-history-item.valid {
+  border-left: 3px solid var(--green);
+}
+
+.receipt-history-item.invalid {
+  border-left: 3px solid var(--alert);
+}
+
+.receipt-history-item-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.84rem;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.receipt-history-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.receipt-history-item-head strong {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.86rem;
+  cursor: text;
+}
+
+.receipt-history-item-head strong:hover {
+  color: var(--green);
+}
+
+.receipt-history-label-input {
+  padding: 2px 6px;
+  border: 1px solid var(--green-dim);
+  border-radius: var(--radius-xs);
+  background: var(--surface-0);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 600;
+  outline: none;
+  min-width: 120px;
+}
+
+.receipt-valid-badge {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-family: var(--display);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.receipt-valid-badge.pass {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.receipt-valid-badge.fail {
+  color: var(--alert);
+  background: rgba(217, 122, 115, 0.12);
+}
+
+.receipt-history-item-meta {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.receipt-error-count {
+  color: var(--alert);
+}
+
+.receipt-tag-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.receipt-tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-family: var(--display);
+}
+
+.receipt-history-item-delete {
+  flex-shrink: 0;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--faint);
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms var(--ease), color 150ms var(--ease);
+}
+
+.receipt-history-item:hover .receipt-history-item-delete {
+  opacity: 1;
+}
+
+.receipt-history-item-delete:hover {
+  color: var(--alert);
+}
+
+/* ── Save Button ──────────────────────────────────────────────────────── */
+
+.receipt-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--green-dim);
+  border-radius: var(--radius-sm);
+  background: var(--green-soft);
+  color: var(--green);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: background 180ms var(--ease), transform 180ms var(--ease);
+}
+
+.receipt-save-btn:hover {
+  background: rgba(91, 108, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.receipt-save-btn.saved {
+  border-color: var(--line-2);
+  background: var(--surface-1);
+  color: var(--muted);
+  cursor: default;
+}
+
+.receipt-history-header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.receipt-clear-all-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-family: var(--display);
+  cursor: pointer;
+  transition: color 180ms var(--ease), border-color 180ms var(--ease);
+}
+
+.receipt-clear-all-btn:hover {
+  color: var(--alert);
+  border-color: var(--alert);
+}
+
+.receipt-save-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.receipt-tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: 3px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--faint);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: color 150ms var(--ease), background 150ms var(--ease);
+}
+
+.receipt-tag-remove:hover {
+  color: var(--alert);
+  background: rgba(217, 122, 115, 0.12);
+}
+
+.receipt-tag-input {
+  width: 60px;
+  padding: 1px 6px;
+  border: 1px dashed var(--line-2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-family: var(--display);
+  outline: none;
+  transition: border-color 180ms var(--ease), width 180ms var(--ease);
+}
+
+.receipt-tag-input:focus {
+  width: 100px;
+  border-color: var(--green-dim);
+  color: var(--ink);
+}
+
+.receipt-tag-input::placeholder {
+  color: var(--faint);
+}
+
+.receipt-notes-toggle {
+  display: block;
+  width: 100%;
+  padding: 4px 0 0;
+  border: none;
+  background: transparent;
+  color: var(--faint);
+  font-size: 0.74rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms var(--ease);
+}
+
+.receipt-notes-toggle:hover {
+  color: var(--muted);
+}
+
+.receipt-notes-editor {
+  padding: 6px 0 4px;
+}
+
+.receipt-notes-textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-xs);
+  background: var(--surface-0);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-family: inherit;
+  line-height: 1.4;
+  outline: none;
+  resize: vertical;
+  min-height: 54px;
+}
+
+.receipt-notes-textarea:focus {
+  border-color: var(--green-dim);
+}
