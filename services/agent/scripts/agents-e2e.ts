@@ -25,8 +25,8 @@ import {
 } from "@stellar/stellar-sdk";
 import { basicNodeSigner } from "@stellar/stellar-sdk/contract";
 import { closeRound, keepRound } from "@decentralized-global-education-skills-passport/keeper";
-import { RoundContract, SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { generateAuditorKeypair, quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { RoundContract, SkillsPassportClient } from "skills-passport-sdk";
+import { generateAuditorKeypair, quicknet } from "skills-passport-tlock";
 import { buildAppraisalServer } from "../../appraisal-api/src/server.js";
 
 import {

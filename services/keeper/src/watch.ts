@@ -12,8 +12,8 @@
 //   WATCH_MAX_ROUNDS    max rounds to probe (default 64)
 
 import { Keypair } from "@stellar/stellar-sdk";
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { SkillsPassportClient } from "skills-passport-sdk";
+import { quicknet } from "skills-passport-tlock";
 
 import { createSettlementGuard } from "./settlement-guard.js";
 import { KeeperStore } from "./store.js";

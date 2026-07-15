@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import type { BidState, Round } from "@decentralized-global-education-skills-passport/round-bindings";
+import type { BidState, Round } from "round-bindings";
 
 import {
   assertMainnetConfirmed,

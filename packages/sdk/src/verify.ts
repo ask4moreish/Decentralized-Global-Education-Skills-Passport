@@ -4,7 +4,7 @@
 // commitment bindings, winner selection, and internal consistency from the
 // receipt data alone.
 
-import { toHex, fromHex, commitment } from "@decentralized-global-education-skills-passport/tlock";
+import { toHex, fromHex, commitment } from "skills-passport-tlock";
 import type { RoundReceipt } from "./receipt.js";
 import { networkFingerprint } from "./receipt.js";
 

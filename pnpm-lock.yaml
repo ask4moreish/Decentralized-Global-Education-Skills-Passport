@@ -19,12 +19,6 @@ importers:
       '@decentralized-global-education-skills-passport/agent':
         specifier: workspace:*
         version: link:../../services/agent
-      '@decentralized-global-education-skills-passport/sdk':
-        specifier: workspace:*
-        version: link:../../packages/sdk
-      '@decentralized-global-education-skills-passport/tlock':
-        specifier: workspace:*
-        version: link:../../packages/tlock
       '@stellar/freighter-api':
         specifier: ^6.0.1
         version: 6.0.1
@@ -61,6 +55,12 @@ importers:
       react-dom:
         specifier: ^19.1.0
         version: 19.2.6(react@19.2.6)
+      skills-passport-sdk:
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      skills-passport-tlock:
+        specifier: workspace:*
+        version: link:../../packages/tlock
       stream-browserify:
         specifier: ^3.0.0
         version: 3.0.0
@@ -95,10 +95,10 @@ importers:
 
   examples/grant-scoring:
     dependencies:
-      '@decentralized-global-education-skills-passport/sdk':
+      skills-passport-sdk:
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@decentralized-global-education-skills-passport/tlock':
+      skills-passport-tlock:
         specifier: workspace:*
         version: link:../../packages/tlock
     devDependencies:
@@ -133,18 +133,18 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@decentralized-global-education-skills-passport/round-bindings':
-        specifier: workspace:*
-        version: link:../round-bindings
-      '@decentralized-global-education-skills-passport/tlock':
-        specifier: workspace:*
-        version: link:../tlock
       '@openzeppelin/relayer-plugin-channels':
         specifier: ^0.20.0
         version: 0.20.0
       '@stellar/stellar-sdk':
         specifier: ^15.1.0
         version: 15.1.0
+      round-bindings:
+        specifier: workspace:*
+        version: link:../round-bindings
+      skills-passport-tlock:
+        specifier: workspace:*
+        version: link:../tlock
     devDependencies:
       '@types/node':
         specifier: ^25.9.1
@@ -192,18 +192,18 @@ importers:
       '@decentralized-global-education-skills-passport/keeper':
         specifier: workspace:*
         version: link:../keeper
-      '@decentralized-global-education-skills-passport/sdk':
-        specifier: workspace:*
-        version: link:../../packages/sdk
-      '@decentralized-global-education-skills-passport/tlock':
-        specifier: workspace:*
-        version: link:../../packages/tlock
       '@stellar/stellar-sdk':
         specifier: ^15.1.0
         version: 15.1.0
       '@x402/core':
         specifier: ^2.14.0
         version: 2.14.0
+      skills-passport-sdk:
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      skills-passport-tlock:
+        specifier: workspace:*
+        version: link:../../packages/tlock
     devDependencies:
       '@types/node':
         specifier: ^25.9.1
@@ -242,10 +242,10 @@ importers:
       '@decentralized-global-education-skills-passport/keeper':
         specifier: workspace:*
         version: link:../keeper
-      '@decentralized-global-education-skills-passport/sdk':
+      skills-passport-sdk:
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@decentralized-global-education-skills-passport/tlock':
+      skills-passport-tlock:
         specifier: workspace:*
         version: link:../../packages/tlock
     devDependencies:
@@ -283,10 +283,10 @@ importers:
 
   services/keeper:
     dependencies:
-      '@decentralized-global-education-skills-passport/sdk':
+      skills-passport-sdk:
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@decentralized-global-education-skills-passport/tlock':
+      skills-passport-tlock:
         specifier: workspace:*
         version: link:../../packages/tlock
     devDependencies:
@@ -305,10 +305,10 @@ importers:
 
   services/receipt-cli:
     dependencies:
-      '@decentralized-global-education-skills-passport/sdk':
+      skills-passport-sdk:
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@decentralized-global-education-skills-passport/tlock':
+      skills-passport-tlock:
         specifier: workspace:*
         version: link:../../packages/tlock
     devDependencies:

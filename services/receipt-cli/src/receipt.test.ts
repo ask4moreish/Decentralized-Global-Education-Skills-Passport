@@ -7,7 +7,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { verifyReceipt, parseReceipt, serializeReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { verifyReceipt, parseReceipt, serializeReceipt } from "skills-passport-sdk";
 import { buildJsonOutput } from "./json-output.js";
 
 const DIR = dirname(fileURLToPath(import.meta.url));

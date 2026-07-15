@@ -8,8 +8,8 @@
 // store. The status API never writes state; only the watch loop advances
 // rounds on-chain.
 
-import type { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import type { DrandClient } from "@decentralized-global-education-skills-passport/tlock";
+import type { SkillsPassportClient } from "skills-passport-sdk";
+import type { DrandClient } from "skills-passport-tlock";
 
 import {
   discoverRoundIds,

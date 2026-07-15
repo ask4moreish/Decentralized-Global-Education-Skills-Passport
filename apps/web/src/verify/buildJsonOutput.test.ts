@@ -17,7 +17,7 @@ import {
   serializeReceipt,
   type RoundReceipt,
   type VerificationResult,
-} from "@decentralized-global-education-skills-passport/sdk";
+} from "skills-passport-sdk";
 
 const TESTNET = "Test SDF Network ; September 2015";
 

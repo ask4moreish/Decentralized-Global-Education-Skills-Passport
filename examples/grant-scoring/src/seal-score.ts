@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import type { CreateRoundParams, SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
+import type { CreateRoundParams, SkillsPassportClient } from "skills-passport-sdk";
 import {
   generateAuditorKeypair,
   generateNonce,
@@ -8,7 +8,7 @@ import {
   sealBid,
   type DrandClient,
   type SealedBid,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 import type { GrantJudge, GrantPilotProgram, GrantProject, SealedScoreSubmission } from "./types.js";
 import { scoreToStroops } from "./scoring.js";
@@ -31,7 +31,7 @@ function judgeIdentity(judgeId: string, projectId: string): Uint8Array {
   return new TextEncoder().encode(`grant-judge:${judgeId}:project:${projectId}`);
 }
 
-/** Seal one judge score with @decentralized-global-education-skills-passport/tlock — same path a live pilot uses. */
+/** Seal one judge score with skills-passport-tlock — same path a live pilot uses. */
 export async function sealJudgeScore(
   params: SealJudgeScoreParams,
 ): Promise<SealedScoreSubmission> {
@@ -59,7 +59,7 @@ export async function sealJudgeScore(
   };
 }
 
-/** Seal then commit via @decentralized-global-education-skills-passport/sdk — integration-layer submit path. */
+/** Seal then commit via skills-passport-sdk — integration-layer submit path. */
 export async function commitSealedJudgeScore(
   params: CommitSealedScoreParams,
 ): Promise<SealedScoreSubmission> {

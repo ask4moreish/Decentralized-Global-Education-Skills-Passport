@@ -4,7 +4,7 @@ import {
   verifyReceipt,
   type RoundReceipt,
   type VerificationResult,
-} from "@decentralized-global-education-skills-passport/sdk";
+} from "skills-passport-sdk";
 import { sha256Hex } from "../verify/hashFingerprint";
 
 export interface UseVerificationResult {

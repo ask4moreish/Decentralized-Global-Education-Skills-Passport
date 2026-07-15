@@ -14,8 +14,8 @@
     "@stellar/stellar-sdk": "^15.1.0",
     "@decentralized-global-education-skills-passport/appraisal-api": "workspace:*",
     "@decentralized-global-education-skills-passport/keeper": "workspace:*",
-    "@decentralized-global-education-skills-passport/sdk": "workspace:*",
-    "@decentralized-global-education-skills-passport/tlock": "workspace:*",
+    "skills-passport-sdk": "workspace:*",
+    "skills-passport-tlock": "workspace:*",
     "@x402/core": "^2.14.0"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { StrKey } from "@stellar/stellar-sdk";
-import { commitment } from "@decentralized-global-education-skills-passport/tlock";
+import { commitment } from "skills-passport-tlock";
 import { verifyReceipt } from "./verify.js";
 import { networkFingerprint, type RoundReceipt } from "./receipt.js";
 

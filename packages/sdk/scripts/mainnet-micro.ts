@@ -19,7 +19,7 @@ import {
   defaultMainnetReadinessInput,
   runMainnetReadiness,
 } from "../src/mainnet-readiness.js";
-import { generateAuditorKeypair, generateNonce, quicknet, sealBid } from "@decentralized-global-education-skills-passport/tlock";
+import { generateAuditorKeypair, generateNonce, quicknet, sealBid } from "skills-passport-tlock";
 
 const DRAND_GENESIS = 1_692_803_367;
 const DRAND_PERIOD = 3;

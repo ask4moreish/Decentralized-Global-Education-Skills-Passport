@@ -2,7 +2,7 @@
 
 The Round contract emits seven **on-chain events** via
 `env.events().publish((symbol_short!("…"), round_id), …)`. Generated
-TypeScript bindings (`@decentralized-global-education-skills-passport/round-bindings`) expose the contract
+TypeScript bindings (`round-bindings`) expose the contract
 **method** spec (`Spec`), but events are not in the spec — so a silent
 rename of `symbol_short!("commit")` to `symbol_short!("submit")` would not
 be caught by standard bindings tests, but it would silently break the
@@ -51,8 +51,8 @@ If you intentionally rename, add, reorder, or remove a Round event:
 5. **Run the snapshot tests.** From the repo root:
 
    ```bash
-   pnpm --filter @decentralized-global-education-skills-passport/round-bindings test
-   pnpm --filter @decentralized-global-education-skills-passport/round-bindings typecheck
+   pnpm --filter round-bindings test
+   pnpm --filter round-bindings typecheck
    ```
 
    Both must pass before you push.

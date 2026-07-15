@@ -136,4 +136,4 @@ export {
   type ClearingRule,
   type Status,
   type DataKey,
-} from "@decentralized-global-education-skills-passport/round-bindings";
+} from "round-bindings";

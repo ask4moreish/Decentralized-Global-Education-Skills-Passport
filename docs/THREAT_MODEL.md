@@ -64,7 +64,7 @@
 
 ### Receipt verification
 
-`@decentralized-global-education-skills-passport/sdk`'s offline `verifyReceipt` checks the canonical JSON export
+`skills-passport-sdk`'s offline `verifyReceipt` checks the canonical JSON export
 against the round's commitments, clearing rule, and declared winner. The full
 schema and verifier surface lives in `docs/RECEIPTS.md`; this subsection only
 captures the threat-model-relevant surface.

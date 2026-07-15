@@ -19,9 +19,9 @@ import {
   type GlobalConfig,
   type Round,
   type Seal,
-} from "@decentralized-global-education-skills-passport/round-bindings";
-import { toHex } from "@decentralized-global-education-skills-passport/tlock";
-import type { SealedBid } from "@decentralized-global-education-skills-passport/tlock";
+} from "round-bindings";
+import { toHex } from "skills-passport-tlock";
+import type { SealedBid } from "skills-passport-tlock";
 import type { RoundReceipt } from "./receipt.js";
 import { validateEncryptedBlob } from "./encrypted-blob.js";
 import { networkFingerprint } from "./receipt.js";
@@ -104,7 +104,7 @@ export interface CreateRoundParams {
 
 export interface CommitParams {
   roundId: number | bigint;
-  /** The off-chain seal produced by @decentralized-global-education-skills-passport/tlock `sealBid`. */
+  /** The off-chain seal produced by skills-passport-tlock `sealBid`. */
   sealed: SealedBid;
   /** Public USDC budget locked now; upper bound on the sealed bid. */
   escrow: bigint;

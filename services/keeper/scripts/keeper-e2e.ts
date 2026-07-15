@@ -13,13 +13,13 @@ import { createHash } from "node:crypto";
 
 import { Keypair } from "@stellar/stellar-sdk";
 import { basicNodeSigner } from "@stellar/stellar-sdk/contract";
-import { RoundContract, SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
+import { RoundContract, SkillsPassportClient } from "skills-passport-sdk";
 import {
   generateAuditorKeypair,
   generateNonce,
   quicknet,
   sealBid,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 import { keepRound } from "../src/keeper.js";
 

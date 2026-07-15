@@ -7,9 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 The three publishable packages
-([`@decentralized-global-education-skills-passport/sdk`](packages/sdk),
-[`@decentralized-global-education-skills-passport/tlock`](packages/tlock),
-[`@decentralized-global-education-skills-passport/round-bindings`](packages/round-bindings))
+([`skills-passport-sdk`](packages/sdk),
+[`skills-passport-tlock`](packages/tlock),
+[`round-bindings`](packages/round-bindings))
 are versioned together as a fixed group — see [`.changeset/config.json`](.changeset/config.json).
 
 ---

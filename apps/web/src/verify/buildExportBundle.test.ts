@@ -15,7 +15,7 @@ import {
   redactReceipt,
   serializeReceipt,
   type RoundReceipt,
-} from "@decentralized-global-education-skills-passport/sdk";
+} from "skills-passport-sdk";
 
 import { buildExportBundle } from "./buildExportBundle.js";
 import type { JsonVerifyOutput } from "./buildJsonOutput.js";

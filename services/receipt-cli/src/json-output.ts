@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { serializeReceipt, type RoundReceipt, type VerificationResult } from "@decentralized-global-education-skills-passport/sdk";
+import { serializeReceipt, type RoundReceipt, type VerificationResult } from "skills-passport-sdk";
 
 export interface JsonIssue {
   code: string;

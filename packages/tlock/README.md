@@ -3,15 +3,15 @@
 </p>
 
 <h1 align="center">
-  <code>@decentralized-global-education-skills-passport/tlock</code>
+  <code>skills-passport-tlock</code>
 </h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@decentralized-global-education-skills-passport/tlock">
-    <img src="https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/tlock" alt="npm" />
+  <a href="https://www.npmjs.com/package/skills-passport-tlock">
+    <img src="https://img.shields.io/npm/v/skills-passport-tlock" alt="npm" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/npm/l/@decentralized-global-education-skills-passport/tlock" alt="license" />
+    <img src="https://img.shields.io/npm/l/skills-passport-tlock" alt="license" />
   </a>
   <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/actions/workflows/npm-publish.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/npm-publish.yml" alt="build" />
@@ -29,7 +29,7 @@ Optionally encrypts a bidder identity to a designated auditor public key for sel
 ## Install
 
 ```bash
-npm install @decentralized-global-education-skills-passport/tlock
+npm install skills-passport-tlock
 ```
 
 ## Quick start — seal and open a bid
@@ -42,7 +42,7 @@ import {
   generateNonce,
   commitment,
   toHex,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 // 1. Connect to Drand quicknet
 const drand = quicknet();
@@ -76,7 +76,7 @@ import {
   openBid,
   generateAuditorKeypair,
   openIdentity,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 const auditor = generateAuditorKeypair();
 
@@ -196,5 +196,5 @@ type AuditorKeypair = {
 
 ## Related packages
 
-- [`@decentralized-global-education-skills-passport/round-bindings`](../round-bindings) — Soroban contract bindings (the on-chain counterpart)
-- [`@decentralized-global-education-skills-passport/sdk`](../sdk) — High-level client, receipt verification, preflight simulation
+- [`round-bindings`](../round-bindings) — Soroban contract bindings (the on-chain counterpart)
+- [`skills-passport-sdk`](../sdk) — High-level client, receipt verification, preflight simulation

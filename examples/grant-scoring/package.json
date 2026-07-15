@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Sealed grant scoring pilot template — projects, judges, criteria, sealed commits, reveal, and ranked receipt output using @decentralized-global-education-skills-passport/sdk and @decentralized-global-education-skills-passport/tlock.",
+  "description": "Sealed grant scoring pilot template — projects, judges, criteria, sealed commits, reveal, and ranked receipt output using skills-passport-sdk and skills-passport-tlock.",
   "main": "src/index.ts",
   "scripts": {
     "start": "node --import tsx src/run-fixture-pilot.ts",
@@ -11,8 +11,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@decentralized-global-education-skills-passport/sdk": "workspace:*",
-    "@decentralized-global-education-skills-passport/tlock": "workspace:*"
+    "skills-passport-sdk": "workspace:*",
+    "skills-passport-tlock": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",

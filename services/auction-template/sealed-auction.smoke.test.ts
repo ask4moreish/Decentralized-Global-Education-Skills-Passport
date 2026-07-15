@@ -20,7 +20,7 @@ import { resolve } from "node:path";
 import { test } from "node:test";
 
 // ---------------------------------------------------------------------------
-// Helpers (mirrors @decentralized-global-education-skills-passport/tlock commitment logic without importing it)
+// Helpers (mirrors skills-passport-tlock commitment logic without importing it)
 // ---------------------------------------------------------------------------
 
 function sha256Hex(data: Uint8Array): string {

@@ -1,4 +1,4 @@
-import type { BidState, Round, SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
+import type { BidState, Round, SkillsPassportClient } from "skills-passport-sdk";
 
 import { VOID_GRACE_SECONDS } from "./keeper.js";
 

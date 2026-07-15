@@ -39,4 +39,4 @@ WASM_HASH="$WASM_HASH" \
 USDC_SAC="$USDC_SAC" \
 RPC_URL="${RPC_URL:-https://soroban-testnet.stellar.org}" \
 NETWORK_PASSPHRASE="${NETWORK_PASSPHRASE:-Test SDF Network ; September 2015}" \
-pnpm --filter @decentralized-global-education-skills-passport/sdk exec tsx scripts/live-smoke.ts
+pnpm --filter skills-passport-sdk exec tsx scripts/live-smoke.ts

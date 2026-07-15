@@ -3,15 +3,15 @@
 </p>
 
 <h1 align="center">
-  <code>@decentralized-global-education-skills-passport/round-bindings</code>
+  <code>round-bindings</code>
 </h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@decentralized-global-education-skills-passport/round-bindings">
-    <img src="https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/round-bindings" alt="npm" />
+  <a href="https://www.npmjs.com/package/round-bindings">
+    <img src="https://img.shields.io/npm/v/round-bindings" alt="npm" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/npm/l/@decentralized-global-education-skills-passport/round-bindings" alt="license" />
+    <img src="https://img.shields.io/npm/l/round-bindings" alt="license" />
   </a>
   <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/actions/workflows/npm-publish.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/npm-publish.yml" alt="build" />
@@ -22,20 +22,20 @@
 
 These bindings are the **type-safe wire format** between your app and the on-chain `SkillsPassportRound` contract. They define the `Client` class, contract types (`Round`, `BidState`, `Seal`, etc.), error codes, and the embedded contract Spec used for argument/return encoding.
 
-> Consumers will typically use `@decentralized-global-education-skills-passport/sdk` instead, which re-exports these types alongside preflight helpers, receipt verification, and a higher-level `SkillsPassportClient`.
+> Consumers will typically use `skills-passport-sdk` instead, which re-exports these types alongside preflight helpers, receipt verification, and a higher-level `SkillsPassportClient`.
 
 ---
 
 ## Install
 
 ```bash
-npm install @decentralized-global-education-skills-passport/round-bindings
+npm install round-bindings
 ```
 
 ## Quick start
 
 ```ts
-import { Client as RoundContract } from "@decentralized-global-education-skills-passport/round-bindings";
+import { Client as RoundContract } from "round-bindings";
 
 const contract = new RoundContract({
   contractId: "CA7KSDEYJEPGZEB2ZROTLUWKQQ6GIRIQNGG6Z745MZ34QHP4UJPWODEX",
@@ -88,7 +88,7 @@ const tx = await RoundContract.deploy(
 The `Errors` map converts on-chain error codes to human-readable messages. See [`contracts/round/ERRORS.md`](https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/blob/main/contracts/round/ERRORS.md) for the full reference.
 
 ```ts
-import { Errors } from "@decentralized-global-education-skills-passport/round-bindings";
+import { Errors } from "round-bindings";
 console.log(Errors[30].message); // "InvalidDrandSignature"
 ```
 
@@ -109,5 +109,5 @@ console.log(Errors[30].message); // "InvalidDrandSignature"
 
 ## Related packages
 
-- [`@decentralized-global-education-skills-passport/tlock`](../tlock) — Off-chain seal/unseal for bid values before commit
-- [`@decentralized-global-education-skills-passport/sdk`](../sdk) — High-level client, preflight simulation, receipt verification, OZ Relayer submitter
+- [`skills-passport-tlock`](../tlock) — Off-chain seal/unseal for bid values before commit
+- [`skills-passport-sdk`](../sdk) — High-level client, preflight simulation, receipt verification, OZ Relayer submitter

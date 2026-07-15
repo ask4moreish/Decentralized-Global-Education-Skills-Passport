@@ -174,7 +174,7 @@ pnpm contract:test       # 14 Rust tests
 
 ```bash
 pnpm sdk:typecheck
-pnpm tlock:typecheck     # (tlock has no root script; use pnpm --filter @decentralized-global-education-skills-passport/tlock typecheck)
+pnpm tlock:typecheck     # (tlock has no root script; use pnpm --filter skills-passport-tlock typecheck)
 pnpm bindings:typecheck
 pnpm web:typecheck
 pnpm appraisal:typecheck
@@ -277,9 +277,9 @@ git push origin main
 ```
 
 The three publishable packages
-([`@decentralized-global-education-skills-passport/sdk`](packages/sdk),
-[`@decentralized-global-education-skills-passport/tlock`](packages/tlock),
-[`@decentralized-global-education-skills-passport/round-bindings`](packages/round-bindings))
+([`skills-passport-sdk`](packages/sdk),
+[`skills-passport-tlock`](packages/tlock),
+[`round-bindings`](packages/round-bindings))
 are versioned together as a fixed group. A changeset touching any one of them
 bumps all three.
 

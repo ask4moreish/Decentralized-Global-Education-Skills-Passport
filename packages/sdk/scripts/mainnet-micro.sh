@@ -9,4 +9,4 @@
 #     pnpm mainnet:micro -- --execute
 set -euo pipefail
 cd "$(dirname "$0")/../../.."
-pnpm --filter @decentralized-global-education-skills-passport/sdk exec tsx scripts/mainnet-micro.ts "$@"
+pnpm --filter skills-passport-sdk exec tsx scripts/mainnet-micro.ts "$@"

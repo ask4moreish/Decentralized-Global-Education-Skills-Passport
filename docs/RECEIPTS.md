@@ -46,7 +46,7 @@ Receipts use **canonical JSON** — keys are deep-sorted lexicographically. BigI
 
 ## Offline verification
 
-The `verifyReceipt` function in `@decentralized-global-education-skills-passport/sdk` performs **stateless, offline** checks:
+The `verifyReceipt` function in `skills-passport-sdk` performs **stateless, offline** checks:
 
 | Check | What it detects | Error code |
 | --- | --- | --- |
@@ -94,7 +94,7 @@ pnpm --filter @decentralized-global-education-skills-passport/receipt-cli receip
 ### Programmatic (TypeScript)
 
 ```ts
-import { verifyReceipt, parseReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { verifyReceipt, parseReceipt } from "skills-passport-sdk";
 import { readFileSync } from "node:fs";
 
 const receipt = parseReceipt(readFileSync("round-1-receipt.json", "utf-8"));
@@ -110,7 +110,7 @@ The SDK ships a pure `redactReceipt` helper that produces a public-safe copy of 
 ### Usage
 
 ```ts
-import { redactReceipt, serializeReceipt, parseReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { redactReceipt, serializeReceipt, parseReceipt } from "skills-passport-sdk";
 import { readFileSync, writeFileSync } from "node:fs";
 
 const receipt = parseReceipt(readFileSync("round-1-receipt.json", "utf-8"));

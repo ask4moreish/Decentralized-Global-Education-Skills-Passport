@@ -1,5 +1,5 @@
 {
-  "name": "@decentralized-global-education-skills-passport/tlock",
+  "name": "skills-passport-tlock",
   "version": "0.1.0",
   "private": false,
   "type": "module",

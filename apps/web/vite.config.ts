@@ -32,7 +32,7 @@ function manualChunks(id: string): string | undefined {
   }
 
   // Monorepo workspace packages — SDK, tlock, agent, bindings, keeper, etc.
-  if (id.includes("@decentralized-global-education-skills-passport")) {
+  if (id.includes("@decentralized-global-education-skills-passport") || id.includes("skills-passport-") || id.includes("round-bindings")) {
     return "vendor-skp";
   }
 

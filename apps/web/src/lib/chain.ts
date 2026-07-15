@@ -4,7 +4,7 @@ import {
   signAuthEntry,
   signTransaction,
 } from "@stellar/freighter-api";
-import { RoundContract } from "@decentralized-global-education-skills-passport/sdk";
+import { RoundContract } from "skills-passport-sdk";
 import { useMemo } from "react";
 
 export const LOGO_SRC = "/decentralized-global-education-skills-passport-logo.png";

@@ -61,10 +61,10 @@ pnpm template:testnet
 | Phase | Description | On-chain call | Off-chain library |
 |-------|-------------|---------------|-------------------|
 | **1. Setup** | Operator deploys contract, configures Drand params, creates round | `create_round` | `SkillsPassportClient.createRound` |
-| **2. Commit** | Bidders seal `(value, nonce)` to Drand R, lock USDC escrow | `commit` | `sealBid` from `@decentralized-global-education-skills-passport/tlock` |
+| **2. Commit** | Bidders seal `(value, nonce)` to Drand R, lock USDC escrow | `commit` | `sealBid` from `skills-passport-tlock` |
 | **3. Reveal** | Keeper fetches Drand R signature, opens reveal, decrypts all seals | `open_reveal`, `reveal` | `keepRound` from `@decentralized-global-education-skills-passport/keeper` + `openBid` |
 | **4. Clear + Settle** | Winner is determined; contract transfers funds | `clear`, `settle` | `closeRound` from `@decentralized-global-education-skills-passport/keeper` |
-| **5. Verify** | Receipt exported and verified offline | (read-only) | `exportReceipt` + `verifyReceipt` from `@decentralized-global-education-skills-passport/sdk` |
+| **5. Verify** | Receipt exported and verified offline | (read-only) | `exportReceipt` + `verifyReceipt` from `skills-passport-sdk` |
 
 ## Failure cases documented
 
@@ -79,8 +79,8 @@ pnpm template:testnet
 
 | Package | Purpose |
 |---------|---------|
-| [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) | `SkillsPassportClient`, `verifyReceipt`, `RoundContract` |
-| [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) | `sealBid`, `openBid`, `generateNonce`, `quicknet` |
+| [`skills-passport-sdk`](../../packages/sdk) | `SkillsPassportClient`, `verifyReceipt`, `RoundContract` |
+| [`skills-passport-tlock`](../../packages/tlock) | `sealBid`, `openBid`, `generateNonce`, `quicknet` |
 | [`@decentralized-global-education-skills-passport/keeper`](../keeper) | `keepRound`, `closeRound` — lifecycle driver |
 | `@stellar/stellar-sdk` | Account, TransactionBuilder, Keypair (testnet mode only) |
 
@@ -89,8 +89,8 @@ pnpm template:testnet
 - [Keeper service](../keeper) — permissionless lifecycle driver
 - [Receipt CLI](../receipt-cli) — standalone receipt export and verification
 - [Agent service](../agent) — autonomous mandate-capped bidding agents
-- [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) — client SDK
-- [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) — timelock encryption
+- [`skills-passport-sdk`](../../packages/sdk) — client SDK
+- [`skills-passport-tlock`](../../packages/tlock) — timelock encryption
 
 ## License
 

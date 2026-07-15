@@ -23,8 +23,8 @@ one repeatable flow.
 This template is **separate from the jury demo trace** in `services/agent` and
 `apps/web`. Those paths prove autonomous sealed bidding; this package shows how
 a pilot partner wires **multi-project grant scoring** with
-[`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) and
-[`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock).
+[`skills-passport-sdk`](../../packages/sdk) and
+[`skills-passport-tlock`](../../packages/tlock).
 
 ---
 
@@ -97,8 +97,8 @@ Key exports:
 Replace fixture mode with a real `SkillsPassportClient` and funded accounts:
 
 ```ts
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { SkillsPassportClient } from "skills-passport-sdk";
+import { quicknet } from "skills-passport-tlock";
 import {
   GrantScoringPilot,
   commitSealedJudgeScore,
@@ -164,8 +164,8 @@ commitment verification at reveal time (3 test files).
 
 | Package | Purpose |
 |---|---|
-| [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) | `SkillsPassportClient`, types, receipt verification |
-| [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) | `sealBid`, `commitment`, `quicknet` — score sealing and on-chain binding |
+| [`skills-passport-sdk`](../../packages/sdk) | `SkillsPassportClient`, types, receipt verification |
+| [`skills-passport-tlock`](../../packages/tlock) | `sealBid`, `commitment`, `quicknet` — score sealing and on-chain binding |
 
 ---
 
@@ -173,8 +173,8 @@ commitment verification at reveal time (3 test files).
 
 - [Integration guide](../../docs/INTEGRATION.md) — how another Stellar app embeds the protocol
 - [Pilot playbook](../../docs/PILOT_PLAYBOOK.md) — outreach strategy, SCF demo narrative, pilot plan
-- [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) — client SDK
-- [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) — timelock encryption
+- [`skills-passport-sdk`](../../packages/sdk) — client SDK
+- [`skills-passport-tlock`](../../packages/tlock) — timelock encryption
 
 ## License
 

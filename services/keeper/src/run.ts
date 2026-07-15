@@ -10,8 +10,8 @@
 //   RPC_URL             default https://soroban-testnet.stellar.org
 //   NETWORK_PASSPHRASE  default testnet
 
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { SkillsPassportClient } from "skills-passport-sdk";
+import { quicknet } from "skills-passport-tlock";
 
 import {
   buildKeeperDryRunSummary,

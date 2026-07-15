@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import { commitment, generateNonce } from "@decentralized-global-education-skills-passport/tlock";
+import { commitment, generateNonce } from "skills-passport-tlock";
 
 import {
   PILOT_EXPECTED_RANKING,
@@ -62,7 +62,7 @@ describe("GrantScoringPilot fixture lifecycle", () => {
     assert.equal(report.pendingProjects.length, 0);
   });
 
-  test("sealed commitments verify at reveal using @decentralized-global-education-skills-passport/tlock vectors", async () => {
+  test("sealed commitments verify at reveal using skills-passport-tlock vectors", async () => {
     const pilot = new GrantScoringPilot();
     await pilot.createProjectRounds();
     await pilot.submitAllFixtureScores();

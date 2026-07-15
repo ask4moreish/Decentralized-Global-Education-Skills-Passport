@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Round, BidState } from "@decentralized-global-education-skills-passport/sdk";
+import type { Round, BidState } from "skills-passport-sdk";
 import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -37,7 +37,7 @@ export function useLiveRound(enabled: boolean, pollMs?: number) {
 
     async function poll() {
       try {
-        const { SkillsPassportClient } = await import("@decentralized-global-education-skills-passport/sdk");
+        const { SkillsPassportClient } = await import("skills-passport-sdk");
         const reader = new SkillsPassportClient({
           rpcUrl: RPC,
           networkPassphrase: NETWORK,

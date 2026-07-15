@@ -3,7 +3,7 @@ import {
   AssembledTransaction,
   type Result,
 } from "@stellar/stellar-sdk/contract";
-import { Errors as RoundContractErrors } from "@decentralized-global-education-skills-passport/round-bindings";
+import { Errors as RoundContractErrors } from "round-bindings";
 import { SkillsPassportPreflightError } from "./errors.js";
 
 export type PreflightOperation =

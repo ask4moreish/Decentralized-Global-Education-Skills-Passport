@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { FIELD_SECTIONS } from "../../verify/fieldDocs";
 import type { UseVerificationResult } from "../../hooks/useVerification";
-import type { RoundReceipt, VerificationIssue } from "@decentralized-global-education-skills-passport/sdk";
+import type { RoundReceipt, VerificationIssue } from "skills-passport-sdk";
 
 export interface ReceiptExplorerProps {
   receipt: RoundReceipt | null;

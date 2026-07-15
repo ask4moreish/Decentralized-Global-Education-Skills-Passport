@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { parseReceipt, type RoundReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { parseReceipt, type RoundReceipt } from "skills-passport-sdk";
 
 export interface UseReceiptInputResult {
   /** Raw textarea contents — what the user typed, dropped, or pasted. */

@@ -8,13 +8,13 @@ import { Keypair } from "@stellar/stellar-sdk";
 import type { Network, SettleResponse } from "@x402/core/types";
 import type { Appraisal, AppraisalAttributes, AppraisalRequest } from "@decentralized-global-education-skills-passport/appraisal-api";
 import { createPaidFetch } from "@decentralized-global-education-skills-passport/appraisal-api";
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
+import { SkillsPassportClient } from "skills-passport-sdk";
 import {
   generateNonce,
   quicknet,
   sealBid,
   type DrandClient,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 import {
   assertAppraisalSpendAllowed,

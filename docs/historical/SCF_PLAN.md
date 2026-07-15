@@ -125,8 +125,8 @@ on testnet.
 
 Deliverables:
 
-- Publish-ready `@decentralized-global-education-skills-passport/sdk` package surface and examples
-- `@decentralized-global-education-skills-passport/tlock` integration examples for sealed values and auditor blobs
+- Publish-ready `skills-passport-sdk` package surface and examples
+- `skills-passport-tlock` integration examples for sealed values and auditor blobs
 - Integration guide: "Add sealed rounds to a Stellar app"
 - Contract hardening pass and expanded test vectors
 - Clear API docs for create round, commit, open reveal, reveal, clear, settle

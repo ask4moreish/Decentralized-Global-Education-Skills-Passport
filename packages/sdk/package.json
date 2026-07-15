@@ -1,5 +1,5 @@
 {
-  "name": "@decentralized-global-education-skills-passport/sdk",
+  "name": "skills-passport-sdk",
   "version": "0.1.0",
   "private": false,
   "type": "module",
@@ -55,8 +55,8 @@
   "dependencies": {
     "@openzeppelin/relayer-plugin-channels": "^0.20.0",
     "@stellar/stellar-sdk": "^15.1.0",
-    "@decentralized-global-education-skills-passport/round-bindings": "workspace:*",
-    "@decentralized-global-education-skills-passport/tlock": "workspace:*"
+    "round-bindings": "workspace:*",
+    "skills-passport-tlock": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",

@@ -39,7 +39,7 @@ async function get(
 
 function makeSource(overrides: Partial<BuildStatusSource> = {}): BuildStatusSource {
   const now = Math.floor(Date.now() / 1000);
-  const fullRound = (extra: Partial<import("@decentralized-global-education-skills-passport/sdk").Round> = {}): import("@decentralized-global-education-skills-passport/sdk").Round =>
+  const fullRound = (extra: Partial<import("skills-passport-sdk").Round> = {}): import("skills-passport-sdk").Round =>
     ({
       status: { tag: "Open" as const },
       reveal_round: BigInt(1_000_000),
@@ -53,8 +53,8 @@ function makeSource(overrides: Partial<BuildStatusSource> = {}): BuildStatusSour
       item_ref: Buffer.from("bb".repeat(32), "hex"),
       operator: "GOPERATOR",
       ...extra,
-    } as import("@decentralized-global-education-skills-passport/sdk").Round);
-  const fullState = (): import("@decentralized-global-education-skills-passport/sdk").BidState =>
+    } as import("skills-passport-sdk").Round);
+  const fullState = (): import("skills-passport-sdk").BidState =>
     ({
       commitment: Buffer.from("00"),
       escrow: 0n,
@@ -62,7 +62,7 @@ function makeSource(overrides: Partial<BuildStatusSource> = {}): BuildStatusSour
       revealed_value: undefined,
       settled: false,
       valid: false,
-    } as import("@decentralized-global-education-skills-passport/sdk").BidState);
+    } as import("skills-passport-sdk").BidState);
   return {
     reader: {
       getRound: async () => fullRound(),

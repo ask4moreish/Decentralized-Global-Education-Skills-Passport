@@ -3,15 +3,15 @@
 </p>
 
 <h1 align="center">
-  <code>@decentralized-global-education-skills-passport/sdk</code>
+  <code>skills-passport-sdk</code>
 </h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@decentralized-global-education-skills-passport/sdk">
-    <img src="https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/sdk" alt="npm" />
+  <a href="https://www.npmjs.com/package/skills-passport-sdk">
+    <img src="https://img.shields.io/npm/v/skills-passport-sdk" alt="npm" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/npm/l/@decentralized-global-education-skills-passport/sdk" alt="license" />
+    <img src="https://img.shields.io/npm/l/skills-passport-sdk" alt="license" />
   </a>
   <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/actions/workflows/npm-publish.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/npm-publish.yml" alt="build" />
@@ -27,10 +27,10 @@ Wraps the [generated contract bindings](../round-bindings) with a `SkillsPasspor
 ## Install
 
 ```bash
-npm install @decentralized-global-education-skills-passport/sdk
+npm install skills-passport-sdk
 ```
 
-Requires `@decentralized-global-education-skills-passport/tlock` for sealing bid values and `@decentralized-global-education-skills-passport/round-bindings` for the contract types. Both are declared as workspace dependencies and will be installed automatically.
+Requires `skills-passport-tlock` for sealing bid values and `round-bindings` for the contract types. Both are declared as workspace dependencies and will be installed automatically.
 
 ---
 
@@ -39,7 +39,7 @@ Requires `@decentralized-global-education-skills-passport/tlock` for sealing bid
 ### 1. Create a client
 
 ```ts
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
+import { SkillsPassportClient } from "skills-passport-sdk";
 
 const client = new SkillsPassportClient({
   rpcUrl: "https://soroban-testnet.stellar.org",
@@ -65,7 +65,7 @@ const roundId = await client.createRound({
 ### 3. Seal and commit a bid (bidder)
 
 ```ts
-import { quicknet, sealBid, generateNonce } from "@decentralized-global-education-skills-passport/tlock";
+import { quicknet, sealBid, generateNonce } from "skills-passport-tlock";
 
 const drand = quicknet();
 const sealed = await sealBid({
@@ -87,7 +87,7 @@ await client.commit({
 ### 4. Open reveal (anyone — after Drand round R)
 
 ```ts
-import { quicknet, fetchRoundSignature, drandSignatureToSoroban } from "@decentralized-global-education-skills-passport/tlock";
+import { quicknet, fetchRoundSignature, drandSignatureToSoroban } from "skills-passport-tlock";
 
 const sig = await fetchRoundSignature(drand, 29_176_840);  // number, not bigint
 const sorobanSig = drandSignatureToSoroban(sig);
@@ -161,21 +161,21 @@ if (preflight.ok) {
 const receipt = await client.exportReceipt(1n);
 
 // Offline verification — no RPC, no secrets
-import { verifyReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { verifyReceipt } from "skills-passport-sdk";
 const result = verifyReceipt(receipt);
 console.log(result.valid);     // true
 console.log(result.issues);    // []
 console.log(result.computedWinner); // { address: "G…", value: 250n }
 
 // Redact sensitive fields for public sharing
-import { redactReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { redactReceipt } from "skills-passport-sdk";
 const redacted = redactReceipt(receipt, { keep: ["winner", "winningValue"] });
 ```
 
 ### Optional OZ Relayer Channels submitter
 
 ```ts
-import { SkillsPassportClient, createOzChannelsSubmitterFromEnv } from "@decentralized-global-education-skills-passport/sdk";
+import { SkillsPassportClient, createOzChannelsSubmitterFromEnv } from "skills-passport-sdk";
 
 const client = new SkillsPassportClient({
   rpcUrl,
@@ -191,7 +191,7 @@ const client = new SkillsPassportClient({
 Validates ciphertext and auditor blob size/encoding before submitting (catches `PayloadTooLarge` errors before paying gas):
 
 ```ts
-import { validateEncryptedBlob, MAX_CIPHERTEXT_BYTES } from "@decentralized-global-education-skills-passport/sdk";
+import { validateEncryptedBlob, MAX_CIPHERTEXT_BYTES } from "skills-passport-sdk";
 
 const result = validateEncryptedBlob(ciphertext, "ciphertext");
 if (!result.valid) {
@@ -207,7 +207,7 @@ import {
   assertMainnetConfirmed,
   MAINNET_ARTIFACTS,
   MAINNET_CONFIRM_PHRASE,
-} from "@decentralized-global-education-skills-passport/sdk";
+} from "skills-passport-sdk";
 
 const report = await runMainnetReadiness(defaultMainnetReadinessInput());
 console.log(formatReadinessReport(report));
@@ -226,7 +226,7 @@ console.log(formatReadinessReport(report));
 
 ## Re-exported types from bindings
 
-The SDK re-exports all contract types from `@decentralized-global-education-skills-passport/round-bindings` so consumers only need one import:
+The SDK re-exports all contract types from `round-bindings` so consumers only need one import:
 
 ```ts
 import {
@@ -240,12 +240,12 @@ import {
   type BiddersPage,
   RoundContract,       // raw Client class
   RoundErrors,         // error code → message map
-} from "@decentralized-global-education-skills-passport/sdk";
+} from "skills-passport-sdk";
 ```
 
 ---
 
 ## Related packages
 
-- [`@decentralized-global-education-skills-passport/tlock`](../tlock) — Sealing/unsealing bid values with Drand timelock encryption
-- [`@decentralized-global-education-skills-passport/round-bindings`](../round-bindings) — Generated Soroban contract bindings (types, Client, Spec)
+- [`skills-passport-tlock`](../tlock) — Sealing/unsealing bid values with Drand timelock encryption
+- [`round-bindings`](../round-bindings) — Generated Soroban contract bindings (types, Client, Spec)

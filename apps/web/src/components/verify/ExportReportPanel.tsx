@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { redactReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { redactReceipt } from "skills-passport-sdk";
 import { useToast } from "../../ui/Toast";
 import { buildJsonOutput, type JsonVerifyOutput } from "../../verify/buildJsonOutput";
 import type { UseVerificationResult } from "../../hooks/useVerification";
-import type { RoundReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import type { RoundReceipt } from "skills-passport-sdk";
 import { buildPermalinkUrl, byteLengthUtf8 } from "../../verify/permalink";
 import { buildExportBundle } from "../../verify/buildExportBundle";
-import { serializeReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { serializeReceipt } from "skills-passport-sdk";
 
 export interface ExportReportPanelProps {
   receipt: RoundReceipt | null;

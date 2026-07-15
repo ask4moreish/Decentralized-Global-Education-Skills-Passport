@@ -1,4 +1,4 @@
-import { commitment, generateNonce } from "@decentralized-global-education-skills-passport/tlock";
+import { commitment, generateNonce } from "skills-passport-tlock";
 
 import type { GrantPilotProgram, SealedScoreSubmission } from "./types.js";
 import { scoreToStroops } from "./scoring.js";

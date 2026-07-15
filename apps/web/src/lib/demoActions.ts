@@ -15,7 +15,7 @@ import {
   quicknet,
   sealBid,
   openBid,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 import type { AttackStep, CapDemoResult } from "./demoTypes";
 

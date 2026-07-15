@@ -1,6 +1,6 @@
 # Release Guide
 
-How to publish `@decentralized-global-education-skills-passport/*` packages to npm.
+How to publish the Skills Passport packages to npm.
 
 ---
 
@@ -8,13 +8,8 @@ How to publish `@decentralized-global-education-skills-passport/*` packages to n
 
 ### 1. Create npm organization
 
-The packages are scoped under `@decentralized-global-education-skills-passport`. If it
-doesn't exist yet, create it on [npm](https://www.npmjs.com):
-
-```bash
-npm org create @decentralized-global-education-skills-passport
-# or create it via the npm web UI → https://www.npmjs.com/org/create
-```
+The publishable packages (`round-bindings`, `skills-passport-sdk`, `skills-passport-tlock`)
+are unscoped and published under your personal or org npm account.
 
 ### 2. Generate an npm automation token
 
@@ -22,8 +17,7 @@ An **automation token** is required so CI can publish without an interactive log
 
 1. Go to https://www.npmjs.com/settings/<your-username>/tokens
 2. Click **"Generate New Token"** → **"Automation"**
-3. Select the `@decentralized-global-education-skills-passport` scope
-4. Copy the token (starts with `npm_`)
+3. Copy the token (starts with `npm_`)
 
 ### 3. Add the token to GitHub Secrets
 
@@ -125,15 +119,15 @@ If you need to publish locally (e.g., for testing):
 
 ```bash
 # Ensure you're logged in to npm
-npm login --scope=@decentralized-global-education-skills-passport
+npm login
 
 # Bump versions and generate changelogs
 pnpm version-packages
 
 # Build everything
-pnpm --filter @decentralized-global-education-skills-passport/round-bindings build
-pnpm --filter @decentralized-global-education-skills-passport/tlock build
-pnpm --filter @decentralized-global-education-skills-passport/sdk build
+pnpm --filter round-bindings build
+pnpm --filter skills-passport-tlock build
+pnpm --filter skills-passport-sdk build
 
 # Publish in dependency order
 pnpm publish:all

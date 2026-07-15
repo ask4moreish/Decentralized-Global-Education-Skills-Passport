@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import { verifyReceipt, type RoundReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { verifyReceipt, type RoundReceipt } from "skills-passport-sdk";
 import {
   commitment as computeCommitment,
   fromHex,
@@ -12,7 +12,7 @@ import {
   quicknet,
   sealBid,
   toHex,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 const DRAND_GENESIS = 1_692_803_367;
 const DRAND_PERIOD = 3;
@@ -78,7 +78,7 @@ async function fixtureMain() {
   console.log("  5. decrypts each seal with tlock + Drand R");
   console.log("  6. submits reveal (value + nonce) — contract checks sha256(be16(value)‖nonce) == H");
   console.log("(protocol-level: BLS verification in Round contract)");
-  console.log("(template-level: openBid from @decentralized-global-education-skills-passport/tlock)");
+  console.log("(template-level: openBid from skills-passport-tlock)");
 
   banner("Phase 4 — Clear + Settle (deterministic winner)");
   console.log(`clearing rule: ${receipt.clearingRule}`);
@@ -119,7 +119,7 @@ async function testnetMain() {
     await import("@stellar/stellar-sdk");
   const { basicNodeSigner } = await import("@stellar/stellar-sdk/contract");
   const { closeRound, keepRound } = await import("@decentralized-global-education-skills-passport/keeper");
-  const { RoundContract, SkillsPassportClient } = await import("@decentralized-global-education-skills-passport/sdk");
+  const { RoundContract, SkillsPassportClient } = await import("skills-passport-sdk");
 
   const operatorSecret = reqEnv("OPERATOR_SECRET");
   const bidder1Secret = reqEnv("BIDDER1_SECRET");

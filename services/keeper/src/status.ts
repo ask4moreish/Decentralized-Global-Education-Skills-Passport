@@ -1,5 +1,5 @@
-import type { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { fetchRoundSignature, type DrandClient } from "@decentralized-global-education-skills-passport/tlock";
+import type { SkillsPassportClient } from "skills-passport-sdk";
+import { fetchRoundSignature, type DrandClient } from "skills-passport-tlock";
 
 import { VOID_GRACE_SECONDS } from "./keeper.js";
 import { decideKeeperDryRunAction, type KeeperDryRunPhase } from "./dry-run.js";

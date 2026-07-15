@@ -20,8 +20,8 @@
 //   KEEPER_STATUS_ENABLE set to "false" to disable the status API (default true)
 
 import { Keypair } from "@stellar/stellar-sdk";
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { SkillsPassportClient } from "skills-passport-sdk";
+import { quicknet } from "skills-passport-tlock";
 
 import { createSettlementGuard } from "./settlement-guard.js";
 import { createStatusServer, withGracefulShutdown } from "./status-server.js";

@@ -1,4 +1,4 @@
-import type { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
+import type { SkillsPassportClient } from "skills-passport-sdk";
 
 import type { GrantPilotPhase, GrantPilotProgram } from "./types.js";
 

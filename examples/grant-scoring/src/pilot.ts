@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 
-import type { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { commitment, generateNonce } from "@decentralized-global-education-skills-passport/tlock";
+import type { SkillsPassportClient } from "skills-passport-sdk";
+import { commitment, generateNonce } from "skills-passport-tlock";
 
 import { FixtureGrantClient } from "./fixture-client.js";
 import { buildFixtureSubmission, commitFixtureScore } from "./fixture-submission.js";

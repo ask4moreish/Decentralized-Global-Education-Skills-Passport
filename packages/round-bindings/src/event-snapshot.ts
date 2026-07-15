@@ -1,6 +1,6 @@
 // Round contract event snapshot.
 //
-// Generated Soroban bindings (`@decentralized-global-education-skills-passport/round-bindings`) expose the contract's
+// Generated Soroban bindings (`round-bindings`) expose the contract's
 // Spec (method shapes), but contract **events** are emitted via
 // `env.events().publish(...)` and never appear in the method Spec. SDK
 // consumers (keeper, web, receipt-cli) and any future indexer rely on a stable

@@ -5,7 +5,7 @@ import {
   isConnected,
   requestAccess,
 } from "@stellar/freighter-api";
-import type { BidState, Round } from "@decentralized-global-education-skills-passport/sdk";
+import type { BidState, Round } from "skills-passport-sdk";
 import {
   fetchRoundSignature,
   generateAuditorKeypair,
@@ -14,7 +14,7 @@ import {
   quicknet,
   roundInSeconds,
   sealBid,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 import type { UseCase } from "../config/useCases";
 import type { UseCaseId } from "../config/useCases";
 import {

@@ -72,9 +72,9 @@ signature is public and the Soroban contract verifies it before opening reveal.
 | Layer | Path | npm | Purpose |
 | --- | --- | --- | --- |
 | **Contract** | `contracts/round` | — | Soroban primitive: sealed commit, BLS-verified reveal, SAC settle |
-| **Crypto** | [`packages/tlock`](packages/tlock) | [![npm](https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/tlock)](https://www.npmjs.com/package/@decentralized-global-education-skills-passport/tlock) | Drand tlock seal + auditor blob, byte-compatible with the contract |
-| **Bindings** *(generated)* | [`packages/round-bindings`](packages/round-bindings) | [![npm](https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/round-bindings)](https://www.npmjs.com/package/@decentralized-global-education-skills-passport/round-bindings) | TypeScript bindings generated from the contract WASM |
-| **SDK** | [`packages/sdk`](packages/sdk) | [![npm](https://img.shields.io/npm/v/@decentralized-global-education-skills-passport/sdk)](https://www.npmjs.com/package/@decentralized-global-education-skills-passport/sdk) | `SkillsPassportClient`, encoding, optional OpenZeppelin Channels submitter |
+| **Crypto** | [`packages/tlock`](packages/tlock) | [![npm](https://img.shields.io/npm/v/skills-passport-tlock)](https://www.npmjs.com/package/skills-passport-tlock) | Drand tlock seal + auditor blob, byte-compatible with the contract |
+| **Bindings** *(generated)* | [`packages/round-bindings`](packages/round-bindings) | [![npm](https://img.shields.io/npm/v/round-bindings)](https://www.npmjs.com/package/round-bindings) | TypeScript bindings generated from the contract WASM |
+| **SDK** | [`packages/sdk`](packages/sdk) | [![npm](https://img.shields.io/npm/v/skills-passport-sdk)](https://www.npmjs.com/package/skills-passport-sdk) | `SkillsPassportClient`, encoding, optional OpenZeppelin Channels submitter |
 | **Receipts** | `services/receipt-cli` | — | Export and offline-verify round receipts (no RPC, no secrets) |
 | **Keeper** | `services/keeper` | — | Permissionless reveal/clear/settle + watch mode + status HTTP API |
 | **Appraisal** | `services/appraisal-api` | — | x402-gated deterministic valuation (USDC SAC) |
@@ -133,17 +133,17 @@ Three packages are published to npm:
 
 | Package | Install | Pulls in |
 | --- | --- | --- |
-| [`@decentralized-global-education-skills-passport/sdk`](packages/sdk) | `npm install @decentralized-global-education-skills-passport/sdk` | ✅ tlock · ✅ round-bindings |
-| [`@decentralized-global-education-skills-passport/tlock`](packages/tlock) | `npm install @decentralized-global-education-skills-passport/tlock` | — |
-| [`@decentralized-global-education-skills-passport/round-bindings`](packages/round-bindings) | `npm install @decentralized-global-education-skills-passport/round-bindings` | — |
+| [`skills-passport-sdk`](packages/sdk) | `npm install skills-passport-sdk` | ✅ tlock · ✅ round-bindings |
+| [`skills-passport-tlock`](packages/tlock) | `npm install skills-passport-tlock` | — |
+| [`round-bindings`](packages/round-bindings) | `npm install round-bindings` | — |
 
 **In most cases, just install the SDK** — it declares `tlock` and `round-bindings` as
 dependencies and installs them automatically. Install `tlock` separately only if
 you need direct access to the seal/unseal APIs without the client.
 
 ```ts
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { sealBid, quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { SkillsPassportClient } from "skills-passport-sdk";
+import { sealBid, quicknet } from "skills-passport-tlock";
 
 const client = new SkillsPassportClient({
   rpcUrl,

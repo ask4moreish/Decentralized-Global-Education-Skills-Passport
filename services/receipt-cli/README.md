@@ -2,7 +2,7 @@
 
 Deterministic round-receipt exporter and offline verifier.
 
-Exports a portable round receipt from a Soroban RPC endpoint, verifies it offline (no RPC, no secrets), and redacts sensitive fields for public sharing. Uses the verification and redaction logic from [`@decentralized-global-education-skills-passport/sdk`](../packages/sdk).
+Exports a portable round receipt from a Soroban RPC endpoint, verifies it offline (no RPC, no secrets), and redacts sensitive fields for public sharing. Uses the verification and redaction logic from [`skills-passport-sdk`](../packages/sdk).
 
 ---
 
@@ -85,14 +85,14 @@ receipt-cli verify round-1-receipt.json --verify-artifact-checksum skills_passpo
 
 ## Dependencies
 
-- [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) — `exportReceipt`, `verifyReceipt`, `parseReceipt`, `redactReceipt`
-- [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) — commitment verification helpers
+- [`skills-passport-sdk`](../../packages/sdk) — `exportReceipt`, `verifyReceipt`, `parseReceipt`, `redactReceipt`
+- [`skills-passport-tlock`](../../packages/tlock) — commitment verification helpers
 
 ## Related
 
 - [Receipt verification docs](../../docs/RECEIPTS.md) — schema, trust model, offline verification
 - [Web UI /verify page](../../apps/web) — receipt verification browser interface
-- [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) — core verification logic
+- [`skills-passport-sdk`](../../packages/sdk) — core verification logic
 
 ## License
 

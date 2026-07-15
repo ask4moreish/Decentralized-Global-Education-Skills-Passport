@@ -7,10 +7,10 @@ TypeScript packages that other Stellar apps can embed.
 ## Target integration
 
 ```bash
-npm install @decentralized-global-education-skills-passport/sdk @decentralized-global-education-skills-passport/tlock
+npm install skills-passport-sdk skills-passport-tlock
 ```
 
-`@decentralized-global-education-skills-passport/sdk` is already present in this monorepo as `packages/sdk`. Publishing
+`skills-passport-sdk` is already present in this monorepo as `packages/sdk`. Publishing
 to npm is a release step, not a protocol requirement.
 
 ## What an app integrates
@@ -20,15 +20,15 @@ An integrating app usually needs four pieces:
 | Piece | Role |
 | --- | --- |
 | Round contract | Stores commitments, ciphertext, escrow, deadlines, Drand R, reveal state |
-| `@decentralized-global-education-skills-passport/sdk` | Creates rounds and submits contract calls from app backend/frontend |
-| `@decentralized-global-education-skills-passport/tlock` | Seals values to Drand R and opens ciphertext after R |
+| `skills-passport-sdk` | Creates rounds and submits contract calls from app backend/frontend |
+| `skills-passport-tlock` | Seals values to Drand R and opens ciphertext after R |
 | Keeper | Opens reveal and settles when Drand R is live; permissionless by design |
 
 ## Minimal flow
 
 ```ts
-import { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { generateNonce, quicknet, sealBid } from "@decentralized-global-education-skills-passport/tlock";
+import { SkillsPassportClient } from "skills-passport-sdk";
+import { generateNonce, quicknet, sealBid } from "skills-passport-tlock";
 
 const drand = quicknet();
 const client = new SkillsPassportClient({
@@ -114,7 +114,7 @@ require live signing credentials beyond a source `publicKey` (or `secretKey`).
 
 For SCF-style sealed grant scoring (multiple projects, panel judges, ranked
 receipt output), see [`examples/grant-scoring`](../examples/grant-scoring/README.md).
-It uses the same `@decentralized-global-education-skills-passport/sdk` + `@decentralized-global-education-skills-passport/tlock` commit path as above but
+It uses the same `skills-passport-sdk` + `skills-passport-tlock` commit path as above but
 models the full grant lifecycle separately from the jury demo trace.
 
 ## Auditor identity recovery CLI
@@ -123,7 +123,7 @@ For pilots that need machine-readable selective-disclosure evidence, recover
 bidder identities from auditor blobs with:
 
 ```bash
-pnpm --filter @decentralized-global-education-skills-passport/tlock recover:identities -- \
+pnpm --filter skills-passport-tlock recover:identities -- \
   --auditor-secret-hex <32-byte-hex> \
   --input-json '{"auditor":{"blobs":{"agent-alpha":"<blob-hex>"}}}'
 ```
@@ -131,7 +131,7 @@ pnpm --filter @decentralized-global-education-skills-passport/tlock recover:iden
 Hex-only input (single blob):
 
 ```bash
-pnpm --filter @decentralized-global-education-skills-passport/tlock recover:identities -- \
+pnpm --filter skills-passport-tlock recover:identities -- \
   --auditor-secret-hex <32-byte-hex> \
   --blob-hex <blob-hex> \
   --label agent-alpha

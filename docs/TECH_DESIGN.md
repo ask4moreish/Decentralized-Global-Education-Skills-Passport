@@ -90,7 +90,7 @@ Same asset rail on a given network (USDC on testnet); authorization differs. Mai
 Critical path uses **direct Soroban RPC** (proven live). The SDK also exposes an optional OpenZeppelin Relayer Channels submitter:
 
 ```ts
-import { SkillsPassportClient, createOzChannelsSubmitterFromEnv } from "@decentralized-global-education-skills-passport/sdk";
+import { SkillsPassportClient, createOzChannelsSubmitterFromEnv } from "skills-passport-sdk";
 
 const sdk = new SkillsPassportClient({
   rpcUrl,

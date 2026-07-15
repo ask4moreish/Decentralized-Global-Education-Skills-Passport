@@ -4,9 +4,9 @@
   "commit": false,
   "fixed": [
     [
-      "@decentralized-global-education-skills-passport/round-bindings",
-      "@decentralized-global-education-skills-passport/tlock",
-      "@decentralized-global-education-skills-passport/sdk"
+      "round-bindings",
+      "skills-passport-tlock",
+      "skills-passport-sdk"
     ]
   ],
   "linked": [],

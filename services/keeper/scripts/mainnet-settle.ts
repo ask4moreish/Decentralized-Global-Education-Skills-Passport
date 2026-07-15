@@ -11,8 +11,8 @@ import {
   nativeXlmSacId,
   runMainnetReadiness,
   SkillsPassportClient,
-} from "@decentralized-global-education-skills-passport/sdk";
-import { quicknet } from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-sdk";
+import { quicknet } from "skills-passport-tlock";
 
 import { closeRound, keepRound } from "../src/keeper.js";
 

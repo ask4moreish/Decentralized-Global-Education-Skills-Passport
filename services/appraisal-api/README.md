@@ -25,9 +25,9 @@ This package is an **integration boundary**. The HTTP shape, validation rules,
 and error strings are part of the public contract. Anything documented here is
 covered by fixtures in `src/fixtures/`.
 
-This service depends on the [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk)
+This service depends on the [`skills-passport-sdk`](../../packages/sdk)
 for Soroban client setup and uses the
-[`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock)
+[`skills-passport-tlock`](../../packages/tlock)
 helpers for bid sealing. Both are workspace dependencies and are installed
 automatically when bootstrapping from the monorepo root.
 

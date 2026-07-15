@@ -44,8 +44,8 @@ The agent verifies the principal's Ed25519 signature before every action and ref
 2. **Check round** — confirms round is still `Open` for commits
 3. **Pay appraisal** — calls the x402-gated `POST /appraise` endpoint using the session secret
 4. **Size bid** — clamps `suggestedMaxBid` from the appraisal to the mandate caps
-5. **Seal** — timelock-encrypts `(value, nonce)` to the configured Drand reveal round via [`@decentralized-global-education-skills-passport/tlock`](../packages/tlock)
-6. **Commit** — submits the sealed bid via [`@decentralized-global-education-skills-passport/sdk`](../packages/sdk) using the session key
+5. **Seal** — timelock-encrypts `(value, nonce)` to the configured Drand reveal round via [`skills-passport-tlock`](../packages/tlock)
+6. **Commit** — submits the sealed bid via [`skills-passport-sdk`](../packages/sdk) using the session key
 
 ### e2e script (`scripts/agents-e2e.ts`)
 
@@ -55,8 +55,8 @@ The canonical end-to-end test deploys a fresh Round contract on testnet, runs tw
 
 | Package | Purpose |
 |---------|---------|
-| [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) | `SkillsPassportClient` — round queries, commit submission |
-| [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) | `sealBid`, `generateNonce`, `quicknet` — timelock encryption |
+| [`skills-passport-sdk`](../../packages/sdk) | `SkillsPassportClient` — round queries, commit submission |
+| [`skills-passport-tlock`](../../packages/tlock) | `sealBid`, `generateNonce`, `quicknet` — timelock encryption |
 | [`@decentralized-global-education-skills-passport/appraisal-api`](../../services/appraisal-api) | `createPaidFetch` — x402 payment client |
 | [`@decentralized-global-education-skills-passport/keeper`](../../services/keeper) | `closeRound`, `keepRound` — lifecycle driver for the e2e |
 | `@stellar/stellar-sdk` | Keypair generation, transaction signing |
@@ -66,8 +66,8 @@ The canonical end-to-end test deploys a fresh Round contract on testnet, runs tw
 
 - [Appraisal API](../appraisal-api) — x402-gated valuation endpoint
 - [Keeper service](../keeper) — permissionless lifecycle driver
-- [`@decentralized-global-education-skills-passport/tlock`](../../packages/tlock) — timelock encryption
-- [`@decentralized-global-education-skills-passport/sdk`](../../packages/sdk) — Soroban client SDK
+- [`skills-passport-tlock`](../../packages/tlock) — timelock encryption
+- [`skills-passport-sdk`](../../packages/sdk) — Soroban client SDK
 
 ## License
 

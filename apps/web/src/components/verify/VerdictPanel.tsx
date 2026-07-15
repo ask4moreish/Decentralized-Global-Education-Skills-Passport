@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useVerification } from "../../hooks/useVerification";
-import type { RoundReceipt, VerificationIssue } from "@decentralized-global-education-skills-passport/sdk";
+import type { RoundReceipt, VerificationIssue } from "skills-passport-sdk";
 
 export interface VerdictPanelProps {
   receipt: RoundReceipt | null;

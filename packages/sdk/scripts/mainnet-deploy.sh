@@ -52,4 +52,4 @@ WASM_HASH="$WASM_HASH" \
 USDC_SAC="$USDC_SAC" \
 RPC_URL="$RPC_URL" \
 NETWORK_PASSPHRASE="$NETWORK_PASSPHRASE" \
-pnpm --filter @decentralized-global-education-skills-passport/sdk exec tsx scripts/live-smoke.ts
+pnpm --filter skills-passport-sdk exec tsx scripts/live-smoke.ts

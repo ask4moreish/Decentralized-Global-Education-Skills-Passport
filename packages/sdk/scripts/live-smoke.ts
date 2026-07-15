@@ -19,7 +19,7 @@ import {
   generateNonce,
   quicknet,
   sealBid,
-} from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-tlock";
 
 import { RoundContract, SkillsPassportClient } from "../src/index.js";
 

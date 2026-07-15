@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { quicknet } from "@decentralized-global-education-skills-passport/tlock";
+import { quicknet } from "skills-passport-tlock";
 
 const QUICKNET_GENESIS = 1_692_803_367;
 const QUICKNET_PERIOD = 3;

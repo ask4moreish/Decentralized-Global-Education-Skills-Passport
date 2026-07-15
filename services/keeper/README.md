@@ -61,7 +61,7 @@ KEEPER_STATUS_PORT=8090 npm run serve
 curl http://127.0.0.1:8090/status | jq .
 ```
 
-Response shape (typed in `@decentralized-global-education-skills-passport/sdk` as `KeeperStatusResponse`):
+Response shape (typed in `skills-passport-sdk` as `KeeperStatusResponse`):
 
 ```json
 {
@@ -155,10 +155,10 @@ The store file is a plain JSON file, making it safe and easy for operators to in
 
 ### Consuming the status API from TypeScript
 
-The `@decentralized-global-education-skills-passport/sdk` package ships typed response shapes and a tiny fetch client:
+The `skills-passport-sdk` package ships typed response shapes and a tiny fetch client:
 
 ```ts
-import { KeeperStatusClient } from "@decentralized-global-education-skills-passport/sdk";
+import { KeeperStatusClient } from "skills-passport-sdk";
 
 const client = new KeeperStatusClient({ baseURL: "http://127.0.0.1:8090" });
 const status = await client.getStatus();
@@ -167,7 +167,7 @@ for (const round of status.rounds) {
 }
 ```
 
-The client throws `StatusApiError` on non-2xx responses and parses the stable JSON shapes (`KeeperStatusResponse`, `KeeperRoundStatusView`, `KeeperHealthResponse`) defined in `@decentralized-global-education-skills-passport/sdk`.
+The client throws `StatusApiError` on non-2xx responses and parses the stable JSON shapes (`KeeperStatusResponse`, `KeeperRoundStatusView`, `KeeperHealthResponse`) defined in `skills-passport-sdk`.
 
 ### Completed Round Cleanup
 The watch loop automatically filters out rounds with a `lastStatus` of `"Settled"` or `"Voided"`. These completed rounds remain in the JSON file for historical audit logs but are practically "pruned" from active RPC polling to save resources. If you want to delete them entirely, use the CLI.

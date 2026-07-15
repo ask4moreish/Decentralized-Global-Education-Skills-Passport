@@ -1,4 +1,4 @@
-import { MAINNET_ARTIFACTS } from "@decentralized-global-education-skills-passport/sdk";
+import { MAINNET_ARTIFACTS } from "skills-passport-sdk";
 import { shortAddr } from "../lib/format";
 
 export function MainnetProofCard() {

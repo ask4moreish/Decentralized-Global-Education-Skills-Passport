@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { quicknet, fetchRoundBeacon } from "@decentralized-global-education-skills-passport/tlock";
+import { quicknet, fetchRoundBeacon } from "skills-passport-tlock";
 import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
 import { useLocalStorage } from "./useLocalStorage";
 

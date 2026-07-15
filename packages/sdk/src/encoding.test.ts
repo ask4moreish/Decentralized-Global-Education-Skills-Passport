@@ -5,13 +5,13 @@
 // embedded in the generated bindings — no network, no deploy, no mock. Each
 // argument type the contract declares (u64, i128, Address, Bytes, BytesN<32>,
 // BytesN<96>, enums, structs) is encoded and round-tripped, and the SealedBid
-// produced by @decentralized-global-education-skills-passport/tlock is shown to encode byte-for-byte into `commit`.
+// produced by skills-passport-tlock is shown to encode byte-for-byte into `commit`.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { StrKey, scValToNative } from "@stellar/stellar-sdk";
-import { commitment, type SealedBid } from "@decentralized-global-education-skills-passport/tlock";
+import { commitment, type SealedBid } from "skills-passport-tlock";
 import { SkillsPassportClient } from "./index.js";
 
 const TESTNET = "Test SDF Network ; September 2015";

@@ -22,7 +22,7 @@ function bidState(revealedValue: bigint | null) {
     revealed_value: revealedValue === null ? undefined : revealedValue,
     settled: false,
     valid: false,
-  } as import("@decentralized-global-education-skills-passport/sdk").BidState;
+  } as import("skills-passport-sdk").BidState;
 }
 
 function drandOk(genesisTime = 1_000, period = 3, signatureReady = false) {
@@ -57,7 +57,7 @@ function baseRound(
   return {
     status: {
       tag: (overrides.status as string | undefined) ?? "Open",
-    } as import("@decentralized-global-education-skills-passport/sdk").Status,
+    } as import("skills-passport-sdk").Status,
     reveal_round: BigInt(
       (overrides.revealRound as number | bigint | undefined) ?? 100,
     ),
@@ -74,11 +74,11 @@ function baseRound(
     winning_bid: BigInt(
       (overrides.winningBid as number | bigint | undefined) ?? 0,
     ),
-    clearing_rule: { tag: clearingRuleTag } as import("@decentralized-global-education-skills-passport/sdk").ClearingRule,
+    clearing_rule: { tag: clearingRuleTag } as import("skills-passport-sdk").ClearingRule,
     auditor_pubkey: Buffer.from("aa"),
     item_ref: Buffer.from("bb".repeat(32), "hex"),
     operator: "GOPERATOR",
-  } as import("@decentralized-global-education-skills-passport/sdk").Round;
+  } as import("skills-passport-sdk").Round;
 }
 
 function readerOk(

@@ -1,7 +1,7 @@
 // Snapshot tests for the Round contract event surface.
 //
 // These tests are the single source of truth — for the TypeScript code in
-// @decentralized-global-education-skills-passport/sdk, services/keeper, services/agent, apps/web, and any future
+// skills-passport-sdk, services/keeper, services/agent, apps/web, and any future
 // indexer — that the names of the seven Round contract events and the field
 // keys of their data tuples have not drifted.
 //

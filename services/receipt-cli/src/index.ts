@@ -3,7 +3,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { SkillsPassportClient, parseReceipt, serializeReceipt, verifyReceipt, redactReceipt } from "@decentralized-global-education-skills-passport/sdk";
+import { SkillsPassportClient, parseReceipt, serializeReceipt, verifyReceipt, redactReceipt } from "skills-passport-sdk";
 import { buildJsonOutput } from "./json-output.js";
 
 function usage(): never {

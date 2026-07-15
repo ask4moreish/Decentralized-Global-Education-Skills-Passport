@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@decentralized-global-education-skills-passport/agent": "workspace:*",
-    "@decentralized-global-education-skills-passport/sdk": "workspace:*",
-    "@decentralized-global-education-skills-passport/tlock": "workspace:*",
+    "skills-passport-sdk": "workspace:*",
+    "skills-passport-tlock": "workspace:*",
     "@stellar/freighter-api": "^6.0.1",
     "@stellar/stellar-sdk": "^15.1.0",
     "buffer": "^6.0.3",

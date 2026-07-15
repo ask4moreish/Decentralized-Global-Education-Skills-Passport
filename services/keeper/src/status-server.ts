@@ -1,6 +1,6 @@
 import http from "node:http";
 
-import type { DrandClient } from "@decentralized-global-education-skills-passport/tlock";
+import type { DrandClient } from "skills-passport-tlock";
 
 import type { StatusReader } from "./status.js";
 import { buildKeeperStatus, type BuildStatusSource } from "./status.js";

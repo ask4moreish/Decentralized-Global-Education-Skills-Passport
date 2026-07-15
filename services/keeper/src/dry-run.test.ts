@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import type { BidState, Round } from "@decentralized-global-education-skills-passport/sdk";
+import type { BidState, Round } from "skills-passport-sdk";
 
 import {
   buildKeeperDryRunSummary,

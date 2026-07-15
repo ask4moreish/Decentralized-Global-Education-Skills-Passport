@@ -3,8 +3,8 @@ import type {
   CreateRoundParams,
   Round,
   SkillsPassportClient,
-} from "@decentralized-global-education-skills-passport/sdk";
-import { commitment } from "@decentralized-global-education-skills-passport/tlock";
+} from "skills-passport-sdk";
+import { commitment } from "skills-passport-tlock";
 
 import type { SealedScoreSubmission } from "./types.js";
 

@@ -33,7 +33,7 @@ export function AuditorView({ trace }: { trace: DemoTrace }) {
     setErr(null);
     setRows(null);
     try {
-      const { openIdentity } = await import("@decentralized-global-education-skills-passport/tlock");
+      const { openIdentity } = await import("skills-passport-tlock");
       const secret = hexToBytes(secretHex);
       const decoded: DecryptedRow[] = blobRows.map(({ label, address, blobHex }) => {
         if (!blobHex) {
@@ -69,7 +69,7 @@ export function AuditorView({ trace }: { trace: DemoTrace }) {
     setErr(null);
     setBidDemo(null);
     try {
-      const { quicknet, sealBid, openBid, generateNonce } = await import("@decentralized-global-education-skills-passport/tlock");
+      const { quicknet, sealBid, openBid, generateNonce } = await import("skills-passport-tlock");
       const client = quicknet();
       const round = trace.meta.revealRound;
       const nonce = generateNonce();

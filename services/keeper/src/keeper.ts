@@ -14,8 +14,8 @@
 // matching contract errors as skips rather than failures. No relayer, no agent,
 // no mock — just the SDK over real RPC and the live Drand beacon.
 
-import type { SkillsPassportClient } from "@decentralized-global-education-skills-passport/sdk";
-import { openBid, fetchRoundSignature, type DrandClient } from "@decentralized-global-education-skills-passport/tlock";
+import type { SkillsPassportClient } from "skills-passport-sdk";
+import { openBid, fetchRoundSignature, type DrandClient } from "skills-passport-tlock";
 
 export type KeeperLogger = (msg: string) => void;
 
