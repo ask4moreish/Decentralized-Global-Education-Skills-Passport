@@ -55,8 +55,8 @@ export function NotificationPanel() {
         onMarkRead={markRead}
         onMarkAllRead={markAllRead}
         onClearAll={clearAll}
-        onClearByType={clearByType}
-        onFilterChange={setFilter}
+        onClearByType={(type) => { if (type !== "all" && type !== "unread") clearByType(type as NotificationType); }}
+        onFilterChange={(f) => setFilter(f)}
       />
     </div>
   );

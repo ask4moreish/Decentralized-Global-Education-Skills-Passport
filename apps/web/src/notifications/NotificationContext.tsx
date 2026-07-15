@@ -97,7 +97,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     [state.items],
   );
 
-  const add: NotificationContextValue["add"] = useCallback(
+  const add = useCallback<(type: NotificationType, title: string, detail?: string, link?: string, roundId?: bigint) => string>(
     (type, title, detail, link, roundId) => {
       dispatch({ type: "ADD", payload: { type, title, detail, link, roundId } });
       return `notif-${state.nextId}`;
