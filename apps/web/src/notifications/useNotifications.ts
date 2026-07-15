@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { STORAGE_KEY_PREFIX } from "../lib/settings";
 import { useNotificationContext } from "./NotificationContext";
-import type { NotificationItem, NotificationType } from "./types";
+import type { NotificationItem } from "./types";
 
 const STORAGE_KEY = `${STORAGE_KEY_PREFIX}notifications`;
 
@@ -33,19 +33,26 @@ function saveToStorage(items: NotificationItem[], nextId: number) {
  */
 export function useNotifications() {
   const ctx = useNotificationContext();
+  const nextIdRef = useRef(1);
 
   // Hydrate from localStorage on first mount
   useEffect(() => {
     const stored = loadFromStorage();
     if (stored) {
       ctx.hydrate(stored.items, stored.nextId);
+      nextIdRef.current = stored.nextId;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Persist to localStorage on every change
   useEffect(() => {
-    saveToStorage(ctx.items, ctx.items.length > 0 ? ctx.items.length + 1 : 1);
+    const maxId = ctx.items.reduce((max, item) => {
+      const num = parseInt(item.id.replace("notif-", ""), 10);
+      return Number.isNaN(num) ? max : Math.max(max, num);
+    }, 0);
+    nextIdRef.current = Math.max(nextIdRef.current, maxId + 1);
+    saveToStorage(ctx.items, nextIdRef.current);
   }, [ctx.items]);
 
   return ctx;
