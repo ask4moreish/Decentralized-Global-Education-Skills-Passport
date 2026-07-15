@@ -98,6 +98,7 @@ export function VerifyPage({ goHome }: { goHome: () => void }) {
         onDelete={receiptStore.deleteReceipt}
         onUpdate={receiptStore.updateReceipt}
         onSelect={handleSelectReceipt}
+        onClearAll={receiptStore.clearAll}
         selectedId={selectedReceiptId}
       />
     </main>

@@ -281,3 +281,32 @@
   color: var(--muted);
   cursor: default;
 }
+
+.receipt-history-header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.receipt-clear-all-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-family: var(--display);
+  cursor: pointer;
+  transition: color 180ms var(--ease), border-color 180ms var(--ease);
+}
+
+.receipt-clear-all-btn:hover {
+  color: var(--alert);
+  border-color: var(--alert);
+}
+
+.receipt-save-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}

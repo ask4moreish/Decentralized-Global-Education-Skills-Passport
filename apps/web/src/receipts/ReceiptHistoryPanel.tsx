@@ -7,6 +7,7 @@ interface ReceiptHistoryPanelProps {
   onDelete: (id: string) => void;
   onUpdate: (id: string, patch: Partial<Pick<SavedReceipt, "label" | "tags" | "notes">>) => void;
   onSelect: (receipt: SavedReceipt) => void;
+  onClearAll: () => void;
   selectedId?: string;
 }
 
@@ -15,6 +16,7 @@ export function ReceiptHistoryPanel({
   onDelete,
   onUpdate,
   onSelect,
+  onClearAll,
   selectedId,
 }: ReceiptHistoryPanelProps) {
   const [search, setSearch] = useState("");
@@ -56,6 +58,13 @@ export function ReceiptHistoryPanel({
     <section className="receipt-history-panel" aria-label="Saved receipts">
       <header className="receipt-history-header">
         <h2>Saved receipts ({receipts.length})</h2>
+        <div className="receipt-history-header-actions">
+          {receipts.length > 0 ? (
+            <button type="button" className="receipt-clear-all-btn" onClick={onClearAll} title="Clear all saved receipts">
+              Clear all
+            </button>
+          ) : null}
+        </div>
         <input
           type="search"
           className="receipt-history-search"
