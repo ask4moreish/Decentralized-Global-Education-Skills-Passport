@@ -23,7 +23,7 @@ type NotificationAction =
 
 const MAX_ITEMS = 100;
 
-function notificationReducer(state: NotificationState, action: NotificationAction): NotificationState {
+export function notificationReducer(state: NotificationState, action: NotificationAction): NotificationState {
   switch (action.type) {
     case "ADD": {
       const id = `notif-${state.nextId}`;
