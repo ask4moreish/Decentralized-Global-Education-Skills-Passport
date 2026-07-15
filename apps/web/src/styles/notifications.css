@@ -305,3 +305,42 @@
     max-height: calc(100vh - 72px);
   }
 }
+
+.notification-item-dismiss {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--faint);
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms var(--ease), color 150ms var(--ease), background 150ms var(--ease);
+}
+
+.notification-item:hover .notification-item-dismiss {
+  opacity: 1;
+}
+
+.notification-item-dismiss:hover {
+  color: var(--ink);
+  background: var(--surface-1);
+}
+
+.notification-item-dot {
+  animation: notification-pulse 2s ease-in-out infinite;
+}
+
+@keyframes notification-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.notification-panel {
+  position: relative;
+}
