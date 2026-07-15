@@ -58,7 +58,17 @@ jobs:
       # Build is handled by each package's prepublishOnly script during publish.
       # Pre-building here would duplicate the work on every push to main.
 
+      - name: Check for pending changesets
+        id: changesets
+        run: |
+          if ls .changeset/*.md 2>/dev/null | grep -qv README.md; then
+            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create Release Pull Request or Publish to npm
+        if: steps.changesets.outputs.has_changesets == 'true'
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
