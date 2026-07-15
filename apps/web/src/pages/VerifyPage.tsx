@@ -80,14 +80,16 @@ export function VerifyPage({ goHome }: { goHome: () => void }) {
         <ReceiptExplorer receipt={input.receipt} verification={verification} />
         <ExportReportPanel receipt={input.receipt} verification={verification} />
         {input.receipt ? (
-          <button
-            type="button"
-            className={`receipt-save-btn ${alreadySaved ? "saved" : ""}`}
-            onClick={handleSave}
-            disabled={alreadySaved}
-          >
-            {alreadySaved ? "✓ Saved" : "💾 Save receipt"}
-          </button>
+          <div className="receipt-save-row">
+            <button
+              type="button"
+              className={`receipt-save-btn ${alreadySaved ? "saved" : ""}`}
+              onClick={handleSave}
+              disabled={alreadySaved}
+            >
+              {alreadySaved ? "✓ Saved" : "💾 Save receipt"}
+            </button>
+          </div>
         ) : null}
       </div>
 
