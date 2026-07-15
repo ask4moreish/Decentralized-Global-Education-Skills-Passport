@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useTheme } from "../hooks/useTheme";
 import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
-import { useLocalStorage, migrateAutoRefresh } from "../hooks/useLocalStorage";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 interface SettingsPanelProps {
   open: boolean;
@@ -24,7 +24,6 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const [refreshInterval, setRefreshInterval] = useLocalStorage<number>(
     "refresh-interval",
     DEFAULT_REFRESH_INTERVAL_SEC,
-    () => migrateAutoRefresh(),
   );
   const [reduceMotion, setReduceMotion] = useLocalStorage("reduce-motion", false);
   const panelRef = useRef<HTMLDivElement>(null);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Round, BidState } from "@decentralized-global-education-skills-passport/sdk";
 import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
-import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
 
 const RPC = import.meta.env.VITE_RPC_URL ?? "https://soroban-testnet.stellar.org";
 const NETWORK =
@@ -24,7 +24,6 @@ export function useLiveRound(enabled: boolean, pollMs?: number) {
   const [refreshIntervalSec] = useLocalStorage<number>(
     "refresh-interval",
     DEFAULT_REFRESH_INTERVAL_SEC,
-    () => migrateAutoRefresh(DEFAULT_REFRESH_INTERVAL_SEC),
   );
 
   // Resolve pollMs: explicit parameter wins, otherwise use the setting

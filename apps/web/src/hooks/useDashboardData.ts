@@ -3,7 +3,7 @@ import type { DashboardData } from "../dashboard/types";
 import { DASHBOARD_FIXTURE } from "../dashboard/fixture";
 import { assertDashboardData } from "../dashboard/fixture-health-check";
 import { DEFAULT_REFRESH_INTERVAL_SEC } from "../lib/settings";
-import { useLocalStorage, migrateAutoRefresh } from "./useLocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
 
 const STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -26,7 +26,6 @@ export function useDashboardData(): UseDashboardDataResult {
   const [refreshIntervalSec] = useLocalStorage<number>(
     "refresh-interval",
     DEFAULT_REFRESH_INTERVAL_SEC,
-    () => migrateAutoRefresh(DEFAULT_REFRESH_INTERVAL_SEC),
   );
 
   const [state, setState] = useState<UseDashboardDataResult>(() => ({
