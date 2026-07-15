@@ -24,6 +24,7 @@
 @import "./config-banner.css";
 @import "./round-status.css";
 @import "./notifications.css";
+@import "./receipts.css";
 
 /* Route-level code-split loading skeletons */
 .page-skeleton {
