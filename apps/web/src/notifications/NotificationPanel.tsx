@@ -5,7 +5,7 @@ import { NotificationDropdown } from "./NotificationDropdown";
 import { useNotificationContext } from "./NotificationContext";
 
 export function NotificationPanel() {
-  const { items, unreadCount, markRead, markAllRead, clearAll } = useNotificationContext();
+  const { items, unreadCount, markRead, markAllRead, clearAll, clearByType } = useNotificationContext();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<NotificationFilter>("all");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,6 +55,7 @@ export function NotificationPanel() {
         onMarkRead={markRead}
         onMarkAllRead={markAllRead}
         onClearAll={clearAll}
+        onClearByType={clearByType}
         onFilterChange={setFilter}
       />
     </div>
