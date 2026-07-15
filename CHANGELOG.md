@@ -84,10 +84,7 @@ are versioned together as a fixed group — see [`.changeset/config.json`](.chan
 - **PILOT_PLAYBOOK.md** — outreach strategy, SCF‑style demo narrative, OverBlock
   internal pilot plan.
 
-#### CI & tooling
-
-- **4 GitHub Actions workflows** — bindings drift check, example typecheck,
-  fixture drift guard, doc link verification.
+#### CI & tooling- **10 GitHub Actions workflows** — bindings drift check, examples typecheck, fixture drift guard, doc link verification, CSS tokens & class names, threat model anchors, fixture size budgets, deploy docs consistency, deploy to GitHub Pages, npm publish via Changesets.
 - **Snapshot integrity** — contract test snapshots, event‑snapshot golden
   fixture, receipt verification fixtures, appraisal fixtures.
 - **Script‑based guards** — threat‑model anchor check, deploy‑doc consistency,
