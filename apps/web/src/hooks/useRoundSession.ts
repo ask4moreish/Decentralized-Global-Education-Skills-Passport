@@ -219,7 +219,7 @@ export function useRoundSession(active: UseCase) {
       push(msg, id);
       toast.dismiss(workingId);
       toast.push("success", "Round created on Stellar", msg);
-      notif.add("commit", "Round created", `Round #${nextRoundId} · ${formatCountdown(commitWindowSeconds)} commit window`, `#/demo/${id}`, nextRoundId);
+      notif.add("commit", "Round created", `Round #${nextRoundId} · ${formatCountdown(commitWindowSeconds)} commit window`);
       await refresh(nextRoundId, id);
     } catch (error) {
       const msg = displayError(error);
@@ -227,7 +227,7 @@ export function useRoundSession(active: UseCase) {
       push(msg, id);
       toast.dismiss(workingId);
       toast.push("error", "Round creation failed", msg);
-      notif.add("error", "Round creation failed", msg, `#/demo/${id}`);
+      notif.add("error", "Round creation failed", msg);
     }
   }
 
@@ -325,7 +325,7 @@ export function useRoundSession(active: UseCase) {
       push(`Sealed ${active.inputLabel}: ${displayed}.`, id);
       toast.dismiss(workingId);
       toast.push("success", "Entry sealed on-chain", msg);
-      notif.add("commit", "Entry sealed", `${active.actorRole}: ${displayed} · round #${roundId}`, `#/demo/${id}`, roundId);
+      notif.add("commit", "Entry sealed", `${active.actorRole}: ${displayed} · round #${roundId}`);
       await refresh(roundId, id);
     } catch (error) {
       const msg = displayError(error);
@@ -333,7 +333,7 @@ export function useRoundSession(active: UseCase) {
       push(msg, id);
       toast.dismiss(workingId);
       toast.push("error", "Commit failed", msg);
-      notif.add("error", "Seal failed", msg, `#/demo/${id}`);
+      notif.add("error", "Seal failed", msg);
     }
   }
 
@@ -429,7 +429,7 @@ export function useRoundSession(active: UseCase) {
       push(msg, id);
       toast.dismiss(workingId);
       toast.push("success", "Reveal complete", msg);
-      notif.add("reveal", "Reveal complete", `${revealed} entries opened · round #${roundId}`, `#/demo/${id}`, roundId);
+      notif.add("reveal", "Reveal complete", `${revealed} entries opened · round #${roundId}`);
       if (skipped.length > 0) {
         toast.push(
           "info",
@@ -445,7 +445,7 @@ export function useRoundSession(active: UseCase) {
       push(msg, id);
       toast.dismiss(workingId);
       toast.push("error", "Reveal failed", msg, `#/demo/${id}`);
-      notif.add("error", "Reveal failed", msg, `#/demo/${id}`);
+      notif.add("error", "Reveal failed", msg);
     }
   }
 
