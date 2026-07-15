@@ -1,4 +1,4 @@
-export { NotificationProvider, useNotificationContext } from "./NotificationContext";
+export { NotificationProvider, useNotificationContext, notificationReducer } from "./NotificationContext";
 export { useNotifications } from "./useNotifications";
 export { NotificationBell } from "./NotificationBell";
 export { NotificationDropdown } from "./NotificationDropdown";
