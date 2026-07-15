@@ -28,6 +28,8 @@ export function ReceiptHistoryItem({
   const [editing, setEditing] = useState(false);
   const [label, setLabel] = useState(receipt.label);
   const [tagInput, setTagInput] = useState("");
+  const [showNotes, setShowNotes] = useState(false);
+  const [notes, setNotes] = useState(receipt.notes);
 
   const handleSaveLabel = () => {
     onUpdate({ label: label.trim() || `Round #${receipt.roundId}` });
@@ -123,6 +125,34 @@ export function ReceiptHistoryItem({
       >
         ×
       </button>
+      {showNotes ? (
+        <div className="receipt-notes-editor" onClick={(e) => e.stopPropagation()}>
+          <textarea
+            className="receipt-notes-textarea"
+            placeholder="Add notes about this receipt..."
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            onBlur={() => {
+              onUpdate({ notes });
+              setShowNotes(false);
+            }}
+            rows={3}
+            autoFocus
+          />
+        </div>
+      ) : null}
+      {!showNotes ? (
+        <button
+          type="button"
+          className="receipt-notes-toggle"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowNotes(true);
+          }}
+        >
+          {receipt.notes ? `📝 ${receipt.notes.slice(0, 60)}${receipt.notes.length > 60 ? "…" : ""}` : "+ Add notes"}
+        </button>
+      ) : null}
     </div>
   );
 }
