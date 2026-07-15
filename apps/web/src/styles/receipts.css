@@ -310,3 +310,47 @@
   gap: 10px;
   padding: 8px 0;
 }
+
+.receipt-tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: 3px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--faint);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: color 150ms var(--ease), background 150ms var(--ease);
+}
+
+.receipt-tag-remove:hover {
+  color: var(--alert);
+  background: rgba(217, 122, 115, 0.12);
+}
+
+.receipt-tag-input {
+  width: 60px;
+  padding: 1px 6px;
+  border: 1px dashed var(--line-2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-family: var(--display);
+  outline: none;
+  transition: border-color 180ms var(--ease), width 180ms var(--ease);
+}
+
+.receipt-tag-input:focus {
+  width: 100px;
+  border-color: var(--green-dim);
+  color: var(--ink);
+}
+
+.receipt-tag-input::placeholder {
+  color: var(--faint);
+}
