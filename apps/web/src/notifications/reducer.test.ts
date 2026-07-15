@@ -3,7 +3,7 @@ import { deepEqual } from "node:assert/strict";
 import type { NotificationItem } from "./types";
 
 // Inline the reducer for testing (pure function, no React needed)
-import { notificationReducer } from "./reducer";
+import { notificationReducer } from "./NotificationContext";
 
 describe("notificationReducer", () => {
   const emptyState = { items: [] as NotificationItem[], nextId: 1 };
