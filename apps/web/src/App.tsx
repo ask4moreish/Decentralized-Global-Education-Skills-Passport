@@ -141,6 +141,17 @@ export default function App() {
         handler: () => setSettingsOpen((v) => !v),
         scope: "global",
       },
+      {
+        id: "notifications",
+        label: "Toggle notifications",
+        keys: "N",
+        combo: "n",
+        handler: () => {
+          const bell = document.querySelector<HTMLButtonElement>(".notification-bell");
+          bell?.click();
+        },
+        scope: "global",
+      },
     ],
     [navigate, route.useCase],
   );
