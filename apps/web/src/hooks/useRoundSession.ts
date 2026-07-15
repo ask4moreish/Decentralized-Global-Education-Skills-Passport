@@ -444,7 +444,7 @@ export function useRoundSession(active: UseCase) {
       setStatus("error");
       push(msg, id);
       toast.dismiss(workingId);
-      toast.push("error", "Reveal failed", msg, `#/demo/${id}`);
+      toast.push("error", "Reveal failed", msg);
       notif.add("error", "Reveal failed", msg);
     }
   }
