@@ -16,6 +16,7 @@ import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import type { Shortcut } from "./hooks/useKeyboardShortcuts";
 import { NotificationProvider } from "./notifications";
 import { NotificationPanel } from "./notifications";
+import { ReceiptStoreProvider } from "./receipts";
 
 /* Route-level code splitting — each page loads only when navigated to.
    React.lazy requires a default export, so we map named exports with .then(). */
@@ -180,6 +181,7 @@ export default function App() {
   }, [route.page]);
 
   return (
+    <ReceiptStoreProvider>
     <NotificationProvider>
     <ToastProvider>
       <SkipToContent />
@@ -261,5 +263,6 @@ export default function App() {
       </ErrorBoundary>
     </ToastProvider>
     </NotificationProvider>
+    </ReceiptStoreProvider>
   );
 }
