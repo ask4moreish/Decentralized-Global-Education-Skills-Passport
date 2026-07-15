@@ -23,6 +23,7 @@
 @import "./app-bar.css";
 @import "./config-banner.css";
 @import "./round-status.css";
+@import "./notifications.css";
 
 /* Route-level code-split loading skeletons */
 .page-skeleton {
