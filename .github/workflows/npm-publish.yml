@@ -63,8 +63,6 @@ jobs:
         run: |
           if ls .changeset/*.md 2>/dev/null | grep -qv README.md; then
             echo "run_release=true" >> "$GITHUB_OUTPUT"
-          elif git log -1 --pretty=%B | grep -q "Version Packages"; then
-            echo "run_release=true" >> "$GITHUB_OUTPUT"
           else
             echo "run_release=false" >> "$GITHUB_OUTPUT"
           fi
