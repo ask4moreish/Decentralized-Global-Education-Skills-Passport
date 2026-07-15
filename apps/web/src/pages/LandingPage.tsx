@@ -4,6 +4,7 @@ import { USE_CASES, type UseCaseId } from "../config/useCases";
 import { LOGO_SRC } from "../lib/chain";
 import { shortAddr } from "../lib/format";
 import { DOCS_BASE_URL, VERTICALS, verticalDocsUrl } from "../lib/docs";
+import { NotificationPanel } from "../notifications";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -60,6 +61,7 @@ export function LandingPage({
           <a href="#/drand" className="secondary-action compact">
             Drand beacon
           </a>
+          <NotificationPanel />
           <button type="button" className="primary-action compact" onClick={onDemo}>
             Open demo
           </button>
