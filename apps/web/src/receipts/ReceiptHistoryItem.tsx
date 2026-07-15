@@ -27,6 +27,7 @@ export function ReceiptHistoryItem({
 }: ReceiptHistoryItemProps) {
   const [editing, setEditing] = useState(false);
   const [label, setLabel] = useState(receipt.label);
+  const [tagInput, setTagInput] = useState("");
 
   const handleSaveLabel = () => {
     onUpdate({ label: label.trim() || `Round #${receipt.roundId}` });
@@ -74,13 +75,41 @@ export function ReceiptHistoryItem({
           <span>{relativeDate(receipt.savedAt)}</span>
           {receipt.errorCount > 0 ? <span className="receipt-error-count">{receipt.errorCount} errors</span> : null}
         </div>
-        {receipt.tags.length > 0 ? (
-          <div className="receipt-tag-row">
-            {receipt.tags.map((tag) => (
-              <span key={tag} className="receipt-tag">{tag}</span>
-            ))}
-          </div>
-        ) : null}
+        <div className="receipt-tag-row">
+          {receipt.tags.map((tag) => (
+            <span key={tag} className="receipt-tag">
+              {tag}
+              <button
+                type="button"
+                className="receipt-tag-remove"
+                aria-label={`Remove tag ${tag}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdate({ tags: receipt.tags.filter((t) => t !== tag) });
+                }}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+          <input
+            type="text"
+            className="receipt-tag-input"
+            placeholder="+ tag"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && tagInput.trim()) {
+                e.stopPropagation();
+                if (!receipt.tags.includes(tagInput.trim())) {
+                  onUpdate({ tags: [...receipt.tags, tagInput.trim()] });
+                }
+                setTagInput("");
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
       </button>
       <button
         type="button"
