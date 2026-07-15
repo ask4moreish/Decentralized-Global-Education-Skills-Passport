@@ -10,6 +10,7 @@ interface NotificationDropdownProps {
   onMarkRead: (id: string) => void;
   onMarkAllRead: () => void;
   onClearAll: () => void;
+  onClearByType: (type: string) => void;
   onFilterChange: (filter: string) => void;
 }
 
@@ -21,6 +22,7 @@ export function NotificationDropdown({
   onMarkRead,
   onMarkAllRead,
   onClearAll,
+  onClearByType,
   onFilterChange,
 }: NotificationDropdownProps) {
   const filtered = filter === "all"
@@ -64,18 +66,23 @@ export function NotificationDropdown({
           >
             <div className="notification-dropdown-header">
               <strong>Notifications</strong>
-              <div className="notification-dropdown-actions">
-                {hasUnread ? (
-                  <button type="button" className="notification-action-btn" onClick={onMarkAllRead}>
-                    Mark all read
-                  </button>
-                ) : null}
-                {hasItems ? (
-                  <button type="button" className="notification-action-btn" onClick={onClearAll}>
-                    Clear all
-                  </button>
-                ) : null}
-              </div>
+            <div className="notification-dropdown-actions">
+              {hasUnread ? (
+                <button type="button" className="notification-action-btn" onClick={onMarkAllRead}>
+                  Mark all read
+                </button>
+              ) : null}
+              {filter !== "all" && hasItems ? (
+                <button type="button" className="notification-action-btn" onClick={() => onClearByType(filter)}>
+                  Clear visible
+                </button>
+              ) : null}
+              {hasItems ? (
+                <button type="button" className="notification-action-btn" onClick={onClearAll}>
+                  Clear all
+                </button>
+              ) : null}
+            </div>
             </div>
 
             <div className="notification-filter-chips">
