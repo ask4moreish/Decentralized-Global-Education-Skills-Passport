@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import type { NotificationItem } from "./types";
+import type { NotificationItem, NotificationType } from "./types";
 import { NotificationItemView } from "./NotificationItemView";
 
 interface NotificationDropdownProps {
@@ -10,7 +10,7 @@ interface NotificationDropdownProps {
   onMarkRead: (id: string) => void;
   onMarkAllRead: () => void;
   onClearAll: () => void;
-  onClearByType: (type: string) => void;
+  onClearByType: (type: NotificationType | string) => void;
   onFilterChange: (filter: string) => void;
 }
 

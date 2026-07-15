@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { NotificationFilter } from "./types";
+import type { NotificationFilter, NotificationType } from "./types";
 import { NotificationBell } from "./NotificationBell";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { useNotificationContext } from "./NotificationContext";
@@ -7,7 +7,7 @@ import { useNotificationContext } from "./NotificationContext";
 export function NotificationPanel() {
   const { items, unreadCount, markRead, markAllRead, clearAll, clearByType } = useNotificationContext();
   const [open, setOpen] = useState(false);
-  const [filter, setFilter] = useState<NotificationFilter>("all");
+  const [filter, setFilter] = useState<string>("all");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const toggle = useCallback(() => setOpen((prev) => !prev), []);
