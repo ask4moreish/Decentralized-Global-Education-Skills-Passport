@@ -26,9 +26,10 @@ function relativeTime(ts: number): string {
 interface NotificationItemViewProps {
   item: NotificationItem;
   onMarkRead: (id: string) => void;
+  onDismiss?: (id: string) => void;
 }
 
-export function NotificationItemView({ item, onMarkRead }: NotificationItemViewProps) {
+export function NotificationItemView({ item, onMarkRead, onDismiss }: NotificationItemViewProps) {
   const handleClick = () => {
     if (!item.read) onMarkRead(item.id);
   };
@@ -51,6 +52,20 @@ export function NotificationItemView({ item, onMarkRead }: NotificationItemViewP
         <small>{relativeTime(item.timestamp)}</small>
       </div>
       {!item.read ? <span className="notification-item-dot" aria-label="Unread" /> : null}
+      {onDismiss ? (
+        <button
+          type="button"
+          className="notification-item-dismiss"
+          aria-label="Dismiss notification"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onDismiss(item.id);
+          }}
+        >
+          ×
+        </button>
+      ) : null}
     </motion.button>
   );
 
