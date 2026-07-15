@@ -35,6 +35,7 @@ import {
 import { DEMO_TRACE } from "../demo/trace";
 import { formatCountdown, useDrandCountdown } from "./useDrandCountdown";
 import { useToast } from "../ui/Toast";
+import { useNotificationContext } from "../notifications";
 
 export type ActionStatus = "idle" | "working" | "ok" | "error";
 
