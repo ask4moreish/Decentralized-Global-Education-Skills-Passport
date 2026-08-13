@@ -72,8 +72,8 @@ async function cmdVerify(path: string, jsonMode: boolean, artifactPath?: string)
     try {
       const data = readFileSync(artifactPath);
       computedChecksum = createHash("sha256").update(data).digest("hex");
-    } catch (e: any) {
-      const message = `Cannot read artifact file: ${e.message}`;
+    } catch (e) {
+      const message = `Cannot read artifact file: ${e instanceof Error ? e.message : String(e)}`;
       result.valid = false;
       result.issues.push({
         severity: "error",

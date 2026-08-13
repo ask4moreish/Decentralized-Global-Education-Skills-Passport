@@ -73,7 +73,7 @@ export async function runWatchLoop(params: RunWatchLoopParams): Promise<void> {
     isStopping,
   } = params;
 
-  const deps: KeeperDeps = { sdk, drand, log };
+  const deps: KeeperDeps = { sdk, drand, log, guard: settlementGuard };
 
   while (!isStopping()) {
     const started = Date.now();
@@ -102,12 +102,10 @@ export async function runWatchLoop(params: RunWatchLoopParams): Promise<void> {
       const roundId = BigInt(storedRound.roundId);
       if (isStopping()) break;
       try {
-        const canSettleCheck = settlementGuard.canSettle(roundId);
-        if (!canSettleCheck.allowed) {
-          // Settlement already in-flight or terminal; skip the close phase.
-          // The keep phase may still open/reveal; we let watchRound proceed but
-          // settle manipulation is avoided by the guard's skip marker.
-        }
+        // The settlement guard is threaded through `deps.guard` and gates the
+        // settle dispatch inside `closeRound` (markSubmitted → settle →
+        // markTerminal), so a round already submitted/terminal is skipped
+        // without suppressing reveal or clear work.
         const tick = await watchRound(deps, roundId);
         const active =
           tick.finalStatus !== "Settled" && tick.finalStatus !== "Voided";

@@ -38,10 +38,24 @@ import type { AppraisalServerConfig } from "./config.js";
 
 const APPRAISE_ROUTE = "POST /appraise";
 
+/** Upper bound on the request body (an appraisal request is ~a few hundred
+ *  bytes). Cap before x402 verification so a free request can't exhaust memory. */
+const MAX_BODY_BYTES = 8 * 1024;
+
 function readBody(req: http.IncomingMessage): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
-    req.on("data", (c) => chunks.push(c as Buffer));
+    let received = 0;
+    req.on("data", (c) => {
+      const chunk = c as Buffer;
+      received += chunk.length;
+      if (received > MAX_BODY_BYTES) {
+        req.destroy();
+        reject(new Error(`request body exceeds ${MAX_BODY_BYTES} bytes`));
+        return;
+      }
+      chunks.push(chunk);
+    });
     req.on("end", () => resolve(Buffer.concat(chunks)));
     req.on("error", reject);
   });
@@ -161,7 +175,23 @@ export async function buildAppraisalServer(
         });
       }
 
-      const rawBody = await readBody(req);
+      let rawBody: Buffer;
+      try {
+        rawBody = await readBody(req);
+      } catch (e) {
+        const tooLarge =
+          e instanceof Error && e.message.includes("exceeds");
+        return send(
+          res,
+          tooLarge ? 413 : 400,
+          {},
+          {
+            error: tooLarge
+              ? "request body too large (max 8 KiB)"
+              : "failed to read request body",
+          },
+        );
+      }
       let parsedBody: unknown = undefined;
       if (rawBody.length > 0) {
         try {

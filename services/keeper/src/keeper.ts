@@ -17,6 +17,8 @@
 import type { SkillsPassportClient } from "skills-passport-sdk";
 import { openBid, fetchRoundSignature, type DrandClient } from "skills-passport-tlock";
 
+import type { SettlementGuard } from "./settlement-guard.js";
+
 export type KeeperLogger = (msg: string) => void;
 
 export interface KeeperDeps {
@@ -28,6 +30,15 @@ export interface KeeperDeps {
   maxWaitSeconds?: number;
   /** Poll cadence while waiting for R (ms). Default 3000. */
   pollMs?: number;
+  /**
+   * Optional in-memory duplicate-settlement guard. When present, `closeRound`
+   * gates the settle dispatch through it (`markSubmitted` before the tx,
+   * `markTerminal` on success / terminal skip) and skips re-dispatching a
+   * settlement that is already submitted or terminal. When absent, the
+   * contract's own idempotency (`NotCleared` on a non-Cleared round) remains
+   * the safety net.
+   */
+  guard?: SettlementGuard;
 }
 
 export interface SkipRecord {
@@ -278,15 +289,45 @@ export async function closeRound(
 
   // ── Phase D: settle a cleared round (real SAC transfers) ──────────────
   if (round.status.tag === "Cleared") {
-    try {
-      await sdk.settle(rid);
-      result.settled = true;
-      log(`settled round ${rid}`);
-    } catch (e) {
-      if (errorMatches(e, ["AlreadySettled", "NotCleared", "WrongStatus"])) {
-        result.skipped.push(`settle skipped: ${errorName(e)}`);
+    const guard = deps.guard;
+    if (guard) {
+      const check = guard.canSettle(rid);
+      if (check.allowed) {
+        guard.markSubmitted(rid);
+        try {
+          await sdk.settle(rid);
+          result.settled = true;
+          guard.markTerminal(rid, "settled on-chain");
+          log(`settled round ${rid}`);
+        } catch (e) {
+          if (errorMatches(e, ["AlreadySettled", "NotCleared", "WrongStatus"])) {
+            guard.markTerminal(rid, `settle skipped: ${errorName(e)}`);
+            result.skipped.push(`settle skipped: ${errorName(e)}`);
+          } else {
+            // Retryable error — the watch loop calls markRetryable on the outer
+            // catch so the next polling cycle retries.
+            throw e;
+          }
+        }
       } else {
-        throw e;
+        result.skipped.push(
+          `settle skipped (duplicate: ${check.event.skippedDuplicateReason})`,
+        );
+        log(
+          `[settlement_skipped_duplicate] round=${rid} reason=${check.event.skippedDuplicateReason}`,
+        );
+      }
+    } else {
+      try {
+        await sdk.settle(rid);
+        result.settled = true;
+        log(`settled round ${rid}`);
+      } catch (e) {
+        if (errorMatches(e, ["AlreadySettled", "NotCleared", "WrongStatus"])) {
+          result.skipped.push(`settle skipped: ${errorName(e)}`);
+        } else {
+          throw e;
+        }
       }
     }
     round = await sdk.getRound(rid);
@@ -360,13 +401,25 @@ export async function voidIfStale(
 
 /** Parse `1,2,5` or `1-5` into round ids. */
 export function parseRoundIdSpec(spec: string): bigint[] {
+  // Upper bound on expanded ids so a hostile/huge range can't OOM the process.
+  const MAX_IDS = 10_000n;
   const ids = new Set<bigint>();
   for (const part of spec.split(",").map((s) => s.trim()).filter(Boolean)) {
     if (part.includes("-")) {
       const [a, b] = part.split("-", 2).map((s) => BigInt(s.trim()));
+      if (a > b) {
+        throw new Error(`invalid round id range "${part}" (start > end)`);
+      }
+      const width = b - a + 1n;
+      if (width > MAX_IDS || BigInt(ids.size) + width > MAX_IDS) {
+        throw new Error(`round id spec expands beyond ${MAX_IDS} ids`);
+      }
       for (let i = a; i <= b; i++) ids.add(i);
     } else {
       ids.add(BigInt(part));
+      if (BigInt(ids.size) > MAX_IDS) {
+        throw new Error(`round id spec expands beyond ${MAX_IDS} ids`);
+      }
     }
   }
   return [...ids].sort((x, y) => (x < y ? -1 : x > y ? 1 : 0));

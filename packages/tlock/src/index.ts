@@ -1,5 +1,6 @@
 export {
   commitment,
+  sha256Hex,
   encodeBidPreimage,
   decodeBidPreimage,
   i128ToBeBytes,

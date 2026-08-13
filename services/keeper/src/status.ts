@@ -260,6 +260,16 @@ export async function buildKeeperStatus(source: BuildStatusSource): Promise<Keep
   };
 }
 
+/** Combine two health indicators into the single worst-case status. */
+function worstHealth(
+  a: "ok" | "degraded" | "down",
+  b: "ok" | "degraded" | "down",
+): "ok" | "degraded" | "down" {
+  if (a === "down" || b === "down") return "down";
+  if (a === "degraded" || b === "degraded") return "degraded";
+  return "ok";
+}
+
 export async function checkHealth(
   reader: StatusReader,
   drand: DrandClient,
@@ -289,16 +299,10 @@ export async function checkHealth(
     reasons.push(`drand: ${e instanceof Error ? e.message : String(e)}`);
   }
 
-  const worst =
-    rpc === "down" || drandStatus === "down"
-      ? "down"
-      : rpc === "degraded" || drandStatus === "degraded"
-        ? "degraded"
-        : "ok";
   return {
     rpc,
     drand: drandStatus,
-    overall: worst,
+    overall: worstHealth(rpc, drandStatus),
     ...(reasons.length ? { reason: reasons.join("; ") } : {}),
     checkedAt: new Date().toISOString(),
   };
