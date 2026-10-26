@@ -35,6 +35,9 @@ const DrandPage = lazy(() =>
 const LandingPage = lazy(() =>
   import("./pages/LandingPage").then((m) => ({ default: m.LandingPage })),
 );
+const PassportPage = lazy(() =>
+  import("./pages/PassportPage").then((m) => ({ default: m.PassportPage })),
+);
 const VerifyPage = lazy(() =>
   import("./pages/VerifyPage").then((m) => ({ default: m.VerifyPage })),
 );
@@ -92,6 +95,14 @@ export default function App() {
         keys: "G then H",
         combo: "g h",
         handler: () => navigate("landing"),
+        scope: "global",
+      },
+      {
+        id: "nav-passport",
+        label: "Go to Skills Passport",
+        keys: "G then P",
+        combo: "g p",
+        handler: () => navigate("passport"),
         scope: "global",
       },
       {
@@ -225,7 +236,9 @@ export default function App() {
 
         {/* Single Suspense boundary covers all lazy-loaded pages */}
         <Suspense fallback={<PageFallback />}>
-          {route.page === "landing" ? (
+          {route.page === "passport" ? (
+            <PassportPage goHome={() => navigate("landing")} />
+          ) : route.page === "landing" ? (
             <LandingPage
               onDemo={() => navigate("demo", "grants")}
               onCase={(id) => navigate("demo", id)}

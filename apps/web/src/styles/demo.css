@@ -25,6 +25,7 @@
 @import "./round-status.css";
 @import "./notifications.css";
 @import "./receipts.css";
+@import "./passport.css";
 
 /* Route-level code-split loading skeletons */
 .page-skeleton {

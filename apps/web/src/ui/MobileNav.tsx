@@ -72,6 +72,15 @@ export function MobileNav({ route, onNavigate }: MobileNavProps) {
               <div className="mobile-nav-links">
                 <button
                   type="button"
+                  className={`mobile-nav-link ${route.page === "passport" ? "active" : ""}`}
+                  onClick={() => onNavigate("passport")}
+                >
+                  <span style={{ fontSize: "16px" }}>🎓</span>
+                  Skills Passport
+                </button>
+
+                <button
+                  type="button"
                   className={`mobile-nav-link ${route.page === "landing" ? "active" : ""}`}
                   onClick={() => onNavigate("landing")}
                 >
