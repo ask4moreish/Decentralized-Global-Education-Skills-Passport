@@ -453,7 +453,11 @@ impl SkillsPassportRound {
         let end = (start + limit).min(total);
         let mut data: Vec<Address> = Vec::new(&env);
         for i in start..end {
-            data.push_back(bidders.get(i).unwrap());
+            // `end` is clamped to `total`, so this never misses; still avoid a
+            // panic path by skipping any (impossible) out-of-range index.
+            if let Some(bidder) = bidders.get(i) {
+                data.push_back(bidder);
+            }
         }
         let next_cursor = if end < total { end } else { 0 };
         Ok(BiddersPage {

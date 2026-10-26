@@ -1,0 +1,91 @@
+name: Tests
+
+# Runs the full unit-test and typecheck suite. Previously only the
+# bindings/fixture/doc guards ran in CI, so a PR could break the SDK, tlock,
+# keeper, web, or contract tests and still merge. This workflow closes that gap.
+#
+# The tlock suite runs `test:unit` (offline); its `test` script includes the
+# live-quicknet `seal.test.ts` which requires external network and is kept out
+# of CI for determinism.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Contract tests (Rust)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "contracts/round"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev libdbus-1-dev libudev-dev libsodium-dev
+
+      - name: Run contract tests
+        run: cargo test -p skills-passport-round
+
+  node:
+    name: TypeScript tests + typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: SDK tests
+        run: pnpm sdk:test
+
+      - name: tlock tests (offline unit suite)
+        run: pnpm --filter skills-passport-tlock test:unit
+
+      - name: Bindings tests
+        run: pnpm bindings:test
+
+      - name: Keeper tests
+        run: pnpm keeper:test
+
+      - name: Appraisal API tests
+        run: pnpm appraisal:test
+
+      - name: Agent tests
+        run: pnpm agent:test
+
+      - name: Receipt CLI tests
+        run: pnpm --filter @decentralized-global-education-skills-passport/receipt-cli test
+
+      - name: Auction template tests
+        run: pnpm --filter @decentralized-global-education-skills-passport/auction-template test
+
+      - name: Grant scoring example tests
+        run: pnpm grant-scoring:test
+
+      - name: Web tests (+ CSS token check)
+        run: pnpm web:test
+
+      - name: Typecheck all workspaces
+        run: pnpm -r --workspace-concurrency=1 run typecheck

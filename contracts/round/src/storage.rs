@@ -30,10 +30,15 @@ fn extend_seal_ttl(env: &Env, key: &DataKey, reveal_deadline: u64) {
 }
 
 pub fn get_config(env: &Env) -> Result<GlobalConfig, Error> {
-    env.storage()
+    let config: GlobalConfig = env
+        .storage()
         .instance()
         .get(&DataKey::Config)
-        .ok_or(Error::NotInitialized)
+        .ok_or(Error::NotInitialized)?;
+    // Keep the Instance entry alive on every read so an idle contract (no new
+    // rounds) never has its deploy-time config expire out from under it.
+    bump_instance(env);
+    Ok(config)
 }
 
 pub fn set_config(env: &Env, config: &GlobalConfig) {
@@ -71,6 +76,9 @@ pub fn get_round(env: &Env, round_id: u64) -> Result<Round, Error> {
     env.storage()
         .persistent()
         .extend_ttl(&key, PERSISTENT_THRESHOLD, PERSISTENT_BUMP);
+    // Round reads are the most common interaction; extend the Instance TTL too
+    // so the contract stays alive as long as it is being read.
+    bump_instance(env);
     Ok(round)
 }
 

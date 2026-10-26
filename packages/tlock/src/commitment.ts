@@ -71,6 +71,14 @@ export function commitment(value: bigint, nonce: Uint8Array): Uint8Array {
   return sha256(encodeBidPreimage(value, nonce));
 }
 
+/// sha256 of UTF-8 text (or raw bytes), hex-encoded. Used for deterministic
+/// fingerprints such as the receipt `networkFingerprint`.
+export function sha256Hex(input: string | Uint8Array): string {
+  const bytes =
+    typeof input === "string" ? new TextEncoder().encode(input) : input;
+  return toHex(sha256(bytes));
+}
+
 export function toHex(bytes: Uint8Array): string {
   return Array.from(bytes)
     .map((b) => b.toString(16).padStart(2, "0"))
