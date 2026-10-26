@@ -14,7 +14,7 @@ export interface IssuerIdentity {
 
 export interface CredentialSubject {
   id: string; // "did:stellar:G..."
-  recipientAddress: string;
+  recipientAddress?: string;
   recipientName?: string;
   title: string;
   institution: string;

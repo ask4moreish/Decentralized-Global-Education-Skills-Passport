@@ -303,6 +303,12 @@ scenario(9, "Network Failures & Malformed Data Error Handling", () => {
   assert.equal(malformedDiag.tampered, true);
   assert.ok(malformedDiag.errors.some((e) => e.includes("Missing credential structure")));
 
+  // Credential without on-chain record is classified as unverifiable
+  const nullOnChainDiag = verifyEducationCredential(validVc, null);
+  assert.equal(nullOnChainDiag.isValid, false);
+  assert.equal(nullOnChainDiag.status, "unverifiable");
+  assert.ok(nullOnChainDiag.errors.some((e) => e.includes("No on-chain registration record")));
+
   // On-chain hash mismatch handled gracefully
   const mismatchedOnChain = {
     ...onChainRecord,

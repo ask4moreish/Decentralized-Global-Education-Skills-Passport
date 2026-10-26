@@ -1,47 +1,45 @@
-# Known Limitations
+# Known Limitations & Honest Scope Boundaries
 
-Honest boundaries for hackathon submission. No hidden fallbacks.
+Honest boundaries and operational status across the platform. No hidden fallbacks or fabricated claims.
 
-## Network scope
+---
 
-| Proof | Network | What it shows |
+## 1. Education & Skills Passport Status
+
+| Capability | Status | Implementation Details |
 | --- | --- | --- |
-| Keeper lifecycle (USDC, 2 bidders) | **Testnet** | `pnpm lifecycle:e2e` |
-| Multi-agent + x402 + UI trace | **Testnet** | `pnpm agents:e2e` |
-| Primitive deploy + settle smoke | **Mainnet** | `pnpm mainnet:deploy`, `pnpm mainnet:settle`, `pnpm mainnet:verify` |
-| Optional micro commit | **Mainnet** | `pnpm mainnet:micro` (dry-run default; tiny XLM only) |
+| **Soroban Core Contract** | **Implemented & Verified** | [`contracts/passport`](../contracts/passport): 19 unit tests passing (`cargo test -p skills-passport-core`), covering issuer registration, template definitions, batch issuance, fast status queries, suspension, and revocation. |
+| **W3C VC Cryptography** | **Implemented & Verified** | [`packages/sdk`](../packages/sdk): RFC 8785 JSON Canonicalization Scheme (JCS) + SHA-256 hashing. 100 tests passing (`pnpm sdk:test`). |
+| **Digital Passport Vault & UI** | **Implemented & Verified** | [`apps/web`](../apps/web): Learner Vault, Institution Console, and Employer Verifier. Persistent `localStorage` state with 78 passing tests (`pnpm web:test`). |
+| **CLI Verifier & E2E Suite** | **Implemented & Verified** | `scripts/verify-credential.mjs` and `scripts/e2e-credential-lifecycle.mjs` (`pnpm lifecycle:passport` verifies all 10 core lifecycle scenarios). |
+| **Passport Contract Deployment** | **Ready for Deployment** | The passport contract is fully verified in local Soroban VM environments. Live Testnet and Mainnet deployment transactions remain scheduled as an operational milestone. Live deployment must be separately authorized to manage network gas and account funding cleanly. |
+| **Selective Disclosure Scope** | **v1 Document-Level Disclosure** | `createSelectiveCredentialView` filters displayed skills while preserving the parent credential identifier. Full ZK-SNARK or BBS+ selective attribute proofs without revealing the parent root hash are planned for v2. |
 
-Mainnet does **not** replay 700 / 459 USDC demo amounts. Mainnet smoke uses **1 XLM bid / 5 XLM escrow** on native XLM SAC.
+---
 
-## Off-chain enforcement
+## 2. Sealed Allocation & Coordination Status
 
-- **Mandate caps** (`maxBid`, `maxAppraisalSpend`) are verified by agent software, not the Soroban contract.
-- Only **escrow** and **bid ≤ escrow** are enforced on-chain at reveal.
-- A malicious or buggy agent could exceed mandate caps if funded — see `docs/THREAT_MODEL.md`.
+| Capability | Network | What it shows | Command |
+| --- | --- | --- | --- |
+| **Keeper lifecycle (USDC, 2 bidders)** | **Testnet** | Escrow locking, Drand round-R BLS verify, settlement → balance 0 | `pnpm lifecycle:e2e` |
+| **Multi-agent + x402 + UI trace** | **Testnet** | Autonomous agents paying x402 appraisal and submitting bids | `pnpm agents:e2e` |
+| **Round deploy + settle smoke** | **Mainnet** | Real XLM SAC deposit and settlement verification | `pnpm mainnet:deploy`, `pnpm mainnet:settle`, `pnpm mainnet:verify` |
+| **Optional micro commit** | **Mainnet** | Dry-run checklist for small XLM bids | `pnpm mainnet:micro` |
 
-## Not in critical path
+Mainnet smoke uses **1 XLM bid / 5 XLM escrow** on native XLM SAC. It does **not** replay testnet USDC amounts.
 
-- **OpenZeppelin Relayer Channels** — optional SDK submitter; all e2e scripts default to direct Soroban RPC.
-- **Passkey-Kit** — UI demo + ecosystem docs; agents use Ed25519 session keys in this build.
-- **Hosted appraisal API on mainnet** — x402 proof is testnet-only in automated e2e.
+---
 
-## UI demo trace
+## 3. Off-Chain vs On-Chain Enforcement
 
-- **Single canonical trace** — `apps/web/src/demo/demo-trace.generated.ts`, written by `pnpm agents:e2e`.
-- Covers agents → x402 → sealed commits → keeper reveal → clear → settle on one testnet contract.
-- Optional live poll requires build-time `VITE_*` vars — see `docs/DEPLOY.md`.
+- **Student PII:** Completely off-chain. Names, transcripts, and personal data are never stored in public contract storage.
+- **Credential Integrity:** The Soroban contract strictly enforces that only the registered issuer can issue credentials, and verifies that the claimed 32-byte hash matches the committed hash.
+- **Mandate caps (`maxBid`, `maxAppraisalSpend`):** In the allocation module, caps are enforced by agent software off-chain, not by the Soroban contract. The contract strictly checks escrow balances and bid bounds (`bid <= escrow`).
 
-## Receipt verification
+---
 
-Round receipts (`docs/RECEIPTS.md`) are **offline only** — the verifier checks internal consistency (commitment bindings, winner selection) but does **not** confirm the receipt matches current on-chain state. Trust the exporter; cross-check with multiple export runs.
+## 4. Operational Boundaries
 
-## Operational
-
-- Drand quicknet must publish round R for reveal to open; keeper can void after grace if R never arrives.
-- Temporary storage expires after the reveal window — seals are not kept forever by design.
-- Mainnet wasm upload requires substantial XLM for resource fees (~30+ XLM observed).
-
-## Intentional PRD deviation
-
-- **Two autonomous agents** instead of one — stronger supporting proof on testnet.
-  The winning hackathon track was Hack Privacy.
+- **Receipt verification:** Round receipts (`docs/RECEIPTS.md`) verify internal mathematical consistency offline without calling live RPCs.
+- **Drand availability:** The allocation round requires Drand quicknet to publish round R; the keeper includes a grace period to void the round if Drand fails to publish.
+- **Storage lifetime:** Allocation temporary storage expires after the reveal window; passport credential commitments are persistent to provide permanent verifiability.

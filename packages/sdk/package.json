@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
-  "description": "SDK for integrating Decentralized Global Education & Skills Passport sealed coordination rounds into Stellar and Soroban apps.",
+  "description": "SDK for Decentralized Global Education & Skills Passport: W3C Verifiable Credentials, RFC 8785 canonical hashing, Soroban registry clients, and cryptographic verification.",
   "keywords": [
     "stellar",
     "soroban",
+    "education-passport",
+    "verifiable-credentials",
+    "skills-passport",
+    "w3c-vc",
+    "cryptography",
     "privacy",
-    "commit-reveal",
-    "drand",
-    "sealed-auctions",
-    "coordination"
+    "commit-reveal"
   ],
   "repository": {
     "type": "git",

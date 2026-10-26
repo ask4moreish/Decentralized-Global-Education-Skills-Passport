@@ -1,260 +1,153 @@
 # Decentralized Global Education & Skills Passport — Architecture
 
-High-level map of the monorepo: components, trust boundaries, round lifecycle, and where each proof runs. For crypto and settlement detail see [docs/TECH_DESIGN.md](./docs/TECH_DESIGN.md).
+High-level architecture, system boundaries, credential lifecycle, and component mapping of the monorepo.
 
 ---
 
-## Problem and primitive
+## 1. Product Mission & System Architecture
 
-Decentralized Global Education & Skills Passport is a **sealed commit–reveal coordination primitive** on Stellar Soroban. Participants commit now; a public Drand round **R** forces simultaneous opening later; the contract clears and settles without operator discretion.
+The **Decentralized Global Education & Skills Passport** is a decentralized, privacy-preserving educational credentialing and verifiable skills platform built on Stellar Soroban.
 
-| Phase | Who acts | What happens |
-| --- | --- | --- |
-| **Commit** | Bidder or agent session key | Lock escrow, post commitment `H`, store tlock ciphertext + auditor blob |
-| **Wait R** | — | Bids undecryptable; only `H` and escrow are public |
-| **Open reveal** | Anyone (keeper) | Submit Drand round-R BLS signature; verified **on-chain** |
-| **Reveal** | Anyone (keeper) | Decrypt every seal; contract checks `H` binding |
-| **Clear / settle** | Anyone (keeper) | Deterministic winner; SAC transfers; contract balance → 0 |
+The platform provides two complementary blockchain primitives:
+1. **Education Passport Core (`contracts/passport`)**: The primary product — authorized institutional issuer registry, W3C Verifiable Credential hash commitments, auditable on-chain revocation/suspension lifecycle, and independent verification with zero on-chain personally identifiable information (PII).
+2. **Sealed Allocation & Coordination Protocol (`contracts/round`)**: A fair commit–reveal primitive utilizing Drand timelock encryption and Stellar Asset Contract (SAC) settlement, used for blind grant scoring, academic hackathon prize allocation, sealed RFP appraisals, and merit-based bounties.
 
-The operator does **not** need keys to open bids. After R, values are public; identities stay auditor-encrypted until opened with the round auditor key.
-
----
-
-## System diagram
-
-```
-                         ┌─────────────────────────────────────────┐
-                         │           Stellar Soroban               │
-                         │  ┌───────────────────────────────────┐  │
-  sealBid + commit ─────►│  │  contracts/round (Round WASM)     │  │
-  (session key)          │  │  · create_round / commit / reveal │  │
-                         │  │  · open_reveal (BLS verify)       │  │
-                         │  │  · clear / settle (SAC)         │  │
-                         │  └───────────────────────────────────┘  │
-                         └─────────────────────────────────────────┘
-        ▲                              ▲
-        │ packages/tlock               │ packages/sdk (SkillsPassportClient)
-        │ sealBid / openBid            │ bindings + RPC (+ optional OZ submitter)
-        │                              │
- ┌──────┴──────┐                ┌──────┴──────┐
- │ services/   │   HTTP 402     │ services/   │
- │ agent       │───────────────►│ appraisal-  │
- │ mandate+caps│   x402 USDC    │ api         │
- └─────────────┘                └─────────────┘
-        │
-        │  services/keeper — permissionless keepRound / closeRound / watch
-        ▼
- ┌─────────────┐     embedded trace      ┌─────────────┐
- │ Drand       │                         │ apps/web    │
- │ quicknet    │                         │ jury demo   │
- └─────────────┘                         └─────────────┘
+```text
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                    USER INTERFACES                                     │
+│   ┌────────────────────────┐  ┌───────────────────────────┐  ┌──────────────────────┐  │
+│   │   Learner Vault        │  │  Institution Console      │  │  Employer Verifier   │  │
+│   │   (QR / Selective View)│  │  (Issuance / Revocation)  │  │  (Status & Proof)    │  │
+│   └───────────┬────────────┘  └─────────────┬─────────────┘  └───────────┬──────────┘  │
+│               │ (W3C VC Payload)            │ (Issue / Revoke)           │ (Verify)    │
+│               ▼                             ▼                            ▼             │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                          SKILLS PASSPORT TYPESCRIPT SDK                                │
+│   • RFC 8785 JSON Canonicalization (JCS)        • Base64url Sharing & QR Code Engine   │
+│   • SHA-256 Hash Commitment Calculator          • Offline / Online Verifier Pipeline   │
+│   • EducationPassportClient (Soroban RPC)       • Selective Disclosure Filtering       │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                                 STELLAR BLOCKCHAIN                                     │
+│  ┌─────────────────────────────────────────┐  ┌─────────────────────────────────────┐  │
+│  │   contracts/passport (Core Registry)    │  │   contracts/round (Sealed Bidding)  │  │
+│  │   • Authorized Issuers & Metadata       │  │   • Commit-Reveal Coordination      │  │
+│  │   • 32-Byte Credential Hash Commitments │  │   • Drand BLS On-Chain Verification │  │
+│  │   • Revocation & Suspension Lifecycle   │  │   • SAC Token Escrow & Settle       │  │
+│  │   • Replay & Substitution Protection    │  │   • Autonomous Keeper Support       │  │
+│  └─────────────────────────────────────────┘  └─────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Round lifecycle
-
-```mermaid
-sequenceDiagram
-  participant Op as Operator
-  participant A as Agent / bidder
-  participant C as Round contract
-  participant X as x402 appraisal API
-  participant D as Drand quicknet
-  participant K as Keeper
-
-  Op->>C: create_round(R, deadlines, auditor pubkey)
-  A->>X: pay appraisal (x402, testnet USDC)
-  X-->>A: fair value + suggested bid
-  A->>C: commit(H, ciphertext, auditor blob, escrow)
-  Note over C: Status Open — sealed
-  D-->>K: publish round R + BLS sig
-  K->>C: open_reveal(sig) — BLS verified on-chain
-  K->>C: reveal(bidder, value) for each bidder
-  Note over C: Status Revealing
-  K->>C: clear() then settle()
-  Note over C: Status Settled — balance 0
-```
-
----
-
-## Monorepo layout
+## 2. Component Directory Map
 
 | Path | Layer | Responsibility |
 | --- | --- | --- |
-| `contracts/round/` | On-chain | Soroban Round: storage tiers, BLS host verify, SAC settle |
-| `packages/round-bindings/` | Generated | TypeScript bindings from WASM |
-| `packages/tlock/` | Crypto (off-chain) | tlock seal/open, auditor identity blob |
-| `packages/sdk/` | Client | `SkillsPassportClient`, encoding, optional OZ Relayer Channels submitter |
-| `services/drand-tools/` | Harness | Live quicknet ↔ on-chain BLS constant validation |
-| `services/keeper/` | Ops | Permissionless reveal/clear/settle; `keeper:watch` daemon |
-| `services/appraisal-api/` | Service | x402-gated appraisal (SEP-41 USDC on testnet) |
-| `services/agent/` | Agent support | Session mandate, cap checks, x402 + commit flow |
-| `apps/web/` | UI | Jury demo; reads `demo-trace.generated.ts` from `agents:e2e` |
-
-Package manager: **pnpm** workspace. Contract build: **Stellar CLI** + Rust (`wasm32v1-none`).
-
----
-
-## Trust boundaries
-
-| Component | Trusted for | Not trusted for |
-| --- | --- | --- |
-| **Round contract** | Escrow, `H` binding, BLS gate, clearing rule | Off-chain mandate caps |
-| **Drand quicknet** | Unbiased future randomness / round-R sig | Liveness (keeper can void after grace) |
-| **Operator** | Creating rounds, receiving winner payment | Reading sealed bids before R |
-| **Keeper** | Liveness (open/reveal/clear) | Secrecy after R (all bids must reveal) |
-| **Agent software** | Enforcing mandate caps off-chain | Honesty if compromised or buggy |
-| **Auditor** | Identity disclosure when given secret | Must not learn bid values before R |
-| **Appraisal API** | Valuation after x402 pay | Unbiased pricing (economic trust) |
-
-Full adversary analysis: [docs/THREAT_MODEL.md](./docs/THREAT_MODEL.md).
+| **`contracts/passport/`** | **Core On-Chain** | Primary Soroban contract: issuer registration, credential hash commitments, revocation, suspension, and verification. |
+| **`contracts/round/`** | **Allocation On-Chain** | Sealed commit-reveal coordination: escrow locking, Drand BLS signature verification, SAC settlement. |
+| **`packages/sdk/`** | **Client & Protocol** | `EducationPassportClient`, W3C Verifiable Credential schema builders, RFC 8785 canonical hashing, and `SkillsPassportClient`. |
+| **`packages/round-bindings/`** | **Generated Bindings** | Spec-accurate TypeScript contract bindings generated from `contracts/round` WASM. |
+| **`packages/tlock/`** | **Cryptographic Tools** | Timelock encryption to Drand beacon rounds and auditor identity ciphertext encapsulation. |
+| **`apps/web/`** | **Frontend Application** | React 19 UI: Learner Vault, Institution Issuance Console, Employer Verifier, and Allocation Observer. |
+| **`services/keeper/`** | **Automation Daemon** | Permissionless keeper for Drand reveal and round clearing on Stellar testnet/mainnet. |
+| **`services/appraisal-api/`** | **Micro-payment Service**| x402-gated valuation API funded via testnet USDC payments. |
+| **`services/agent/`** | **Agent Engine** | Autonomous sealed-bid agents executing under principal-signed mandates. |
+| **`services/receipt-cli/`** | **Audit Tools** | Export and independently verify round execution receipts offline. |
+| **`examples/grant-scoring/`** | **Reference Pilot** | Sealed grant evaluation and scoring template. |
 
 ---
 
-## Two payment rails (same SEP-41 asset, different jobs)
+## 3. Credential Lifecycle & Data Flow
 
-On **testnet**, both appraisal and prize settlement use **USDC SAC**. They are intentionally separate:
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Admin as Contract Admin
+  participant Inst as Educational Institution
+  participant Learner as Student / Learner
+  participant Soroban as Soroban Passport Contract
+  participant Emp as Employer / Verifier
 
-| Rail | Path | Used for |
-| --- | --- | --- |
-| **x402** | Agent → appraisal server via HTTP 402 + facilitator | Appraisal micro-payment only |
-| **SAC `settle()`** | Round contract escrow → operator + refunds | Winner prize — **not** x402 |
+  Admin->>Soroban: register_issuer(institution_address, name, metadata_uri)
+  Note over Soroban: Issuer authorized on ledger
 
-**Mainnet smoke** uses **native XLM SAC** (1 / 5 XLM), not USDC — see [docs/LIMITATIONS.md](./docs/LIMITATIONS.md).
+  Inst->>Inst: Build W3C Credential Document (PII off-chain)
+  Inst->>Inst: Compute SHA-256 digest via RFC 8785 canonicalization
+  Inst->>Soroban: issue_credential(learner_address, credential_id, hash, template, exp)
+  Note over Soroban: 32-byte hash commitment stored on-chain
 
----
+  Inst-->>Learner: Deliver Verifiable Credential document (off-chain)
+  Learner->>Learner: Store in Digital Passport Vault
+  Learner->>Learner: Selectively disclose relevant skills
+  Learner->>Emp: Share via QR code / verification URL / VC JSON
 
-## Agent authorization model
-
-```
-Principal (G-address)
-    │ signs mandate JSON (maxBid, maxEscrow, maxAppraisalSpend, contract, round)
-    ▼
-Session Ed25519 key  ──► x402 pay + Soroban commit (never principal on-chain)
+  Emp->>Emp: Recompute document hash via RFC 8785 canonicalization
+  Emp->>Soroban: verify_credential(credential_id, computed_hash) / get_credential_status()
+  Soroban-->>Emp: (Status: Active, HashMatched: true, IssuerAuthorized: true, NotExpired: true)
+  Note over Emp: Verifier confirms valid credential without accessing private transcripts
 ```
 
-- **Off-chain:** agent verifies mandate signature and caps before any payment or commit.
-- **On-chain:** `valid = value > 0 && value ≤ escrow` at reveal.
+---
 
-Production mapping (Passkey / Smart Account Kit / OZ Relayer): [docs/ECOSYSTEM.md](./docs/ECOSYSTEM.md). Not on the critical path for this submission.
+## 4. Privacy Guarantees & Separation of Concerns
+
+1. **Zero On-Chain PII**: Learner names, national identification numbers, grades, course syllabi, and internal academic remarks are **never stored on public Stellar Soroban storage**.
+2. **Cryptographic Commitments**: Credentials adhere to the W3C Verifiable Credentials data model. The JSON payload is canonicalized using RFC 8785 (JSON Canonicalization Scheme) and hashed using SHA-256. Only the resulting 32-byte digest is anchored to the contract storage.
+3. **Selective Disclosure**: Learners can generate views containing only selected skills or competencies. Because the credential ID and issuer DID remain anchored, verifiers can inspect both the full credential and selective views while confirming that unselected records were not leaked.
+4. **Instant Revocation & Suspension**: Institutions can revoke or suspend credentials on-chain. When a credential is revoked, it becomes immediately invalid globally with an immutable reason string for auditable defense against academic fraud.
 
 ---
 
-## Planned Stellar Wallets Kit integration
+## 5. Storage Model (Soroban Ledger)
 
-This section describes the planned **Stellar Wallets Kit** integration for the
-SCF Integration Track. It does not describe a completed integration and does not
-replace the existing proof paths.
+### Education Passport (`contracts/passport`)
+| Tier | Key / Record | Contents | Lifetime |
+| --- | --- | --- | --- |
+| **Instance** | `Admin` | Primary contract administrator address | Contract lifetime |
+| **Persistent** | `Issuer(address)` | Authorized institution profile, status, accreditation URI | Until deauthorized |
+| **Persistent** | `Template(symbol)`| Credential schema definition, name, standard metadata | Indefinite |
+| **Persistent** | `Credential(id)` | 32-byte SHA-256 hash, issuer address, recipient address, status (`Active`, `Revoked`, `Suspended`), issued_at, expires_at, revocation_reason | Indefinite (verifiable historical record) |
 
-### Current state
-
-- The live end-user flow in `apps/web` connects directly to Freighter through
-  `@stellar/freighter-api`.
-- `apps/web/src/lib/chain.ts` adapts Freighter transaction and authorization
-  signing to the generated `RoundContract` client.
-- Agent and keeper proofs continue to use session keys and direct Soroban RPC;
-  they do not depend on a browser wallet.
-- The embedded jury trace and existing testnet/mainnet proof artifacts remain
-  unchanged.
-
-### Target state
-
-Stellar Wallets Kit will become the browser-wallet connection and signing layer
-for the end-user application. The contract, generated bindings, tlock package,
-keeper, and settlement rules remain wallet-agnostic.
-
-```text
-Supported Stellar wallet
-        │
-        ▼
-Stellar Wallets Kit
-  connect / select / sign
-        │
-        ▼
-apps/web wallet adapter
-        │
-        ▼
-RoundContract client ──► Soroban RPC ──► contracts/round
-```
-
-The adapter will expose the signer interface already consumed by
-`RoundContract`: the selected public address, transaction signing, and Soroban
-authorization-entry signing. This keeps wallet-specific behavior outside the
-protocol and SDK layers.
-
-### End-user transaction flows
-
-| Flow | Wallets Kit role | Existing protocol behavior retained |
-| --- | --- | --- |
-| Connect | Discover/select a supported wallet and expose its active Stellar address | No contract call |
-| Create round | Sign the operator transaction | Contract stores deadlines, Drand round, clearing rule, and auditor key |
-| Commit | Sign the bidder transaction after the browser seals the value with `packages/tlock` | Contract locks SAC escrow and stores commitment/ciphertext |
-| Reveal / clear / settle | Allow an authorized user to submit permissionless lifecycle calls when desired | Keeper can still perform these calls without a browser wallet |
-| Read status | Provide the active address for user-specific UI state | Reads continue through Soroban RPC |
-
-The initial target is standardized multi-wallet support for wallets exposed by
-Stellar Wallets Kit, including Freighter, xBull, Albedo, and Lobstr where their
-supported signing capabilities satisfy the required Soroban flows. Unsupported
-wallet/capability combinations will be surfaced explicitly rather than falling
-back to hidden keys.
-
-### Migration and verification plan
-
-1. Add a Wallets Kit adapter beside the current Freighter adapter.
-2. Verify connection, network selection, transaction signing, and Soroban
-   authorization-entry signing against the existing `RoundContract` interface.
-3. Move the end-user UI to the Wallets Kit adapter after parity is proven.
-4. Retain direct RPC/session-key paths for agents, keepers, automated tests, and
-   operational recovery.
-5. Test round creation, sealed commit, reveal readiness, settlement, rejection,
-   reconnect, and wrong-network states on Stellar testnet.
-6. Publish the supported-wallet matrix and test evidence before enabling the
-   adapter in the production mainnet web app.
-
-This integration changes how end users authorize transactions; it does not
-change the sealed-round state machine, Drand trust model, or SAC settlement
-logic.
+### Sealed Allocation Round (`contracts/round`)
+| Tier | Key / Record | Contents | Lifetime |
+| --- | --- | --- | --- |
+| **Instance** | Config | Drand network pubkey, DST, genesis time, SAC token address | Contract lifetime |
+| **Persistent** | Round | Deadlines, Drand round R, status, clearing rule, winner | Until settle or void |
+| **Persistent** | Bidder Escrow | Escrow amounts, revealed values per participant | Until settle or void |
+| **Temporary** | Sealed Bid | Ciphertext + auditor blob | Expires after reveal window |
 
 ---
 
-## Demo and proof artifacts
+## 6. Trust Boundaries
 
-| Network | Contract | UI / trace |
+| Component | Trusted For | Not Trusted For |
 | --- | --- | --- |
-| **Testnet** | `CAPTODBCDEVIK23ALBJBS2TXRTIK47ZA5MBTHYF4XLHG2BK7JPYUCU2Y` | `apps/web/src/demo/demo-trace.generated.ts` |
-| **Mainnet** | `CA7KSDEYJEPGZEB2ZROTLUWKQQ6GIRIQNGG6Z745MZ34QHP4UJPWODEX` | Mainnet proof card in UI; `pnpm mainnet:verify` |
+| **Passport Contract** | Cryptographic hash binding, authorized issuer list, revocation status | Off-chain transcript storage (kept off-chain) |
+| **Issuing Institution** | Conferred academic merit, accurate grades, honest credential issuance | Modifying credentials post-issuance (hashes cannot be retroactively changed) |
+| **Learner** | Storing private credential payloads, selecting what to share | Altering grades or substituting recipient DID (tampering breaks hash match) |
+| **Employer / Verifier** | Verifying authenticity against Soroban RPC | Fabricating proof results or overriding on-chain revocation |
+| **Round Contract** | Escrow locking, commit hash binding, BLS verification, token distribution | Off-chain mandate enforcement |
+| **Drand Beacon** | Unbiased randomness and round-R BLS signatures | Guaranteeing round clearing liveness |
+| **Keeper Service** | Triggering open/reveal/clear/settle lifecycle calls | Secrecy before round R |
 
-Canonical end-to-end testnet run (agents → x402 → commits → keeper → settle → 0):
+---
+
+## 7. Verified Verification Commands
 
 ```bash
-pnpm agents:e2e
+# 1. Full Workspace Tests (Rust contracts + TypeScript SDK + Web app)
+pnpm test
+
+# 2. Automated 10-Scenario End-to-End Passport Lifecycle
+pnpm lifecycle:passport
+
+# 3. Command-Line Credential Verifier
+pnpm passport:verify --demo
+
+# 4. Soroban Smart Contract Unit Tests
+cargo test --workspace
+
+# 5. Typecheck All Workspace Packages
+pnpm -r --workspace-concurrency=1 run typecheck
 ```
-
-Other proofs: `pnpm lifecycle:e2e`, `pnpm appraisal:e2e`, `pnpm mainnet:verify`. See README **Proof at a glance**.
-
-The web UI is **read-mostly**: embedded trace + optional live RPC poll. No wallet connect in the jury demo.
-
----
-
-## Storage model (on-chain)
-
-| Tier | Contents | Lifetime |
-| --- | --- | --- |
-| **Instance** | Drand pubkey, DST, genesis, period, token SAC | Contract lifetime |
-| **Persistent** | Round record, per-bidder escrow / revealed value | Until settle or void |
-| **Temporary** | Ciphertext + auditor blob | Expires after reveal window |
-
----
-
-## Related documentation
-
-| Document | Focus |
-| --- | --- |
-| [docs/TECH_DESIGN.md](./docs/TECH_DESIGN.md) | Cryptography, storage, settlement rails, relayer hook |
-| [docs/THREAT_MODEL.md](./docs/THREAT_MODEL.md) | Adversaries and mitigations |
-| [docs/DEPLOY.md](./docs/DEPLOY.md) | UI build vs runtime secrets |
-| [docs/DEMO_SCRIPT.md](./docs/DEMO_SCRIPT.md) | 5-minute jury walkthrough |
-| [`docs/historical/TRACK_ANSWERS.md`](./docs/historical/TRACK_ANSWERS.md) | Hackathon track mapping (historical submission doc — see [`docs/historical/README.md`](./docs/historical/README.md)) |
-| [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) | Honest scope boundaries |
-| [docs/ECOSYSTEM.md](./docs/ECOSYSTEM.md) | Passkey, Smart Account Kit, OZ Relayer |
