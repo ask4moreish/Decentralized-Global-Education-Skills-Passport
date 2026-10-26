@@ -15,6 +15,8 @@ pub enum PassportError {
     InvalidExpiration = 9,
     IssuerAlreadyRegistered = 10,
     IssuerNotFound = 11,
+    TemplateAlreadyExists = 12,
+    TemplateNotFound = 13,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -38,6 +40,16 @@ pub struct IssuerRecord {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[contracttype]
+pub struct TemplateRecord {
+    pub template_id: Symbol,
+    pub issuer: Address,
+    pub name: String,
+    pub schema_uri: String,
+    pub registered_at: u64,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[contracttype]
 pub struct CredentialRecord {
     pub credential_id: BytesN<32>,
     pub issuer: Address,
@@ -48,6 +60,16 @@ pub struct CredentialRecord {
     pub expires_at: Option<u64>,
     pub status: CredentialStatus,
     pub revocation_reason: Option<String>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[contracttype]
+pub struct BatchIssueItem {
+    pub recipient: Address,
+    pub credential_id: BytesN<32>,
+    pub credential_hash: BytesN<32>,
+    pub template_id: Symbol,
+    pub expires_at: Option<u64>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -69,6 +91,7 @@ pub struct VerificationResult {
 pub enum DataKey {
     Admin,
     Issuer(Address),
+    Template(Symbol),
     Credential(BytesN<32>),
     LearnerCredentials(Address),
 }

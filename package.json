@@ -23,6 +23,8 @@
   "scripts": {
     "test": "cargo test --workspace && pnpm sdk:test && pnpm web:test",
     "passport:test": "cargo test -p skills-passport-core",
+    "passport:verify": "pnpm --filter skills-passport-sdk exec tsx ../../scripts/verify-credential.mjs",
+    "lifecycle:passport": "pnpm --filter skills-passport-sdk exec tsx ../../scripts/e2e-credential-lifecycle.mjs",
     "contract:build": "stellar contract build",
     "contract:test": "cargo test --workspace",
     "bindings:generate": "stellar contract build --out-dir artifacts && rm -rf tmp-bindings && stellar contract bindings typescript --wasm artifacts/skills_passport_round.wasm --output-dir tmp-bindings --overwrite && cp tmp-bindings/src/index.ts packages/round-bindings/src/index.ts && rm -rf tmp-bindings",

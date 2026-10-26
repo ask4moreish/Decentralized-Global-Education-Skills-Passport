@@ -1,6 +1,6 @@
-use soroban_sdk::{Address, BytesN, Env, Vec};
+use soroban_sdk::{Address, BytesN, Env, Symbol, Vec};
 
-use crate::types::{CredentialRecord, DataKey, IssuerRecord, PassportError};
+use crate::types::{CredentialRecord, DataKey, IssuerRecord, PassportError, TemplateRecord};
 
 const LEDGERS_PER_DAY: u32 = 17_280;
 pub const PERSISTENT_BUMP: u32 = 120 * LEDGERS_PER_DAY; // ~120 days
@@ -56,6 +56,22 @@ pub fn is_issuer_authorized(env: &Env, issuer: &Address) -> bool {
         Some(record) => record.is_active,
         None => false,
     }
+}
+
+pub fn get_template(env: &Env, template_id: &Symbol) -> Option<TemplateRecord> {
+    let key = DataKey::Template(template_id.clone());
+    if env.storage().persistent().has(&key) {
+        bump_persistent(env, &key);
+        env.storage().persistent().get(&key)
+    } else {
+        None
+    }
+}
+
+pub fn set_template(env: &Env, template_record: &TemplateRecord) {
+    let key = DataKey::Template(template_record.template_id.clone());
+    env.storage().persistent().set(&key, template_record);
+    bump_persistent(env, &key);
 }
 
 pub fn get_credential(env: &Env, credential_id: &BytesN<32>) -> Option<CredentialRecord> {

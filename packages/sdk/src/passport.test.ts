@@ -293,5 +293,153 @@ describe("Education & Skills Passport SDK", () => {
     });
 
     assert.equal(revokeArgs.length, 3);
+
+    const registerIssuerArgs = client.buildRegisterIssuerArgs({
+      issuerAddress: recipientAddress,
+      name: "Stellar University",
+      metadataUri: "ipfs://QmIssuer123",
+    });
+    assert.equal(registerIssuerArgs.length, 3);
+
+    const registerTemplateArgs = client.buildRegisterTemplateArgs({
+      issuerAddress,
+      templateIdSymbol: "Degree2026",
+      name: "Bachelor of Science",
+      schemaUri: "ipfs://QmSchema123",
+    });
+    assert.equal(registerTemplateArgs.length, 4);
+
+    const batchArgs = client.buildBatchIssueCredentialsArgs({
+      issuerAddress,
+      items: [
+        {
+          recipientAddress,
+          credentialIdHex: "1".repeat(64),
+          credentialHashHex: "2".repeat(64),
+          templateIdSymbol: "Degree",
+          expiresAtTimestamp: 1900000000,
+        },
+        {
+          recipientAddress,
+          credentialIdHex: "3".repeat(64),
+          credentialHashHex: "4".repeat(64),
+          templateIdSymbol: "Certificate",
+        },
+      ],
+    });
+    assert.equal(batchArgs.length, 2);
+
+    const suspendArgs = client.buildSuspendCredentialArgs({
+      callerAddress: issuerAddress,
+      credentialIdHex: "1".repeat(64),
+      reason: "Investigation",
+    });
+    assert.equal(suspendArgs.length, 3);
+
+    const reactivateArgs = client.buildReactivateCredentialArgs({
+      callerAddress: issuerAddress,
+      credentialIdHex: "1".repeat(64),
+    });
+    assert.equal(reactivateArgs.length, 2);
+  });
+
+  it("should detect recipient DID substitution attack", () => {
+    const vc = createVerifiableCredential({
+      credentialType: "DegreeCredential",
+      issuer: {
+        address: issuerAddress,
+        name: "MIT",
+      },
+      recipient: {
+        address: recipientAddress,
+        name: "Alice Original",
+      },
+      title: "Master of Science",
+      institution: "MIT",
+      skills: ["Quantum Computing"],
+      achievementDescription: "Graduated with honors.",
+    });
+
+    // An attacker Bob intercepts Alice's credential and replaces her DID with his own
+    const attackerKeypair = Keypair.random();
+    const attackerAddress = attackerKeypair.publicKey();
+    const substitutedVc = {
+      ...vc,
+      credentialSubject: {
+        ...vc.credentialSubject,
+        id: `did:stellar:${attackerAddress}`,
+      },
+    };
+
+    const diag = verifyEducationCredential(substitutedVc);
+    assert.equal(diag.isValid, false);
+    assert.equal(diag.tampered, true);
+    assert.equal(diag.status, "tampered");
+    assert.ok(diag.errors.some((e) => e.includes("hash mismatch")));
+  });
+
+  it("should detect arbitrary skill tampering in credentialSubject", () => {
+    const vc = createVerifiableCredential({
+      credentialType: "SkillBadgeCredential",
+      issuer: {
+        address: issuerAddress,
+        name: "Soroban Developers Guild",
+      },
+      recipient: {
+        address: recipientAddress,
+      },
+      title: "Soroban Associate",
+      institution: "Soroban Developers Guild",
+      skills: ["Rust", "WASM"],
+      achievementDescription: "Basic smart contracts.",
+    });
+
+    // Attacker appends a high-level skill they never earned
+    const tamperedVc = {
+      ...vc,
+      credentialSubject: {
+        ...vc.credentialSubject,
+        skills: ["Rust", "WASM", "Zero-Knowledge Circuit Architecture"],
+      },
+    };
+
+    const diag = verifyEducationCredential(tamperedVc);
+    assert.equal(diag.isValid, false);
+    assert.equal(diag.tampered, true);
+    assert.equal(diag.status, "tampered");
+  });
+
+  it("should detect suspended credentials on-chain", () => {
+    const vc = createVerifiableCredential({
+      credentialType: "CertificateCredential",
+      issuer: {
+        address: issuerAddress,
+        name: "Medical Board",
+      },
+      recipient: {
+        address: recipientAddress,
+      },
+      title: "Board Certified Surgeon",
+      institution: "Medical Board",
+      skills: ["Surgery"],
+      achievementDescription: "License to practice.",
+    });
+
+    const suspendedOnChain = {
+      credentialId: "d".repeat(64),
+      issuer: issuerAddress,
+      recipient: recipientAddress,
+      credentialHash: vc.proof.credentialHash,
+      templateId: "Certificate",
+      issuedAt: 1000,
+      status: "Suspended" as const,
+      revocationReason: "Temporary administrative review",
+      issuerAuthorized: true,
+    };
+
+    const diag = verifyEducationCredential(vc, suspendedOnChain);
+    assert.equal(diag.isValid, false);
+    assert.equal(diag.status, "suspended");
+    assert.ok(diag.errors.some((e) => e.includes("suspended on-chain")));
   });
 });

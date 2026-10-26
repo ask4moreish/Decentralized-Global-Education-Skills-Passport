@@ -162,4 +162,5 @@ export {
   type CredentialSharePackage,
   type CreateCredentialInput,
   type EducationPassportClientConfig,
+  type BatchIssueItemParams,
 } from "./passport/index.js";

@@ -7,7 +7,10 @@ pub mod types;
 mod test;
 
 use soroban_sdk::{contract, contractimpl, Address, BytesN, Env, String, Symbol, Vec};
-use types::{CredentialRecord, CredentialStatus, IssuerRecord, PassportError, VerificationResult};
+use types::{
+    BatchIssueItem, CredentialRecord, CredentialStatus, IssuerRecord, PassportError,
+    TemplateRecord, VerificationResult,
+};
 
 #[contract]
 pub struct SkillsPassportContract;
@@ -81,6 +84,45 @@ impl SkillsPassportContract {
         Ok(())
     }
 
+    /// Update metadata or name of an existing authorized issuer.
+    pub fn update_issuer_metadata(
+        env: Env,
+        issuer: Address,
+        name: String,
+        metadata_uri: String,
+    ) -> Result<(), PassportError> {
+        let admin = storage::get_admin(&env)?;
+        if !storage::is_issuer_authorized(&env, &issuer) {
+            return Err(PassportError::IssuerNotFound);
+        }
+
+        // Must be authorized by the issuer itself or the contract admin
+        if !issuer.to_val().is_void() {
+            // Check auth
+            if env.auths().is_empty() {
+                issuer.require_auth();
+            } else {
+                // If caller is admin, accept
+                let is_admin = admin == issuer;
+                if !is_admin {
+                    issuer.require_auth();
+                }
+            }
+        }
+
+        let mut record = storage::get_issuer(&env, &issuer).ok_or(PassportError::IssuerNotFound)?;
+        record.name = name.clone();
+        record.metadata_uri = metadata_uri.clone();
+        storage::set_issuer(&env, &record);
+
+        env.events().publish(
+            (Symbol::new(&env, "issuer"), Symbol::new(&env, "updated")),
+            (issuer, name),
+        );
+
+        Ok(())
+    }
+
     /// Deauthorize an issuer (disallowing future issuance and flagging existing credentials).
     pub fn deauthorize_issuer(env: Env, issuer: Address) -> Result<(), PassportError> {
         let admin = storage::get_admin(&env)?;
@@ -123,6 +165,47 @@ impl SkillsPassportContract {
     /// Query issuer record by address.
     pub fn get_issuer(env: Env, issuer: Address) -> Option<IssuerRecord> {
         storage::get_issuer(&env, &issuer)
+    }
+
+    /// Register a credential template schema by an authorized institution.
+    pub fn register_template(
+        env: Env,
+        issuer: Address,
+        template_id: Symbol,
+        name: String,
+        schema_uri: String,
+    ) -> Result<(), PassportError> {
+        issuer.require_auth();
+
+        if !storage::is_issuer_authorized(&env, &issuer) {
+            return Err(PassportError::IssuerNotAuthorized);
+        }
+
+        if storage::get_template(&env, &template_id).is_some() {
+            return Err(PassportError::TemplateAlreadyExists);
+        }
+
+        let record = TemplateRecord {
+            template_id: template_id.clone(),
+            issuer: issuer.clone(),
+            name: name.clone(),
+            schema_uri,
+            registered_at: env.ledger().timestamp(),
+        };
+
+        storage::set_template(&env, &record);
+
+        env.events().publish(
+            (Symbol::new(&env, "template"), Symbol::new(&env, "registered")),
+            (template_id, issuer, name),
+        );
+
+        Ok(())
+    }
+
+    /// Query credential template schema by ID.
+    pub fn get_template(env: Env, template_id: Symbol) -> Option<TemplateRecord> {
+        storage::get_template(&env, &template_id)
     }
 
     /// Issue a new credential commitment. Requires authorization of an approved issuer.
@@ -177,6 +260,62 @@ impl SkillsPassportContract {
         );
 
         Ok(())
+    }
+
+    /// Batch issue credentials to multiple learners atomically in a single transaction.
+    pub fn batch_issue_credentials(
+        env: Env,
+        issuer: Address,
+        credentials: Vec<BatchIssueItem>,
+    ) -> Result<u32, PassportError> {
+        issuer.require_auth();
+
+        if !storage::is_issuer_authorized(&env, &issuer) {
+            return Err(PassportError::IssuerNotAuthorized);
+        }
+
+        let now = env.ledger().timestamp();
+        let mut count: u32 = 0;
+
+        for item in credentials.iter() {
+            if storage::get_credential(&env, &item.credential_id).is_some() {
+                return Err(PassportError::CredentialAlreadyExists);
+            }
+
+            if let Some(exp) = item.expires_at {
+                if exp <= now {
+                    return Err(PassportError::InvalidExpiration);
+                }
+            }
+
+            let record = CredentialRecord {
+                credential_id: item.credential_id.clone(),
+                issuer: issuer.clone(),
+                recipient: item.recipient.clone(),
+                credential_hash: item.credential_hash.clone(),
+                template_id: item.template_id,
+                issued_at: now,
+                expires_at: item.expires_at,
+                status: CredentialStatus::Active,
+                revocation_reason: None,
+            };
+
+            storage::set_credential(&env, &record);
+            storage::add_learner_credential(&env, &item.recipient, &item.credential_id);
+
+            env.events().publish(
+                (
+                    Symbol::new(&env, "credential"),
+                    Symbol::new(&env, "issued"),
+                    item.recipient,
+                ),
+                (item.credential_id, issuer.clone(), item.credential_hash),
+            );
+
+            count += 1;
+        }
+
+        Ok(count)
     }
 
     /// Revoke an issued credential. Callable only by the issuing institution or contract admin.
@@ -275,6 +414,16 @@ impl SkillsPassportContract {
         );
 
         Ok(())
+    }
+
+    /// Fast status query returning (status, expires_at, revocation_reason) without full record overhead.
+    pub fn get_credential_status(
+        env: Env,
+        credential_id: BytesN<32>,
+    ) -> Result<(CredentialStatus, Option<u64>, Option<String>), PassportError> {
+        let record =
+            storage::get_credential(&env, &credential_id).ok_or(PassportError::CredentialNotFound)?;
+        Ok((record.status, record.expires_at, record.revocation_reason))
     }
 
     /// Read a credential commitment record.
