@@ -4,15 +4,15 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { fileURLToPath } from "node:url";
 
-const SCRIPT_PATH = new URL(
-  "check-threat-model-anchors.mjs",
-  import.meta.url,
-).pathname;
-const PROJECT_ROOT = new URL("..", import.meta.url).pathname;
+const SCRIPT_PATH = fileURLToPath(
+  new URL("check-threat-model-anchors.mjs", import.meta.url),
+);
+const PROJECT_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 function runScript(args = [], options = {}) {
-  return execFileSync("node", [SCRIPT_PATH, ...args], {
+  return execFileSync(process.execPath, [SCRIPT_PATH, ...args], {
     encoding: "utf-8",
     cwd: PROJECT_ROOT,
     ...options,

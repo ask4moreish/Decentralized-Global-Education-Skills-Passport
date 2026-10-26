@@ -137,3 +137,29 @@ export {
   type Status,
   type DataKey,
 } from "round-bindings";
+
+// Education & Skills Passport
+export {
+  canonicalizeJson,
+  computeCredentialHash,
+  hexToBytes32,
+  bytes32ToHex,
+  createVerifiableCredential,
+  verifyEducationCredential,
+  encodeCredentialForSharing,
+  decodeSharedCredential,
+  createCredentialSharePackage,
+  createSelectiveCredentialView,
+  EducationPassportClient,
+  type CredentialType,
+  type IssuerIdentity,
+  type CredentialSubject,
+  type CredentialProof,
+  type VerifiableEducationCredential,
+  type OnChainCredentialStatus,
+  type OnChainCredentialRecord,
+  type VerificationDiagnostic,
+  type CredentialSharePackage,
+  type CreateCredentialInput,
+  type EducationPassportClientConfig,
+} from "./passport/index.js";

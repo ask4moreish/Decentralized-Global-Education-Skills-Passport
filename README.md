@@ -20,59 +20,84 @@
 
 # Decentralized Global Education & Skills Passport
 
-**Sealed commit–reveal allocation on Stellar Soroban.** Grants, bounties, sealed
-auctions, and scored allocation rounds — where every input stays encrypted until
-a public Drand beacon forces simultaneous disclosure. No operator can read, censor,
-or reorder bids before reveal.
+**A decentralized, verifiable educational credential and skills passport platform built on Stellar Soroban.**
 
-> The SDK and contract ship under the legacy `@decentralized-global-education-skills-passport/*`
-> npm scope and `skills-passport-round` Rust crate. The brand survives in code identifiers
-> because renaming the Rust crate would invalidate the Stellar mainnet contract hash, and
-> the Build On Stellar / IBW 2026 win plus the SCF #44 / CV Labs submission cycle reference
-> these names in public materials — see [`docs/VERTICALS.md` § On namespaces](./docs/VERTICALS.md#on-namespaces).
+The platform allows educational institutions, universities, training providers, learners, and employers to issue, manage, share, and independently verify educational credentials, certifications, and verified skills on the Stellar blockchain without depending entirely on any single institution's private database.
+
+> **Core Philosophy:** People should be able to prove what they have learned and what they can do anywhere in the world, with zero personally identifiable information (PII) leaked on public ledgers, full cryptographic hash commitments, auditable on-chain revocation lifecycles, and W3C Verifiable Credentials interoperability.
 
 ```bash
 pnpm install
-pnpm web:dev              # jury UI — works without .env
-pnpm contract:test        # 14 Rust tests
-pnpm agents:e2e           # testnet full agent proof
-pnpm mainnet:verify       # read-only mainnet proof
+pnpm web:dev              # Launches the Education Passport & Verifier UI
+pnpm test                 # Runs all 242 contract, SDK, and web tests
+pnpm passport:test        # Soroban skills-passport-core contract tests (13 scenarios)
+pnpm contract:test        # Soroban sealed-allocation contract tests (58 tests)
 ```
-
-> Built on what's proven. Sealed by math, not by trust.
-
----
-
-## Try the demo
-
-```bash
-pnpm install
-pnpm web:dev
-```
-
-Open `http://localhost:5173` — you'll see the jury UI immediately. No `.env`, no
-Stellar keys, no Rust toolchain required. The embedded trace shows a real testnet
-round from end to end.
-
----
-
-## How it works
-
-- **Seal** each bid with Drand timelock encryption (`tlock`) to a future round **R**.
-- **Force-open** at R: BLS12-381 verified **on-chain** — all bids reveal simultaneously.
-- **Settle** deterministically. Identities disclosed only to the designated auditor.
-
-The operator never holds a key that can read a sealed bid. After R, the Drand
-signature is public and the Soroban contract verifies it before opening reveal.
 
 ---
 
 ## What's in the box
 
-| Layer | Path | npm | Purpose |
-| --- | --- | --- | --- |
-| **Contract** | `contracts/round` | — | Soroban primitive: sealed commit, BLS-verified reveal, SAC settle |
-| **Crypto** | [`packages/tlock`](packages/tlock) | [![npm](https://img.shields.io/npm/v/skills-passport-tlock)](https://www.npmjs.com/package/skills-passport-tlock) | Drand tlock seal + auditor blob, byte-compatible with the contract |
+| Layer | Path | Purpose |
+| --- | --- | --- |
+| **Passport Contract** | [`contracts/passport`](contracts/passport) | **Core Soroban Primitive**: Authorized issuer registry, W3C credential hash commitments, revocation & suspension lifecycle, and independent on-chain verification |
+| **Allocation Contract** | [`contracts/round`](contracts/round) | **Sealed Allocation Primitive**: Confidential commit-reveal coordination round with Drand timelock & SAC settlement |
+| **TypeScript SDK** | [`packages/sdk`](packages/sdk) | Full W3C Verifiable Credential builder, JCS canonical hashing (SHA-256), selective disclosure, QR sharing, and `EducationPassportClient` |
+| **Web Application** | [`apps/web`](apps/web) | Interactive React 19 app featuring: **Learner Passport Vault**, **Institution Issuance & Revocation Console**, and **Employer Verifier Portal** |
+| **Crypto Package** | [`packages/tlock`](packages/tlock) | Drand timelock encryption and BLS12-381 verification utilities |
+| **Keeper Service** | [`services/keeper`](services/keeper) | Permissionless automated execution daemon for blockchain coordination rounds |
+
+---
+
+## User Journeys
+
+### 1. Learner Passport
+- Connect supported Stellar wallets (Freighter or simulated testnet keypairs).
+- View verified credentials, university degrees, certificates, and skills badges with cryptographic proof anchors.
+- Selectively disclose specific competencies without revealing unrelated transcript details.
+- Generate live SVG QR codes and shareable verification links for job applications.
+- Export interoperable W3C Verifiable Credential JSON files.
+
+### 2. Educational Institution & Issuer
+- Establish an authorized institutional identity in the Soroban issuer registry.
+- Issue tamper-evident credentials mapped to learner Stellar addresses (`did:stellar:...`).
+- Commit 32-byte SHA-256 cryptographic digests to Soroban storage while keeping student PII private.
+- Auditable revocation and temporary suspension controls with mandatory audit trail notes.
+
+### 3. Employer & Verifier
+- Scan QR code or paste verification link / W3C VC JSON.
+- Verify credential authenticity against Soroban ledger state in milliseconds.
+- Clearly distinguishes:
+  - 🟢 **Valid & Authentic**: Cryptographically sound, issuer verified, active on ledger.
+  - 🔴 **Revoked**: Formally rescinded by the institution with recorded reason.
+  - 🟠 **Expired**: Past validity window.
+  - ⚠️ **Tampered / Forged**: Cryptographic hash mismatch detected!
+  - ⛔ **Untrusted Issuer**: Issuing entity is not authorized on-chain.
+
+---
+
+## Privacy & Blockchain Architecture
+
+1. **Zero On-Chain PII**: Student names, national IDs, grades, and detailed descriptions are **never stored on public ledger storage**.
+2. **Deterministic Cryptographic Commitments**: Credentials follow the W3C Verifiable Credentials standard. The canonical JSON payload is hashed using SHA-256 (RFC 8785 canonicalization), and only the resulting 32-byte digest is anchored on Soroban.
+3. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide.
+4. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can issue or revoke credentials.
+
+---
+
+## Quickstart
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Run all tests
+pnpm test
+
+# 3. Launch the web UI
+pnpm web:dev
+```
+Open `http://localhost:5173` to interact with the **Skills Passport**, **Institution Portal**, and **Employer Verifier**.
 | **Bindings** *(generated)* | [`packages/round-bindings`](packages/round-bindings) | [![npm](https://img.shields.io/npm/v/round-bindings)](https://www.npmjs.com/package/round-bindings) | TypeScript bindings generated from the contract WASM |
 | **SDK** | [`packages/sdk`](packages/sdk) | [![npm](https://img.shields.io/npm/v/skills-passport-sdk)](https://www.npmjs.com/package/skills-passport-sdk) | `SkillsPassportClient`, encoding, optional OpenZeppelin Channels submitter |
 | **Receipts** | `services/receipt-cli` | — | Export and offline-verify round receipts (no RPC, no secrets) |

@@ -47,13 +47,13 @@ export function LandingPage({
           <span>Decentralized Global Education & Skills Passport</span>
         </button>
         <div className="landing-nav-actions">
-          <span className="landing-status-pill winner">Hack Privacy #1</span>
+          <span className="landing-status-pill winner">Soroban Protocol 22</span>
           <span className="landing-status-pill">testnet · live</span>
-          <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport" target="_blank" rel="noreferrer">
-            GitHub
+          <a href="#/passport" className="primary-action compact" style={{ background: "var(--accent, #6366f1)", color: "#fff" }}>
+            🎓 Skills Passport
           </a>
           <a href="#/verify" className="secondary-action compact" title="Paste a receipt and run verifyReceipt in your browser">
-            Verify a receipt
+            Verify
           </a>
           <a href="#/dashboard" className="secondary-action compact">
             Dashboard
@@ -93,8 +93,8 @@ export function LandingPage({
           </motion.p>
 
           <motion.div className="hero-actions" variants={fadeUp} transition={transition}>
-            <button type="button" className="primary-action large" onClick={onDemo}>
-              Open sealed grant scoring demo
+            <a className="primary-action large" href="#/passport" style={{ background: "var(--accent, #6366f1)", color: "#fff", textDecoration: "none" }}>
+              🎓 Launch Education & Skills Passport
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M5 12h14M13 6l6 6-6 6"
@@ -104,9 +104,12 @@ export function LandingPage({
                   strokeLinejoin="round"
                 />
               </svg>
+            </a>
+            <button type="button" className="secondary-action large" onClick={onDemo}>
+              ⚖️ Open sealed round demo
             </button>
             <a className="secondary-action" href="#/architecture">
-              Read the architecture
+              Read architecture
             </a>
           </motion.div>
 

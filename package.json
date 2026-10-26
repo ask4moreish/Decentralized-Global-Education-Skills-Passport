@@ -21,8 +21,10 @@
     }
   },
   "scripts": {
+    "test": "cargo test --workspace && pnpm sdk:test && pnpm web:test",
+    "passport:test": "cargo test -p skills-passport-core",
     "contract:build": "stellar contract build",
-    "contract:test": "cargo test -p skills-passport-round",
+    "contract:test": "cargo test --workspace",
     "bindings:generate": "stellar contract build --out-dir artifacts && rm -rf tmp-bindings && stellar contract bindings typescript --wasm artifacts/skills_passport_round.wasm --output-dir tmp-bindings --overwrite && cp tmp-bindings/src/index.ts packages/round-bindings/src/index.ts && rm -rf tmp-bindings",
     "bindings:check": "stellar contract build --out-dir artifacts && rm -rf tmp-bindings && stellar contract bindings typescript --wasm artifacts/skills_passport_round.wasm --output-dir tmp-bindings --overwrite && (diff tmp-bindings/src/index.ts packages/round-bindings/src/index.ts; diff_exit=$?; rm -rf tmp-bindings; if [ $diff_exit -ne 0 ]; then echo '❌ Round bindings are stale. Run pnpm bindings:generate to update them.'; exit 1; else echo '✅ Round bindings are up to date.'; fi)",
     "sdk:test": "pnpm --filter skills-passport-sdk test",
