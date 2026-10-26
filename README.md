@@ -29,9 +29,11 @@ The platform allows educational institutions, universities, training providers, 
 ```bash
 pnpm install
 pnpm web:dev              # Launches the Education Passport & Verifier UI
-pnpm test                 # Runs all 242 contract, SDK, and web tests
-pnpm passport:test        # Soroban skills-passport-core contract tests (13 scenarios)
-pnpm contract:test        # Soroban sealed-allocation contract tests (58 tests)
+pnpm test                 # Runs full test suite (contracts, SDK, web)
+pnpm lifecycle:passport   # Runs all 10 End-to-End Credential Lifecycle scenarios
+pnpm passport:verify      # CLI Credential Verifier tool
+pnpm passport:test        # Soroban skills-passport-core contract tests (19 scenarios)
+pnpm contract:test        # All Soroban contract tests (77 tests total)
 ```
 
 ---
@@ -79,9 +81,47 @@ pnpm contract:test        # Soroban sealed-allocation contract tests (58 tests)
 ## Privacy & Blockchain Architecture
 
 1. **Zero On-Chain PII**: Student names, national IDs, grades, and detailed descriptions are **never stored on public ledger storage**.
-2. **Deterministic Cryptographic Commitments**: Credentials follow the W3C Verifiable Credentials standard. The canonical JSON payload is hashed using SHA-256 (RFC 8785 canonicalization), and only the resulting 32-byte digest is anchored on Soroban.
-3. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide.
-4. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can issue or revoke credentials.
+2. **Deterministic Cryptographic Commitments**: Credentials follow the W3C Verifiable Credentials standard. The canonical JSON payload is hashed using SHA-256 (RFC 8785 JSON Canonicalization Scheme), and only the resulting 32-byte digest is anchored on Soroban.
+3. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide with auditable reason logs.
+4. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can register templates, issue, revoke, or suspend credentials.
+5. **Selective Disclosure & DID Anchoring**: Learners can present isolated skill subsets without exposing unrelated transcripts, degrees, or sensitive personal data.
+
+---
+
+## Complete Credential Lifecycle & Contract Interface
+
+The Soroban Education Passport contract (`contracts/passport`) provides a complete suite of lifecycle primitives:
+
+| Contract Function | Authorization | Description |
+| --- | --- | --- |
+| `initialize(admin)` | Admin | Deploys registry and sets contract administrator |
+| `register_issuer(issuer, name, metadata_uri)` | Admin | Authorizes an educational institution or certifying body |
+| `update_issuer_metadata(issuer, name, metadata_uri)` | Issuer / Admin | Updates institution name or accreditation profile |
+| `deauthorize_issuer(issuer)` | Admin | Removes issuing authority; immediately marks existing credentials as untrusted |
+| `register_template(issuer, template_id, name, schema_uri)` | Issuer | Registers reusable credential schema (degree, diploma, badge) |
+| `get_template(template_id)` | Read-only | Queries registered credential template metadata |
+| `issue_credential(issuer, recipient, credential_id, credential_hash, template_id, expires_at)` | Issuer | Issues tamper-evident credential hash commitment |
+| `batch_issue_credentials(issuer, credentials)` | Issuer | Atomically issues up to 50 credentials in a single transaction |
+| `revoke_credential(caller, credential_id, reason)` | Issuer / Admin | Permanently revokes a credential with auditable reason |
+| `suspend_credential(caller, credential_id, reason)` | Issuer / Admin | Temporarily suspends credential pending review |
+| `reactivate_credential(caller, credential_id)` | Issuer / Admin | Reactivates a suspended credential (revoked cannot be reactivated) |
+| `get_credential_status(credential_id)` | Read-only | High-speed tuple query: `(status, expires_at, revocation_reason)` |
+| `verify_credential(credential_id, claimed_hash)` | Read-only | Full cryptographic verification returning structured boolean flags |
+
+### Automated 10-Scenario Verification Suite
+
+The repository includes a comprehensive regression test suite (`pnpm lifecycle:passport`) validating all 10 core scenarios:
+
+1. **Authorized Issuance**: Authorized institution registers templates and issues W3C credentials.
+2. **Learner Passport Ingestion**: Learner receives credential, views competencies, and generates QR code/sharing link.
+3. **Independent Verification**: Employer independently verifies credential authenticity against ledger state.
+4. **Cryptographic Tampering Detection**: Altered grades, conferred titles, or substituted student DIDs immediately fail verification.
+5. **Unauthorized Issuer Rejection**: Issuances from deauthorized or unaccredited entities are flagged as untrusted.
+6. **Revocation Enforcement**: Revoked credentials are rejected with verifiable revocation reason audit trail.
+7. **Expiration Detection**: Expired credentials are unambiguously identified based on timestamp.
+8. **Selective Disclosure**: Learner shares subset of skills without leaking unshared courses or personal records.
+9. **Resilient Error Recovery**: Malformed payloads, network drops, and simulation failures produce clean, typed errors.
+10. **Reproducibility Check**: All checks execute deterministically across Soroban VM, TypeScript SDK, and browser UI.
 
 ---
 
@@ -115,6 +155,9 @@ Open `http://localhost:5173` to interact with the **Skills Passport**, **Institu
 
 | Layer | Command | Network | What it proves |
 | --- | --- | --- | --- |
+| **Education Passport E2E** | `pnpm lifecycle:passport` | Local / SDK | **All 10 core scenarios**: issuance, learner view, independent verifier, tampering detection, unauthorized rejection, revocation audit, expiration, selective disclosure, recovery |
+| **CLI Verifier** | `pnpm passport:verify --demo` | Local / CLI | Off-chain W3C VC parsing, RFC-8785 canonical hash computation, and status diagnostics |
+| **Passport Contract** | `pnpm passport:test` | Soroban VM | **19 unit tests**: registration, templates, batch issuance, revocation, suspension, fast status queries, replay/substitution protection |
 | **Full product** | `pnpm lifecycle:e2e` | Testnet | 2 bidders, USDC SAC, keeper settle → contract **0** |
 | **Multi-agent** | `pnpm agents:e2e` | Testnet | Mandate + x402 + keeper reveal + settle → **single UI trace** |
 | **x402 appraisal** | `pnpm appraisal:e2e` | Testnet | HTTP 402 → on-chain USDC settle |

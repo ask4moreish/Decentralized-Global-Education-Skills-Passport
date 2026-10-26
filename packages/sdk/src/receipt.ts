@@ -4,7 +4,7 @@
 // lowercase hex. Fields that depend on expired Temporary storage (seal
 // ciphertext, auditor blob) are honestly marked null when unavailable.
 
-import { createHash } from "node:crypto";
+import { sha256Hex } from "skills-passport-tlock";
 
 export const RECEIPT_VERSION = 1;
 
@@ -12,7 +12,7 @@ export const RECEIPT_VERSION = 1;
  *  offline verifier can detect a tampered `network` field without any caller-
  *  supplied context. */
 export function networkFingerprint(passphrase: string): string {
-  return createHash("sha256").update(passphrase, "utf8").digest("hex");
+  return sha256Hex(passphrase);
 }
 
 export interface BidReceiptEntry {

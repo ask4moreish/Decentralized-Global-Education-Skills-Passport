@@ -247,6 +247,7 @@ Before opening a PR, verify the following:
 
 | Workflow | Trigger | What it checks |
 |----------|---------|----------------|
+| **Tests** | Push/PR to `main` | Full unit-test + typecheck suite: `cargo test` for the contract and every TypeScript package's `test` + `typecheck` (tlock runs its offline `test:unit` suite) |
 | **Bindings check** | Push/PR to `main` (any path) | Rust contract → WASM → generated TS bindings match committed ones |
 | **Examples typecheck** | Push/PR touching `examples/` or `packages/` | `tsc --noEmit` for `grant-scoring` example |
 | **Fixture drift guard** | Push/PR touching `appraisal-api/` | Fixture hashes stay in sync with canonical serializers |

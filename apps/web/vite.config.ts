@@ -40,7 +40,10 @@ function manualChunks(id: string): string | undefined {
 }
 
 export default defineConfig({
-  base: "/Decentralized-Global-Education-Skills-Passport/",
+  // Base path for asset URLs. GitHub Pages serves the site under the repo
+  // subpath, so that is the default; set BASE_PATH=/ for a domain-root host
+  // (Vercel, Netlify, Cloudflare Pages) at build time.
+  base: process.env.BASE_PATH ?? "/Decentralized-Global-Education-Skills-Passport/",
   plugins: [
     react(),
     {

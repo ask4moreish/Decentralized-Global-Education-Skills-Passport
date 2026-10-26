@@ -63,6 +63,7 @@ export function verifyEducationCredential(
 
   // 4. On-chain validation
   let onChainExpired = false;
+  let onChainHashMatched = true;
   let statusActive = true;
   let isRevoked = false;
   let isSuspended = false;
@@ -91,6 +92,7 @@ export function verifyEducationCredential(
       onChainRecord.credentialHash.toLowerCase() !== claimedHash ||
       onChainRecord.credentialHash.toLowerCase() !== calculatedHash.toLowerCase()
     ) {
+      onChainHashMatched = false;
       errors.push("On-chain credential hash does not match document hash");
     }
 
@@ -108,7 +110,7 @@ export function verifyEducationCredential(
   }
 
   const isExpired = docExpired || onChainExpired;
-  const isTampered = !hashMatched;
+  const isTampered = !hashMatched || !onChainHashMatched;
   const isUntrusted = !issuerAuthorized;
 
   let status: VerificationDiagnostic["status"] = "valid";
@@ -126,6 +128,7 @@ export function verifyEducationCredential(
 
   const isValid =
     hashMatched &&
+    onChainHashMatched &&
     !isExpired &&
     !isRevoked &&
     !isSuspended &&
@@ -143,7 +146,7 @@ export function verifyEducationCredential(
     claimedHash,
     errors,
     evidence: {
-      hashMatched,
+      hashMatched: hashMatched && onChainHashMatched,
       issuerAuthorized,
       statusActive,
       notExpired: !isExpired,

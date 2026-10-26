@@ -205,11 +205,14 @@ export function bidFromAppraisal(
   suggestedMaxBidUsdc: number,
   mandate: SessionMandate,
 ): { bidValue: bigint; escrow: bigint } {
-  let bidValue = usdcToStroops(suggestedMaxBidUsdc);
   const maxBid = BigInt(mandate.maxBidStroops);
   const maxEscrow = BigInt(mandate.maxEscrowStroops);
+  let bidValue = usdcToStroops(suggestedMaxBidUsdc);
+  // Clamp the appraisal's suggestion to the mandate caps. `maxBid <= maxEscrow`
+  // is enforced by verifySessionMandate, so a bid at maxBid never exceeds the
+  // escrow ceiling; the maxEscrow clamp is a defensive fallback only.
   if (bidValue > maxBid) bidValue = maxBid;
-  assertBidWithinMandate(mandate, bidValue, bidValue <= maxEscrow ? bidValue : maxEscrow);
+  if (bidValue > maxEscrow) bidValue = maxEscrow;
   const escrow = bidValue; // minimal escrow; contract refunds surplus at settle
   assertBidWithinMandate(mandate, bidValue, escrow);
   return { bidValue, escrow };

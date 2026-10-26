@@ -397,3 +397,159 @@ fn test_deauthorized_issuer_invalidates_credentials() {
     assert!(!res.is_valid);
     assert!(!res.issuer_authorized);
 }
+
+#[test]
+fn test_update_issuer_metadata() {
+    let (env, _, issuer, _, client) = setup_test();
+
+    let new_name = String::from_str(&env, "MIT Center for Quantum & Blockchain Studies");
+    let new_uri = String::from_str(&env, "https://mit.edu/quantum-creds");
+
+    client.update_issuer_metadata(&issuer, &new_name, &new_uri);
+
+    let updated = client.get_issuer(&issuer).unwrap();
+    assert_eq!(updated.name, new_name);
+    assert_eq!(updated.metadata_uri, new_uri);
+}
+
+#[test]
+fn test_template_registration_and_lookup() {
+    let (env, _, issuer, _, client) = setup_test();
+
+    let template_id = Symbol::new(&env, "MScDegree");
+    let name = String::from_str(&env, "Master of Science in Distributed Systems");
+    let schema_uri = String::from_str(&env, "https://w3id.org/skills-passport/schemas/msc-v1.json");
+
+    client.register_template(&issuer, &template_id, &name, &schema_uri);
+
+    let tmpl = client.get_template(&template_id).unwrap();
+    assert_eq!(tmpl.template_id, template_id);
+    assert_eq!(tmpl.issuer, issuer);
+    assert_eq!(tmpl.name, name);
+    assert_eq!(tmpl.schema_uri, schema_uri);
+
+    // Duplicate template registration rejected
+    let dup = client.try_register_template(&issuer, &template_id, &name, &schema_uri);
+    assert_eq!(dup, Err(Ok(PassportError::TemplateAlreadyExists)));
+}
+
+#[test]
+fn test_batch_issue_credentials() {
+    let (env, _, issuer, learner, client) = setup_test();
+
+    let learner_2 = Address::generate(&env);
+    let mut batch = Vec::new(&env);
+
+    let cred_1 = BytesN::from_array(&env, &[131u8; 32]);
+    let hash_1 = BytesN::from_array(&env, &[132u8; 32]);
+    let cred_2 = BytesN::from_array(&env, &[133u8; 32]);
+    let hash_2 = BytesN::from_array(&env, &[134u8; 32]);
+
+    batch.push_back(BatchIssueItem {
+        recipient: learner.clone(),
+        credential_id: cred_1.clone(),
+        credential_hash: hash_1.clone(),
+        template_id: Symbol::new(&env, "BatchBSc"),
+        expires_at: None,
+    });
+
+    batch.push_back(BatchIssueItem {
+        recipient: learner_2.clone(),
+        credential_id: cred_2.clone(),
+        credential_hash: hash_2.clone(),
+        template_id: Symbol::new(&env, "BatchBSc"),
+        expires_at: None,
+    });
+
+    let count = client.batch_issue_credentials(&issuer, &batch);
+    assert_eq!(count, 2);
+
+    assert!(client.verify_credential(&cred_1, &hash_1).is_valid);
+    assert!(client.verify_credential(&cred_2, &hash_2).is_valid);
+    assert_eq!(client.get_learner_credentials(&learner).len(), 1);
+    assert_eq!(client.get_learner_credentials(&learner_2).len(), 1);
+}
+
+#[test]
+fn test_fast_status_query() {
+    let (env, _, issuer, learner, client) = setup_test();
+
+    let credential_id = BytesN::from_array(&env, &[141u8; 32]);
+    let credential_hash = BytesN::from_array(&env, &[142u8; 32]);
+
+    client.issue_credential(
+        &issuer,
+        &learner,
+        &credential_id,
+        &credential_hash,
+        &Symbol::new(&env, "SkillBadge"),
+        &None,
+    );
+
+    let (status, expires_at, reason) = client.get_credential_status(&credential_id);
+    assert_eq!(status, CredentialStatus::Active);
+    assert_eq!(expires_at, None);
+    assert_eq!(reason, None);
+
+    client.revoke_credential(
+        &issuer,
+        &credential_id,
+        &String::from_str(&env, "Certificate rescinded"),
+    );
+
+    let (status_rev, _, reason_rev) = client.get_credential_status(&credential_id);
+    assert_eq!(status_rev, CredentialStatus::Revoked);
+    assert_eq!(reason_rev, Some(String::from_str(&env, "Certificate rescinded")));
+}
+
+#[test]
+fn test_reactivate_revoked_credential_fails() {
+    let (env, _, issuer, learner, client) = setup_test();
+
+    let credential_id = BytesN::from_array(&env, &[151u8; 32]);
+    let credential_hash = BytesN::from_array(&env, &[152u8; 32]);
+
+    client.issue_credential(
+        &issuer,
+        &learner,
+        &credential_id,
+        &credential_hash,
+        &Symbol::new(&env, "Degree"),
+        &None,
+    );
+
+    client.revoke_credential(
+        &issuer,
+        &credential_id,
+        &String::from_str(&env, "Rescinded permanently"),
+    );
+
+    // Attempting to reactivate a revoked credential must fail with CredentialNotSuspended
+    let res = client.try_reactivate_credential(&issuer, &credential_id);
+    assert_eq!(res, Err(Ok(PassportError::CredentialNotSuspended)));
+}
+
+#[test]
+fn test_credential_substitution_attack() {
+    let (env, _, issuer, learner, client) = setup_test();
+
+    let victim_cred_id = BytesN::from_array(&env, &[161u8; 32]);
+    let victim_hash = BytesN::from_array(&env, &[162u8; 32]);
+
+    client.issue_credential(
+        &issuer,
+        &learner,
+        &victim_cred_id,
+        &victim_hash,
+        &Symbol::new(&env, "BScCompSci"),
+        &None,
+    );
+
+    // An attacker tries to substitute a fake claim hash or another learner's credential ID
+    let attacker_fake_hash = BytesN::from_array(&env, &[163u8; 32]);
+    let verify_res = client.verify_credential(&victim_cred_id, &attacker_fake_hash);
+
+    assert!(!verify_res.is_valid);
+    assert!(!verify_res.hash_matches);
+    assert_eq!(verify_res.status, CredentialStatus::Active);
+}

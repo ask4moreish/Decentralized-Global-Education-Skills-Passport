@@ -238,6 +238,9 @@ function initializeSeedCredentials(): StoredCredentialItem[] {
 
 export function loadStoredCredentials(): StoredCredentialItem[] {
   try {
+    if (typeof localStorage === "undefined") {
+      return initializeSeedCredentials();
+    }
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       const seed = initializeSeedCredentials();
@@ -252,7 +255,9 @@ export function loadStoredCredentials(): StoredCredentialItem[] {
 
 export function saveStoredCredentials(items: StoredCredentialItem[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
   } catch (err) {
     console.error("Failed to save credentials to localStorage", err);
   }
@@ -260,6 +265,9 @@ export function saveStoredCredentials(items: StoredCredentialItem[]): void {
 
 export function loadStoredIssuers(): IssuerProfile[] {
   try {
+    if (typeof localStorage === "undefined") {
+      return DEMO_ISSUERS;
+    }
     const raw = localStorage.getItem(ISSUERS_STORAGE_KEY);
     if (!raw) {
       saveStoredIssuers(DEMO_ISSUERS);
@@ -273,7 +281,9 @@ export function loadStoredIssuers(): IssuerProfile[] {
 
 export function saveStoredIssuers(issuers: IssuerProfile[]): void {
   try {
-    localStorage.setItem(ISSUERS_STORAGE_KEY, JSON.stringify(issuers));
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(ISSUERS_STORAGE_KEY, JSON.stringify(issuers));
+    }
   } catch (err) {
     console.error("Failed to save issuers to localStorage", err);
   }
