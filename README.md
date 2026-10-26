@@ -138,16 +138,6 @@ pnpm test
 pnpm web:dev
 ```
 Open `http://localhost:5173` to interact with the **Skills Passport**, **Institution Portal**, and **Employer Verifier**.
-| **Bindings** *(generated)* | [`packages/round-bindings`](packages/round-bindings) | [![npm](https://img.shields.io/npm/v/round-bindings)](https://www.npmjs.com/package/round-bindings) | TypeScript bindings generated from the contract WASM |
-| **SDK** | [`packages/sdk`](packages/sdk) | [![npm](https://img.shields.io/npm/v/skills-passport-sdk)](https://www.npmjs.com/package/skills-passport-sdk) | `SkillsPassportClient`, encoding, optional OpenZeppelin Channels submitter |
-| **Receipts** | `services/receipt-cli` | — | Export and offline-verify round receipts (no RPC, no secrets) |
-| **Keeper** | `services/keeper` | — | Permissionless reveal/clear/settle + watch mode + status HTTP API |
-| **Appraisal** | `services/appraisal-api` | — | x402-gated deterministic valuation (USDC SAC) |
-| **Agent** | `services/agent` | — | Mandate + cap-checked sealed-bid agents |
-| **Template** | `services/auction-template` | — | Sealed-auction integration template (SDK + keeper + tlock e2e) |
-| **Drand harness** | `services/drand-tools` | — | Risk-2 harness: validate tlock ↔ Drand ↔ on-chain BLS |
-| **UI** | `apps/web` | — | Jury demo — embedded trace, observer, attack labs, Drand beacon monitor |
-| **Example** | `examples/grant-scoring` | — | Sealed grant scoring pilot template |
 
 ---
 
@@ -168,7 +158,16 @@ See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for honest scope boundaries.
 
 ## Deployed artifacts
 
-### Mainnet (settlement smoke)
+### Education Passport Contract (`contracts/passport`)
+
+| Field | Value |
+| --- | --- |
+| Contract Type | Decentralized Education & Skills Passport Core |
+| Test Coverage | **19/19 passing** (Soroban VM test harness) |
+| Lifecycle Scenarios | **10/10 passing** (`pnpm lifecycle:passport`) |
+| Network Deployment | Testnet / Mainnet deployment ready; live contract deployment pending operator key setup. See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for scope boundaries. |
+
+### Sealed Allocation Round Contract (`contracts/round`)
 
 | Field | Value |
 | --- | --- |
@@ -206,8 +205,28 @@ Three packages are published to npm:
 | [`round-bindings`](packages/round-bindings) | `npm install round-bindings` | — |
 
 **In most cases, just install the SDK** — it declares `tlock` and `round-bindings` as
-dependencies and installs them automatically. Install `tlock` separately only if
-you need direct access to the seal/unseal APIs without the client.
+dependencies and installs them automatically.
+
+### Education Passport Credential Lifecycle & Verification
+
+```ts
+import { EducationPassportClient, verifyEducationCredential } from "skills-passport-sdk";
+
+// Initialize client for Soroban RPC
+const client = new EducationPassportClient({
+  contractId: "CA...",
+  rpcUrl: "https://soroban-testnet.stellar.org",
+  networkPassphrase: "Test SDF Network ; September 2015",
+});
+
+// Verify a W3C Verifiable Credential independently against ledger state
+const result = await verifyEducationCredential(credential, onChainRecord);
+console.log(`Valid: ${result.isValid}, Status: ${result.status}`);
+```
+
+### Sealed Allocation Commit-Reveal
+
+Install `tlock` separately only if you need direct access to the seal/unseal APIs without the client.
 
 ```ts
 import { SkillsPassportClient } from "skills-passport-sdk";
@@ -249,6 +268,17 @@ exercises, see **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** — the authoritat
 
 ## Status
 
+### Decentralized Education & Skills Passport
+- [x] Soroban Passport Contract + 19 unit tests (`contracts/passport`)
+- [x] 10/10 End-to-end credential lifecycle test suite (`pnpm lifecycle:passport`)
+- [x] CLI Credential Verifier tool (`pnpm passport:verify --demo`)
+- [x] TypeScript SDK with W3C VC builder, JCS canonical hashing, selective disclosure
+- [x] Interactive Web Portal (`apps/web`): Learner Vault, Issuer Console, Employer Verifier
+- [x] QR code generation and access-controlled credential sharing
+- [x] Auditable on-chain revocation, suspension, and reactivation lifecycles
+- [x] Zero-PII architecture (only 32-byte RFC-8785 SHA-256 hashes anchored on-chain)
+
+### Sealed Allocation Round Primitive
 - [x] Round contract + 14 tests + on-chain Drand BLS
 - [x] tlock + auditor blob (13 tests)
 - [x] SDK + optional OZ Relayer Channels submitter
