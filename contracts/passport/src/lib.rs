@@ -91,24 +91,11 @@ impl SkillsPassportContract {
         name: String,
         metadata_uri: String,
     ) -> Result<(), PassportError> {
-        let admin = storage::get_admin(&env)?;
         if !storage::is_issuer_authorized(&env, &issuer) {
             return Err(PassportError::IssuerNotFound);
         }
 
-        // Must be authorized by the issuer itself or the contract admin
-        if !issuer.to_val().is_void() {
-            // Check auth
-            if env.auths().is_empty() {
-                issuer.require_auth();
-            } else {
-                // If caller is admin, accept
-                let is_admin = admin == issuer;
-                if !is_admin {
-                    issuer.require_auth();
-                }
-            }
-        }
+        issuer.require_auth();
 
         let mut record = storage::get_issuer(&env, &issuer).ok_or(PassportError::IssuerNotFound)?;
         record.name = name.clone();

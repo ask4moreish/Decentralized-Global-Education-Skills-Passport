@@ -2,7 +2,7 @@
   "name": "decentralized-global-education-skills-passport",
   "version": "0.1.0",
   "private": true,
-  "description": "Verifiable allocation infrastructure for Stellar grants, hackathons, bounties, RFPs, and sealed auctions.",
+  "description": "Decentralized Global Education & Skills Passport on Stellar Soroban: verifiable credential issuance, cryptographic hash registry, privacy-preserving selective disclosure, and independent verification.",
   "license": "MIT",
   "packageManager": "pnpm@10.13.1",
   "engines": {

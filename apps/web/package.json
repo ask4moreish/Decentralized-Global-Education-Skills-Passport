@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Jury demo UI — lifecycle, observer, agents, x402, keeper, seal-off vs seal-on attack, mandate cap safety lab.",
+  "description": "Decentralized Global Education & Skills Passport UI: Learner Vault, Institution Issuance Console, and Employer Verifier Portal on Stellar Soroban.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

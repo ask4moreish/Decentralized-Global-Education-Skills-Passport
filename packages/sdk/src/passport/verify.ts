@@ -69,7 +69,10 @@ export function verifyEducationCredential(
   let isSuspended = false;
   let issuerAuthorized = true;
 
-  if (onChainRecord) {
+  if (onChainRecord === null) {
+    statusActive = false;
+    errors.push("No on-chain registration record found on Stellar Soroban ledger");
+  } else if (onChainRecord) {
     if (onChainRecord.status === "Revoked") {
       isRevoked = true;
       statusActive = false;
@@ -112,10 +115,13 @@ export function verifyEducationCredential(
   const isExpired = docExpired || onChainExpired;
   const isTampered = !hashMatched || !onChainHashMatched;
   const isUntrusted = !issuerAuthorized;
+  const isUnregistered = onChainRecord === null;
 
   let status: VerificationDiagnostic["status"] = "valid";
   if (isTampered) {
     status = "tampered";
+  } else if (isUnregistered) {
+    status = "unverifiable";
   } else if (isRevoked) {
     status = "revoked";
   } else if (isSuspended) {
@@ -129,6 +135,7 @@ export function verifyEducationCredential(
   const isValid =
     hashMatched &&
     onChainHashMatched &&
+    !isUnregistered &&
     !isExpired &&
     !isRevoked &&
     !isSuspended &&

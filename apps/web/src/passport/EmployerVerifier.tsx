@@ -62,26 +62,18 @@ export function EmployerVerifier() {
           vc.proof.credentialHash.toLowerCase()
     );
 
-    // Look up issuer in registry
+    // Look up issuer in registry. Unknown issuers are not authorized.
     const issuerAddr = vc.issuer.id.replace("did:stellar:", "");
     const issuerProfile = issuers.find((i) => i.address === issuerAddr);
-    const isIssuerAuthorized = issuerProfile ? issuerProfile.isAuthorized : true;
+    const isIssuerAuthorized = issuerProfile ? issuerProfile.isAuthorized : false;
 
+    // Look up on-chain ledger record. If not found in registry, record is null (unverifiable).
     const onChainRecord = stored
       ? {
           ...stored.onChain,
           issuerAuthorized: isIssuerAuthorized,
         }
-      : {
-          credentialId: idKey,
-          issuer: issuerAddr,
-          recipient: vc.credentialSubject.recipientAddress,
-          credentialHash: vc.proof.credentialHash,
-          templateId: vc.type[1],
-          issuedAt: Math.floor(Date.parse(vc.issuanceDate) / 1000),
-          status: "Active" as const,
-          issuerAuthorized: isIssuerAuthorized,
-        };
+      : null;
 
     const diag = verifyEducationCredential(vc, onChainRecord);
     setDiagnostic(diag);

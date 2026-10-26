@@ -69,6 +69,7 @@ describe("Passport State & Credential Persistence", () => {
         issuanceDate: new Date().toISOString(),
         credentialSubject: {
           id: `did:stellar:${DEMO_LEARNERS[0].address}`,
+          recipientAddress: DEMO_LEARNERS[0].address,
           title: "Full Stack Engineer",
           institution: "Test University",
           skills: ["TypeScript", "Rust"],
