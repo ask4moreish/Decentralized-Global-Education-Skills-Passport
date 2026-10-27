@@ -32,6 +32,7 @@ pnpm web:dev                  # Launches the Education Passport & Verifier UI
 pnpm test                     # Runs full test suite (contracts, SDK, web)
 pnpm lifecycle:passport       # Runs all 10 End-to-End Credential Lifecycle scenarios
 pnpm passport:lifecycle:testnet # Runs live on-chain lifecycle against Stellar Testnet
+pnpm passport:verify:testnet  # Direct Soroban RPC contract verifier (WASM hash, admin, issuer)
 pnpm passport:verify          # CLI Credential Verifier tool
 pnpm passport:test            # Soroban skills-passport-core contract tests (19 scenarios)
 pnpm contract:test            # All Soroban contract tests (77 tests total)
@@ -85,7 +86,9 @@ pnpm contract:test            # All Soroban contract tests (77 tests total)
 2. **Deterministic Cryptographic Commitments**: Credentials follow the W3C Verifiable Credentials standard. The canonical JSON payload is hashed using SHA-256 (RFC 8785 JSON Canonicalization Scheme), and only the resulting 32-byte digest is anchored on Soroban.
 3. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide with auditable reason logs.
 4. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can register templates, issue, revoke, or suspend credentials.
-5. **Selective Disclosure & DID Anchoring**: Learners can present isolated skill subsets without exposing unrelated transcripts, degrees, or sensitive personal data.
+5. **Selective Disclosure Architecture**:
+   - **v1 Document-Level Selective View (Implemented)**: Learners can present isolated skill subsets for job applications without exposing unrelated transcript details. The presentation filters attributes in software while preserving the parent credential root identifier for ledger verification.
+   - **v2 Cryptographic Attribute Proofs (Planned)**: Full zero-knowledge selective disclosure using BBS+ signatures or ZK-SNARKs to prove individual claims without disclosing the parent credential preimage or root hash.
 
 ---
 
@@ -172,6 +175,23 @@ See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for honest scope boundaries.
 | Lifecycle Scenarios | **10/10 passing** (`pnpm lifecycle:passport` local & `pnpm passport:lifecycle:testnet` on-chain) |
 | Status | **Deployed & Verified on Stellar Testnet** |
 
+#### Independent On-Chain Verification (Direct Soroban RPC)
+
+If block explorers experience network latency or UI indexing delays, the contract instance, bytecode hash, and on-chain state can be **independently verified directly against the Soroban Testnet JSON-RPC endpoint**:
+
+```bash
+# Automated independent verification of WASM hash, admin, issuer, and credentials:
+pnpm passport:verify:testnet
+```
+
+Or query the contract instance ledger entry directly via raw `curl`:
+
+```bash
+curl -s -X POST https://soroban-testnet.stellar.org \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"getContractData","params":{"contract":"CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5","key":"AAAABAAAAAE=","durability":"persistent"}}'
+```
+
 #### Testnet Verified Transaction Proofs
 
 | Stage | Transaction Hash | Result |
@@ -185,6 +205,9 @@ See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for honest scope boundaries.
 | **Credential Suspension** | [`84c8f791...`](https://stellar.expert/explorer/testnet/tx/84c8f791a1b30a9cfc326e9bfefc2c215f4a143d2c7d2973e59e41091711b2b6) | State set to Suspended (status = 3) |
 | **Credential Reactivation** | [`a20cadbf...`](https://stellar.expert/explorer/testnet/tx/a20cadbf98d950f3a74e42c5452a8b698a079b7fa47acd85e01ce07f21c0227b) | State restored to Active (status = 1) |
 | **Credential Revocation** | [`fbf1f4b6...`](https://stellar.expert/explorer/testnet/tx/fbf1f4b6e2c36a1daef4a421cba3db98dfadb707182b2626f36832f1c4dcef5d) | State permanently Revoked (status = 2) |
+
+> [!WARNING]
+> **Independent Security Audit Requirement:** Passing automated unit tests and demonstrating Testnet deployment does **not** constitute an independent security audit. An external audit by qualified smart-contract security specialists is strictly mandatory before issuing real student records or processing production credentials. See [docs/SECURITY_REVIEW_REQUIREMENTS.md](./docs/SECURITY_REVIEW_REQUIREMENTS.md) for the audit checklist and threat matrix.
 
 ### Sealed Allocation Round Contract (`contracts/round`)
 
