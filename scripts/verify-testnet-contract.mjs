@@ -149,7 +149,7 @@ async function main() {
   console.log("      [PASS] On-chain credential record retrieved and verified!\n");
 
   // 6. Independent Verification Simulation (verify_credential)
-  console.log("[6/6] Executing independent verify_credential check against Soroban RPC...");
+  console.log("[6/7] Executing independent verify_credential check against Soroban RPC...");
   const credHashBytes = Buffer.from(EXPECTED_CREDENTIAL_HASH, "hex");
   const verifyResult = await simulateCall(
     server,
@@ -165,6 +165,25 @@ async function main() {
   console.log(`      Issuer Authorized:           ${verifyResult.issuer_authorized}`);
   console.log(`      Is Valid:                    ${verifyResult.is_valid} (Correctly rejected due to revocation status)`);
   console.log("      [PASS] Independent contract verification simulation complete!\n");
+
+  // 7. Negative Verification Checks (Tampered Hash Detection)
+  console.log("[7/7] Executing negative verification checks (tampered hash detection)...");
+  const tamperedHashBytes = crypto.randomBytes(32);
+  const tamperedResult = await simulateCall(
+    server,
+    EXPECTED_CONTRACT_ID,
+    "verify_credential",
+    [
+      sdk.nativeToScVal(credIdBytes, { type: "bytes" }),
+      sdk.nativeToScVal(tamperedHashBytes, { type: "bytes" }),
+    ]
+  );
+  console.log(`      Tampered Hash Matches:       ${tamperedResult.hash_matches} (Expected: false)`);
+  console.log(`      Tampered Is Valid:           ${tamperedResult.is_valid} (Expected: false)`);
+  if (tamperedResult.hash_matches !== false || tamperedResult.is_valid !== false) {
+    throw new Error("Tampered hash was incorrectly accepted by contract!");
+  }
+  console.log("      [PASS] Tampered credential hash correctly rejected by on-chain contract!\n");
 
   console.log("==================================================================");
   console.log("  CONTRACT VERIFIED ON-CHAIN VIA DIRECT SOROBAN RPC");

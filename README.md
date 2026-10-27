@@ -84,11 +84,16 @@ pnpm contract:test            # All Soroban contract tests (77 tests total)
 
 1. **Zero On-Chain PII**: Student names, national IDs, grades, and detailed descriptions are **never stored on public ledger storage**.
 2. **Deterministic Cryptographic Commitments**: Credentials follow the W3C Verifiable Credentials standard. The canonical JSON payload is hashed using SHA-256 (RFC 8785 JSON Canonicalization Scheme), and only the resulting 32-byte digest is anchored on Soroban.
-3. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide with auditable reason logs.
-4. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can register templates, issue, revoke, or suspend credentials.
-5. **Selective Disclosure Architecture**:
-   - **v1 Document-Level Selective View (Implemented)**: Learners can present isolated skill subsets for job applications without exposing unrelated transcript details. The presentation filters attributes in software while preserving the parent credential root identifier for ledger verification.
+3. **Zero-PII Sharing Links (Anchor Mode)**:
+   - Verification links default to **On-Chain Anchor Mode** (`#/verify?cid=...&id=...&h=...`), encoding only the contract ID, credential ID, and hash commitment.
+   - **Zero Student PII** (names, grades, courses) is present in the URL, preventing leakage into browser histories, copied links, or server access logs.
+   - Parameters are confined strictly to the client-side URL hash fragment (`#`), ensuring they are never transmitted over the wire in HTTP request lines.
+4. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide with auditable reason logs.
+5. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can register templates, issue, revoke, or suspend credentials.
+6. **Selective Disclosure & Trust Boundaries**:
+   - **v1 Document-Level Presentation Filter & Anchor (Implemented)**: Learners can share Zero-PII anchor links or present isolated skill subsets for job applications. The presentation filters attributes in software while preserving the parent credential root identifier for ledger verification.
    - **v2 Cryptographic Attribute Proofs (Planned)**: Full zero-knowledge selective disclosure using BBS+ signatures or ZK-SNARKs to prove individual claims without disclosing the parent credential preimage or root hash.
+   - For an exhaustive analysis of what the verifier proves, trusts, and does not prove, consult **[`docs/VERIFIER_TRUST_MODEL.md`](./docs/VERIFIER_TRUST_MODEL.md)**.
 
 ---
 
@@ -318,7 +323,10 @@ exercises, see **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** — the authoritat
 - [x] Interactive Web Portal (`apps/web`): Learner Vault, Issuer Console, Employer Verifier
 - [x] QR code generation and access-controlled credential sharing
 - [x] Auditable on-chain revocation, suspension, and reactivation lifecycles
-- [x] Zero-PII architecture (only 32-byte RFC-8785 SHA-256 hashes anchored on-chain)
+- [x] Zero-PII sharing architecture (Anchor Mode with 0 personal data in links, URL fragment protection)
+- [x] Direct Stellar Testnet contract verification (`pnpm passport:verify:testnet`) with 7/7 checks including tampered hash rejection
+- [x] Live Testnet lifecycle test with negative transaction rejection (`pnpm passport:lifecycle:testnet`)
+- [ ] **Independent Security Audit**: Outstanding prerequisite before processing real student educational data in production.
 
 ### Sealed Allocation Round Primitive
 - [x] Round contract + 14 tests + on-chain Drand BLS
@@ -337,6 +345,9 @@ exercises, see **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** — the authoritat
 | Doc | Purpose |
 | --- | --- |
 | **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System overview, lifecycle, trust boundaries, repo map |
+| **[`docs/VERIFIER_TRUST_MODEL.md`](./docs/VERIFIER_TRUST_MODEL.md)** | Cryptographic verification boundaries: what verifier proves, trusts, and does NOT prove |
+| **[`docs/SECURITY_REVIEW_REQUIREMENTS.md`](./docs/SECURITY_REVIEW_REQUIREMENTS.md)** | Audit readiness checklist, threat vectors, and pre-production security requirements |
+| **[`docs/LIMITATIONS.md`](./docs/LIMITATIONS.md)** | Known scope boundaries and 5-tier verification hierarchy |
 | **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** | Authoritative verticals reference — sealed grants / RFPs / auctions / credentials / DAO voting |
 | [docs/INTEGRATION.md](./docs/INTEGRATION.md) | How another Stellar app embeds the sealed round primitive |
 | [docs/TECH_DESIGN.md](./docs/TECH_DESIGN.md) | Cryptography, storage, settlement rails |
@@ -346,7 +357,6 @@ exercises, see **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** — the authoritat
 | [docs/PILOT_PLAYBOOK.md](./docs/PILOT_PLAYBOOK.md) | Pilot scope, demo narrative, partner outreach |
 | [docs/DEMO_SCRIPT.md](./docs/DEMO_SCRIPT.md) | 5-minute walkthrough |
 | [docs/DEPLOY.md](./docs/DEPLOY.md) | UI build vs runtime secrets |
-| [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) | Known scope boundaries |
 
 ## Cryptographic design
 

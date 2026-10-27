@@ -3,9 +3,12 @@ import assert from "node:assert/strict";
 import {
   createVerifiableCredential,
   createSelectiveCredentialView,
+  createCredentialSharePackage,
   encodeCredentialForSharing,
   decodeSharedCredential,
   computeCredentialHash,
+  parseVerificationUrl,
+  formatFragmentUrl,
 } from "./index.js";
 
 describe("Privacy & Selective Disclosure Boundaries", () => {
@@ -104,5 +107,72 @@ describe("Privacy & Selective Disclosure Boundaries", () => {
     assert.equal(hash.includes("Elena"), false);
     assert.equal(hash.includes("Rostova"), false);
     assert.equal(hash.includes("Summa"), false);
+  });
+
+  it("anchor mode share package generates a URL with ZERO student PII", () => {
+    const pkg = createCredentialSharePackage(
+      fullVc,
+      "https://example.com/#/verify",
+      {
+        mode: "anchor",
+        contractId: "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
+      }
+    );
+
+    const url = pkg.verificationUrl;
+    assert.ok(url);
+    // URL contains contractId, credentialId, and hash only
+    assert.ok(url.includes("cid=CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5"));
+    assert.ok(url.includes("h=" + fullVc.proof.credentialHash));
+
+    // Zero student personal data in URL:
+    assert.equal(url.includes("Elena"), false);
+    assert.equal(url.includes("Rostova"), false);
+    assert.equal(url.includes("Summa"), false);
+    assert.equal(url.includes("Computer"), false);
+
+    // Parse the anchor URL back
+    const parsed = parseVerificationUrl(url);
+    assert.equal(parsed.type, "anchor");
+    assert.equal(parsed.anchor?.contractId, "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5");
+    assert.equal(parsed.anchor?.credentialHash, fullVc.proof.credentialHash);
+  });
+
+  it("payload mode supports explicit privacy redaction (name and grade)", () => {
+    const pkg = createCredentialSharePackage(
+      fullVc,
+      "https://example.com/#/verify",
+      {
+        mode: "payload",
+        redactRecipientName: true,
+        redactGrade: true,
+        selectedSkills: ["Rust"],
+      }
+    );
+
+    assert.equal(pkg.credential.credentialSubject.recipientName, undefined);
+    assert.equal(pkg.credential.credentialSubject.grade, undefined);
+    assert.deepEqual(pkg.credential.credentialSubject.skills, ["Rust"]);
+
+    // Raw JSON stringified payload check:
+    const jsonStr = JSON.stringify(pkg.credential);
+    assert.equal(jsonStr.includes("Elena"), false);
+    assert.equal(jsonStr.includes("Summa"), false);
+  });
+
+  it("verifies that URL parameters are strictly in the hash fragment (#) to prevent server leakage", () => {
+    const url = formatFragmentUrl("https://example.com/app/#/verify", {
+      cid: "CAP3",
+      id: "cad1",
+    });
+
+    const hashPart = url.split("#")[1];
+    assert.ok(hashPart);
+    assert.ok(hashPart.includes("cid=CAP3"));
+    assert.ok(hashPart.includes("id=cad1"));
+
+    // Server-bound path before # has no query parameters
+    const pathPart = url.split("#")[0];
+    assert.equal(pathPart.includes("?"), false);
   });
 });

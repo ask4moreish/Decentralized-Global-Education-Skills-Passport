@@ -391,6 +391,131 @@ async function main() {
   }
   console.log("  [PASS] Revoked credential permanently REJECTED on Testnet!");
 
+  // 12. Negative & Unauthorized Transaction Tests
+  console.log("\n--- STEP 12: NEGATIVE & UNAUTHORIZED TRANSACTION REJECTION TESTS ---");
+  evidence.steps.negativeTests = {};
+
+  // 12a. Unauthorized issuer attempts to issue credential
+  console.log("  [12a] Testing unauthorized issuer attempting issue_credential...");
+  const learnerAccount = await server.getAccount(learnerKeypair.publicKey());
+  const unauthIssueTx = new TransactionBuilder(learnerAccount, {
+    fee: "100000",
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(
+      Operation.invokeContractFunction({
+        contract: contractId,
+        function: "issue_credential",
+        args: [
+          new Address(learnerKeypair.publicKey()).toScVal(),
+          new Address(learnerKeypair.publicKey()).toScVal(),
+          nativeToScVal(crypto.randomBytes(32), { type: "bytes" }),
+          nativeToScVal(crypto.randomBytes(32), { type: "bytes" }),
+          xdr.ScVal.scvSymbol("Degree"),
+          xdr.ScVal.scvVoid(),
+        ],
+      })
+    )
+    .setTimeout(30)
+    .build();
+
+  const simUnauth = await server.simulateTransaction(unauthIssueTx);
+  const unauthRejected = Boolean(simUnauth.error || (simUnauth.result && simUnauth.result.error));
+  if (!unauthRejected) {
+    throw new Error("Security failure: Unauthorized issuer issuance was NOT rejected by contract!");
+  }
+  console.log("    [PASS] Unauthorized issuance rejected as expected.");
+  evidence.steps.negativeTests.unauthorizedIssuanceRejected = true;
+
+  // 12b. Duplicate credential ID issuance attempt
+  console.log("  [12b] Testing duplicate credential ID issuance...");
+  const issuerAccountForDup = await server.getAccount(issuerKeypair.publicKey());
+  const dupIssueTx = new TransactionBuilder(issuerAccountForDup, {
+    fee: "100000",
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(
+      Operation.invokeContractFunction({
+        contract: contractId,
+        function: "issue_credential",
+        args: [
+          new Address(issuerKeypair.publicKey()).toScVal(),
+          new Address(learnerKeypair.publicKey()).toScVal(),
+          nativeToScVal(credIdBytes, { type: "bytes" }), // already used!
+          nativeToScVal(crypto.randomBytes(32), { type: "bytes" }),
+          xdr.ScVal.scvSymbol("Degree"),
+          xdr.ScVal.scvVoid(),
+        ],
+      })
+    )
+    .setTimeout(30)
+    .build();
+
+  const simDup = await server.simulateTransaction(dupIssueTx);
+  const dupRejected = Boolean(simDup.error || (simDup.result && simDup.result.error));
+  if (!dupRejected) {
+    throw new Error("Integrity failure: Duplicate credential ID was NOT rejected by contract!");
+  }
+  console.log("    [PASS] Duplicate credential ID rejected as expected.");
+  evidence.steps.negativeTests.duplicateCredentialIdRejected = true;
+
+  // 12c. Reactivating already revoked credential attempt
+  console.log("  [12c] Testing reactivation of already revoked credential...");
+  const issuerAccountForReactivate = await server.getAccount(issuerKeypair.publicKey());
+  const reactivateRevokedTx = new TransactionBuilder(issuerAccountForReactivate, {
+    fee: "100000",
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(
+      Operation.invokeContractFunction({
+        contract: contractId,
+        function: "reactivate_credential",
+        args: [
+          new Address(issuerKeypair.publicKey()).toScVal(),
+          nativeToScVal(credIdBytes, { type: "bytes" }),
+        ],
+      })
+    )
+    .setTimeout(30)
+    .build();
+
+  const simReactivateRevoked = await server.simulateTransaction(reactivateRevokedTx);
+  const reactivateRevokedRejected = Boolean(simReactivateRevoked.error || (simReactivateRevoked.result && simReactivateRevoked.result.error));
+  if (!reactivateRevokedRejected) {
+    throw new Error("State transition failure: Reactivating revoked credential was NOT rejected!");
+  }
+  console.log("    [PASS] Reactivating revoked credential rejected as expected.");
+  evidence.steps.negativeTests.reactivateRevokedRejected = true;
+
+  // 12d. Unauthorized revocation attempt
+  console.log("  [12d] Testing unauthorized revocation attempt...");
+  const learnerAccountForRevoke = await server.getAccount(learnerKeypair.publicKey());
+  const unauthRevokeTx = new TransactionBuilder(learnerAccountForRevoke, {
+    fee: "100000",
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(
+      Operation.invokeContractFunction({
+        contract: contractId,
+        function: "revoke_credential",
+        args: [
+          new Address(learnerKeypair.publicKey()).toScVal(), // learner is NOT the issuer!
+          nativeToScVal(credIdBytes, { type: "bytes" }),
+          nativeToScVal("Unauthorized revocation", { type: "string" }),
+        ],
+      })
+    )
+    .setTimeout(30)
+    .build();
+
+  const simUnauthRevoke = await server.simulateTransaction(unauthRevokeTx);
+  const unauthRevokeRejected = Boolean(simUnauthRevoke.error || (simUnauthRevoke.result && simUnauthRevoke.result.error));
+  if (!unauthRevokeRejected) {
+    throw new Error("Authorization failure: Unauthorized revocation was NOT rejected!");
+  }
+  console.log("    [PASS] Unauthorized revocation rejected as expected.");
+  evidence.steps.negativeTests.unauthorizedRevocationRejected = true;
+
   // Save evidence to contracts/passport/deployed-testnet.json
   const finalSummary = {
     contractId,

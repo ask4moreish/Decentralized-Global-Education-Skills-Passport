@@ -7,6 +7,7 @@ import {
   decodeSharedCredential,
   verifyEducationCredential,
   computeCredentialHash,
+  parseVerificationUrl,
 } from "skills-passport-sdk";
 import {
   loadStoredCredentials,
@@ -210,5 +211,34 @@ describe("Complete End-to-End User Journey", () => {
     assert.equal(unverifiableDiag.isValid, false);
     assert.equal(unverifiableDiag.status, "unverifiable");
     assert.ok(unverifiableDiag.errors.some((e) => e.includes("No on-chain registration record")));
+
+    // -------------------------------------------------------------
+    // STAGE 10: Zero-PII Anchor Sharing & Privacy-Preserving Verification
+    // -------------------------------------------------------------
+    const testnetContractId = "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5";
+    const anchorPkg = createCredentialSharePackage(
+      learnerCred.vc,
+      "https://example.com/#/verify",
+      {
+        mode: "anchor",
+        contractId: testnetContractId,
+      }
+    );
+
+    // Verify URL fragment protection and ZERO PII in URL
+    assert.ok(anchorPkg.verificationUrl);
+    const anchorUrl = anchorPkg.verificationUrl!;
+    assert.ok(anchorUrl.startsWith("https://example.com/#/verify?"));
+    assert.equal(anchorUrl.includes("Elena"), false);
+    assert.equal(anchorUrl.includes("Rostova"), false);
+    assert.equal(anchorUrl.includes("Distributed"), false);
+    assert.equal(anchorUrl.includes("GPA"), false);
+
+    // Verifier parses anchor URL
+    const parsedAnchor = parseVerificationUrl(anchorUrl);
+    assert.equal(parsedAnchor.type, "anchor");
+    assert.equal(parsedAnchor.anchor?.contractId, testnetContractId);
+    assert.equal(parsedAnchor.anchor?.credentialHash, learnerCred.vc.proof.credentialHash);
+    assert.equal(parsedAnchor.anchor?.credentialId, item.onChain.credentialId);
   });
 });

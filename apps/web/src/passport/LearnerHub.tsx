@@ -26,6 +26,9 @@ export function LearnerHub() {
     useState<VerifiableEducationCredential | null>(null);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [shareMode, setShareMode] = useState<"anchor" | "payload">("anchor");
+  const [redactName, setRedactName] = useState(false);
+  const [redactGrade, setRedactGrade] = useState(false);
 
   const activeLearner = DEMO_LEARNERS[selectedLearnerIdx];
   const displayedAddress = freighterAddress || activeLearner.address;
@@ -106,11 +109,18 @@ export function LearnerHub() {
     URL.revokeObjectURL(url);
   }
 
-  // Generate sharing package with selective disclosure
+  // Generate sharing package with selective disclosure or zero-PII on-chain anchor
   const sharePackage = activeShareCred
     ? createCredentialSharePackage(
-        createSelectiveCredentialView(activeShareCred, selectedSkills),
-        window.location.origin + window.location.pathname + "#/verify"
+        activeShareCred,
+        window.location.origin + window.location.pathname + "#/verify",
+        {
+          mode: shareMode,
+          contractId: "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
+          selectedSkills: shareMode === "payload" ? selectedSkills : undefined,
+          redactRecipientName: shareMode === "payload" ? redactName : undefined,
+          redactGrade: shareMode === "payload" ? redactGrade : undefined,
+        }
       )
     : null;
 
@@ -431,31 +441,89 @@ export function LearnerHub() {
                 </p>
               </div>
 
-              {/* Selective Disclosure Controls */}
-              <div className="selective-disclosure-box">
-                <h4>Selective Skills Disclosure:</h4>
-                <p className="disclosure-desc">
-                  Choose which skills to include in this presentation. Unselected skills will not be revealed to the employer.
-                </p>
-                <div className="skills-toggle-grid">
-                  {activeShareCred.credentialSubject.skills.map((skill) => {
-                    const isSelected = selectedSkills.includes(skill);
-                    return (
-                      <button
-                        key={skill}
-                        type="button"
-                        className={`skill-toggle-btn ${
-                          isSelected ? "selected" : "deselected"
-                        }`}
-                        onClick={() => handleToggleSkill(skill)}
-                      >
-                        {isSelected ? "✓ " : "+ "}
-                        {skill}
-                      </button>
-                    );
-                  })}
+              {/* Privacy & Sharing Mechanism */}
+              <div className="selective-disclosure-box" style={{ marginBottom: "1rem" }}>
+                <h4>Privacy & Sharing Mechanism:</h4>
+                <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                    <input
+                      type="radio"
+                      name="shareMode"
+                      value="anchor"
+                      checked={shareMode === "anchor"}
+                      onChange={() => setShareMode("anchor")}
+                    />
+                    <span><strong>Zero-PII On-Chain Anchor (Recommended)</strong></span>
+                  </label>
+                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                    <input
+                      type="radio"
+                      name="shareMode"
+                      value="payload"
+                      checked={shareMode === "payload"}
+                      onChange={() => setShareMode("payload")}
+                    />
+                    <span><strong>Selective Document Link</strong></span>
+                  </label>
                 </div>
+                <p className="disclosure-desc" style={{ marginTop: "0.5rem" }}>
+                  {shareMode === "anchor"
+                    ? "Zero-PII Mode encodes ONLY the on-chain contract ID, credential ID, and SHA-256 hash in the URL hash fragment (#/verify?...). No student name, degree title, or grades are included in the link or sent to servers."
+                    : "Selective Document Link encodes presentation attributes in the client-side URL hash fragment. Choose which skills or fields to disclose below."}
+                </p>
               </div>
+
+              {shareMode === "payload" && (
+                <>
+                  <div className="selective-disclosure-box" style={{ marginBottom: "1rem" }}>
+                    <h4>Redaction Options:</h4>
+                    <div style={{ display: "flex", gap: "1.5rem", marginTop: "0.5rem" }}>
+                      <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                        <input
+                          type="checkbox"
+                          checked={redactName}
+                          onChange={(e) => setRedactName(e.target.checked)}
+                        />
+                        <span>Redact Student Name</span>
+                      </label>
+                      <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                        <input
+                          type="checkbox"
+                          checked={redactGrade}
+                          onChange={(e) => setRedactGrade(e.target.checked)}
+                        />
+                        <span>Redact Honors / Grade</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Selective Disclosure Controls */}
+                  <div className="selective-disclosure-box">
+                    <h4>Selective Skills Disclosure:</h4>
+                    <p className="disclosure-desc">
+                      Choose which skills to include in this presentation. Unselected skills will not be revealed to the employer.
+                    </p>
+                    <div className="skills-toggle-grid">
+                      {activeShareCred.credentialSubject.skills.map((skill) => {
+                        const isSelected = selectedSkills.includes(skill);
+                        return (
+                          <button
+                            key={skill}
+                            type="button"
+                            className={`skill-toggle-btn ${
+                              isSelected ? "selected" : "deselected"
+                            }`}
+                            onClick={() => handleToggleSkill(skill)}
+                          >
+                            {isSelected ? "✓ " : "+ "}
+                            {skill}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Link copy */}
               <div className="link-copy-box">

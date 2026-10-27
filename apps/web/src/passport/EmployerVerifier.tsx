@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
   decodeSharedCredential,
   verifyEducationCredential,
+  parseVerificationUrl,
   type VerifiableEducationCredential,
   type VerificationDiagnostic,
+  type AnchorPayload,
 } from "skills-passport-sdk";
 import {
   loadStoredCredentials,
@@ -21,27 +23,28 @@ export function EmployerVerifier() {
   const [jsonInput, setJsonInput] = useState("");
   const [activeCredential, setActiveCredential] =
     useState<VerifiableEducationCredential | null>(null);
+  const [anchorInfo, setAnchorInfo] = useState<AnchorPayload | null>(null);
   const [diagnostic, setDiagnostic] = useState<VerificationDiagnostic | null>(
     null
   );
   const [parseError, setParseError] = useState<string | null>(null);
 
-  // Check URL on mount or hash change for embedded credential payload (?data=... or &data=...)
+  // Check URL on mount or hash change for embedded credential payload or zero-PII anchor
   useEffect(() => {
     function parseUrlPayload() {
       const href = window.location.href;
-      const match = href.match(/[?&]data=([^&#]+)/);
-      if (match && match[1]) {
-        try {
-          const raw = decodeURIComponent(match[1]);
-          const decoded = decodeSharedCredential(raw);
-          setActiveCredential(decoded);
-          setInputUrlOrData(href);
-          setJsonInput(JSON.stringify(decoded, null, 2));
-          runVerification(decoded);
-        } catch {
-          setParseError("Could not decode credential payload from verification URL.");
-        }
+      const parsed = parseVerificationUrl(href);
+      if (parsed.type === "payload" && parsed.payload) {
+        setActiveCredential(parsed.payload);
+        setAnchorInfo(null);
+        setInputUrlOrData(href);
+        setJsonInput(JSON.stringify(parsed.payload, null, 2));
+        runVerification(parsed.payload);
+      } else if (parsed.type === "anchor" && parsed.anchor) {
+        setAnchorInfo(parsed.anchor);
+        setActiveCredential(null);
+        setInputUrlOrData(href);
+        runAnchorVerification(parsed.anchor);
       }
     }
 
@@ -49,6 +52,83 @@ export function EmployerVerifier() {
     window.addEventListener("hashchange", parseUrlPayload);
     return () => window.removeEventListener("hashchange", parseUrlPayload);
   }, []);
+
+  function runAnchorVerification(anchor: AnchorPayload) {
+    setParseError(null);
+    const targetId = (anchor.credentialId || "").toLowerCase();
+    const targetHash = (anchor.credentialHash || "").toLowerCase();
+    const stored = credentials.find(
+      (c) =>
+        (targetId && c.onChain.credentialId.toLowerCase() === targetId) ||
+        (targetHash && c.onChain.credentialHash.toLowerCase() === targetHash)
+    );
+
+    const isIssuerAuthorized = stored
+      ? issuers.find((i) => i.address === stored.onChain.issuer)?.isAuthorized ?? false
+      : false;
+
+    if (!stored) {
+      setDiagnostic({
+        isValid: false,
+        status: "unverifiable",
+        tampered: false,
+        revoked: false,
+        suspended: false,
+        expired: false,
+        untrustedIssuer: true,
+        calculatedHash: anchor.credentialHash || "",
+        claimedHash: anchor.credentialHash || "",
+        evidence: {
+          hashMatched: Boolean(anchor.credentialHash),
+          issuerAuthorized: false,
+          statusActive: false,
+          notExpired: true,
+          issuerAddress: "",
+          recipientAddress: "",
+          issuedAt: new Date().toISOString(),
+        },
+        errors: [`No on-chain registration record found matching credential hash: ${anchor.credentialHash || "none"}`],
+      });
+      return;
+    }
+
+    const onChain = stored.onChain;
+    const isRevoked = onChain.status === "Revoked";
+    const isSuspended = onChain.status === "Suspended";
+    const isExpired = onChain.expiresAt !== undefined && onChain.expiresAt < Math.floor(Date.now() / 1000);
+    const isActive = onChain.status === "Active" && !isExpired && isIssuerAuthorized;
+
+    setDiagnostic({
+      isValid: isActive,
+      status: isRevoked ? "revoked" : isSuspended ? "suspended" : isExpired ? "expired" : !isIssuerAuthorized ? "untrusted" : "valid",
+      tampered: false,
+      revoked: isRevoked,
+      suspended: isSuspended,
+      expired: isExpired,
+      untrustedIssuer: !isIssuerAuthorized,
+      calculatedHash: anchor.credentialHash || onChain.credentialHash,
+      claimedHash: onChain.credentialHash,
+      evidence: {
+        hashMatched: true,
+        issuerAuthorized: isIssuerAuthorized,
+        statusActive: onChain.status === "Active",
+        notExpired: !isExpired,
+        issuerAddress: onChain.issuer,
+        recipientAddress: onChain.recipient,
+        issuedAt: new Date(onChain.issuedAt * 1000).toISOString(),
+        expiresAt: onChain.expiresAt ? new Date(onChain.expiresAt * 1000).toISOString() : undefined,
+      },
+      errors: isRevoked
+        ? ["Credential has been permanently revoked on-chain."]
+        : isSuspended
+        ? ["Credential is currently suspended on-chain."]
+        : isExpired
+        ? ["Credential validity period has expired."]
+        : !isIssuerAuthorized
+        ? ["Issuing institution is deauthorized."]
+        : [],
+    });
+  }
 
   function runVerification(vc: VerifiableEducationCredential) {
     setParseError(null);
@@ -87,26 +167,46 @@ export function EmployerVerifier() {
     }
 
     try {
-      let vc: VerifiableEducationCredential | null = null;
-
-      // Try reading as URL / base64 payload first
       if (inputUrlOrData.trim()) {
         const text = inputUrlOrData.trim();
-        const dataMatch = text.match(/[?&]data=([^&#]+)/);
-        const encoded = dataMatch ? decodeURIComponent(dataMatch[1]) : text;
-        try {
-          vc = decodeSharedCredential(encoded);
-        } catch {
-          // If not base64, try parsing as JSON
-          vc = JSON.parse(text) as VerifiableEducationCredential;
+        const parsed = parseVerificationUrl(text);
+        if (parsed.type === "anchor" && parsed.anchor) {
+          setAnchorInfo(parsed.anchor);
+          setActiveCredential(null);
+          runAnchorVerification(parsed.anchor);
+          return;
         }
-      } else if (jsonInput.trim()) {
-        vc = JSON.parse(jsonInput.trim()) as VerifiableEducationCredential;
+        if (parsed.type === "payload" && parsed.payload) {
+          setAnchorInfo(null);
+          setActiveCredential(parsed.payload);
+          setJsonInput(JSON.stringify(parsed.payload, null, 2));
+          runVerification(parsed.payload);
+          return;
+        }
+
+        // Try direct base64 decode if not parsed by URL
+        try {
+          const vc = decodeSharedCredential(text);
+          setAnchorInfo(null);
+          setActiveCredential(vc);
+          setJsonInput(JSON.stringify(vc, null, 2));
+          runVerification(vc);
+          return;
+        } catch {
+          // If not base64, try JSON
+          const vc = JSON.parse(text) as VerifiableEducationCredential;
+          setAnchorInfo(null);
+          setActiveCredential(vc);
+          setJsonInput(JSON.stringify(vc, null, 2));
+          runVerification(vc);
+          return;
+        }
       }
 
-      if (vc) {
+      if (jsonInput.trim()) {
+        const vc = JSON.parse(jsonInput.trim()) as VerifiableEducationCredential;
+        setAnchorInfo(null);
         setActiveCredential(vc);
-        setJsonInput(JSON.stringify(vc, null, 2));
         runVerification(vc);
       }
     } catch (err: any) {
@@ -449,6 +549,30 @@ export function EmployerVerifier() {
                           </span>
                         ))}
                       </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Anchor Details (Zero-PII Mode) */}
+              {anchorInfo && !activeCredential && (
+                <div className="verified-details-card">
+                  <h4>🔒 Zero-PII On-Chain Anchor Verification</h4>
+                  <p style={{ fontSize: "0.9rem", color: "var(--muted, #64748b)", marginBottom: "1rem" }}>
+                    Verified strictly against Soroban contract state without exposing student name, degree title, or grades in the sharing link.
+                  </p>
+                  <div className="details-grid">
+                    <div className="detail-row">
+                      <span className="label">Soroban Contract:</span>
+                      <code>{anchorInfo.contractId}</code>
+                    </div>
+                    <div className="detail-row">
+                      <span className="label">Credential ID:</span>
+                      <code>{anchorInfo.credentialId}</code>
+                    </div>
+                    <div className="detail-row full-width">
+                      <span className="label">Cryptographic Hash Commitment:</span>
+                      <code>{anchorInfo.credentialHash}</code>
                     </div>
                   </div>
                 </div>
