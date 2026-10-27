@@ -28,12 +28,13 @@ The platform allows educational institutions, universities, training providers, 
 
 ```bash
 pnpm install
-pnpm web:dev              # Launches the Education Passport & Verifier UI
-pnpm test                 # Runs full test suite (contracts, SDK, web)
-pnpm lifecycle:passport   # Runs all 10 End-to-End Credential Lifecycle scenarios
-pnpm passport:verify      # CLI Credential Verifier tool
-pnpm passport:test        # Soroban skills-passport-core contract tests (19 scenarios)
-pnpm contract:test        # All Soroban contract tests (77 tests total)
+pnpm web:dev                  # Launches the Education Passport & Verifier UI
+pnpm test                     # Runs full test suite (contracts, SDK, web)
+pnpm lifecycle:passport       # Runs all 10 End-to-End Credential Lifecycle scenarios
+pnpm passport:lifecycle:testnet # Runs live on-chain lifecycle against Stellar Testnet
+pnpm passport:verify          # CLI Credential Verifier tool
+pnpm passport:test            # Soroban skills-passport-core contract tests (19 scenarios)
+pnpm contract:test            # All Soroban contract tests (77 tests total)
 ```
 
 ---
@@ -163,9 +164,27 @@ See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for honest scope boundaries.
 | Field | Value |
 | --- | --- |
 | Contract Type | Decentralized Education & Skills Passport Core |
+| Testnet Contract | [`CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5`](https://stellar.expert/explorer/testnet/contract/CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5) |
+| Testnet WASM Hash | `f7f29f6c3ab6f0e3524605b7d3bb1ff41c1de7fb015973719f50aed5ce480610` |
+| Admin Identity | `GCSKC6MWND2LHUE2PXITRPIUES52CODYWH5D6MBD7K5FD2GVIKLOCUUA` |
+| Authorized Issuer | `GCW3HMYU6W52RSTSTDBRYWON7SZIFXKJWVODJYYFWMK7WEVUTXAAVY3F` |
 | Test Coverage | **19/19 passing** (Soroban VM test harness) |
-| Lifecycle Scenarios | **10/10 passing** (`pnpm lifecycle:passport`) |
-| Network Deployment | Testnet / Mainnet deployment ready; live contract deployment pending operator key setup. See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for scope boundaries. |
+| Lifecycle Scenarios | **10/10 passing** (`pnpm lifecycle:passport` local & `pnpm passport:lifecycle:testnet` on-chain) |
+| Status | **Deployed & Verified on Stellar Testnet** |
+
+#### Testnet Verified Transaction Proofs
+
+| Stage | Transaction Hash | Result |
+| --- | --- | --- |
+| **WASM Upload** | [`d69d074b...`](https://stellar.expert/explorer/testnet/tx/d69d074b2f80637f2b33bae75c57bb9264a1cfcefc9bbc6b23a960a7db711916) | Bytecode installed (35,216 bytes) |
+| **Contract Deployment** | [`5b6424a3...`](https://stellar.expert/explorer/testnet/tx/5b6424a33e13fc1eeb87dd18a7972324e3ad09e319d3ac8ade8ce908f0677c5d) | Instance `CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5` |
+| **Admin Initialization** | [`59bad590...`](https://stellar.expert/explorer/testnet/tx/59bad59001b1f7c9e59b910afd299e9d773fce46eae91a8863917c8370964394) | Admin set to `GCSKC6...` |
+| **Issuer Authorization** | [`4f107688...`](https://stellar.expert/explorer/testnet/tx/4f107688e3be794f69ca4377dbbae440bddbb5adaf480270655891002222904f) | MIT Digital Credentials Institute authorized |
+| **Template Registration** | [`f39c6809...`](https://stellar.expert/explorer/testnet/tx/f39c6809d32499392684cfcb3196f3ddba9744ab36d8f2ed3a80598775adb27e) | `Degree` template registered |
+| **Credential Issuance** | [`0fac86a4...`](https://stellar.expert/explorer/testnet/tx/0fac86a487f55ecf79a1a675638faa972fa89d2fd8990f3d14535dbf69ee9827) | Issued with SHA-256 hash commitment |
+| **Credential Suspension** | [`84c8f791...`](https://stellar.expert/explorer/testnet/tx/84c8f791a1b30a9cfc326e9bfefc2c215f4a143d2c7d2973e59e41091711b2b6) | State set to Suspended (status = 3) |
+| **Credential Reactivation** | [`a20cadbf...`](https://stellar.expert/explorer/testnet/tx/a20cadbf98d950f3a74e42c5452a8b698a079b7fa47acd85e01ce07f21c0227b) | State restored to Active (status = 1) |
+| **Credential Revocation** | [`fbf1f4b6...`](https://stellar.expert/explorer/testnet/tx/fbf1f4b6e2c36a1daef4a421cba3db98dfadb707182b2626f36832f1c4dcef5d) | State permanently Revoked (status = 2) |
 
 ### Sealed Allocation Round Contract (`contracts/round`)
 

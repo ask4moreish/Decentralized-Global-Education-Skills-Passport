@@ -129,24 +129,24 @@ export class EducationPassportClient {
 
       return xdr.ScVal.scvMap([
         new xdr.ScMapEntry({
-          key: xdr.ScVal.scvSymbol("recipient"),
-          val: recipientVal,
+          key: xdr.ScVal.scvSymbol("credential_hash"),
+          val: credHashVal,
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("credential_id"),
           val: credIdVal,
         }),
         new xdr.ScMapEntry({
-          key: xdr.ScVal.scvSymbol("credential_hash"),
-          val: credHashVal,
+          key: xdr.ScVal.scvSymbol("expires_at"),
+          val: expiresAtVal,
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("recipient"),
+          val: recipientVal,
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("template_id"),
           val: templateVal,
-        }),
-        new xdr.ScMapEntry({
-          key: xdr.ScVal.scvSymbol("expires_at"),
-          val: expiresAtVal,
         }),
       ]);
     });

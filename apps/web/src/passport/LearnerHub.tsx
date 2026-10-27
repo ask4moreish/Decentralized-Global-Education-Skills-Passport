@@ -34,11 +34,15 @@ export function LearnerHub() {
     : activeLearner.did;
 
   // Filter credentials for this learner
-  const learnerCredentials = credentials.filter(
-    (c) =>
-      c.vc.credentialSubject.recipientAddress === displayedAddress ||
-      c.vc.credentialSubject.recipientAddress === activeLearner.address
-  );
+  const learnerCredentials = credentials.filter((c) => {
+    const recipientAddr =
+      c.vc.credentialSubject.recipientAddress ||
+      c.vc.credentialSubject.id.replace(/^did:stellar:/, "");
+    return (
+      recipientAddr === displayedAddress ||
+      recipientAddr === activeLearner.address
+    );
+  });
 
   const filteredCredentials = learnerCredentials.filter((c) => {
     if (filterType === "all") return true;

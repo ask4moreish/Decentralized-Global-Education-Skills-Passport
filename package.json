@@ -23,6 +23,8 @@
   "scripts": {
     "test": "cargo test --workspace && pnpm sdk:test && pnpm web:test",
     "passport:test": "cargo test -p skills-passport-core",
+    "passport:deploy:testnet": "node scripts/deploy-passport-testnet.mjs",
+    "passport:lifecycle:testnet": "node scripts/testnet-e2e-live.mjs",
     "passport:verify": "pnpm --filter skills-passport-sdk exec tsx ../../scripts/verify-credential.mjs",
     "lifecycle:passport": "pnpm --filter skills-passport-sdk exec tsx ../../scripts/e2e-credential-lifecycle.mjs",
     "contract:build": "stellar contract build",

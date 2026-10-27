@@ -1,0 +1,70 @@
+name: Release
+
+# Uses Changesets to version packages, generate changelogs, and publish to
+# npm. On every push to main, if changeset files exist, a "Version Packages"
+# PR is created/updated. When that PR is merged, versions are bumped,
+# changelogs generated, GitHub releases created, and packages published to
+# npm in dependency order.
+#
+# Authentication:
+# Uses GitHub Actions built-in GITHUB_TOKEN with contents: write and
+# pull-requests: write permissions.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check CSS tokens & class names
+        run: node scripts/check-css-tokens.mjs
+
+      - name: Check for pending changesets
+        id: changesets
+        run: |
+          if ls .changeset/*.md 2>/dev/null | grep -qv README.md; then
+            echo "run_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_release=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Release Pull Request or Publish to npm
+        if: steps.changesets.outputs.run_release == 'true'
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: pnpm publish:all
+          commit: 'chore(release): version packages'
+          title: 'Version Packages'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
