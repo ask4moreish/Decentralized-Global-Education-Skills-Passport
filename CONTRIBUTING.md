@@ -34,8 +34,8 @@ This document covers development setup, branch conventions, code style, testing,
 ### Clone and install
 
 ```bash
-git clone https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport.git
-cd decentralized-global-education-skills-passport
+git clone https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport.git
+cd Decentralized-Global-Education-Skills-Passport
 
 # Install all workspace dependencies
 pnpm install
@@ -218,7 +218,7 @@ Before opening a PR, verify the following:
 - [ ] The dependency is necessary (no unused or duplicate deps)
 - [ ] The package.json version range matches the monorepo convention (`^major.minor.0`)
 - [ ] For Node.js polyfills in the web app: verify they're actually imported
-  (see the [polyfill audit](https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport#status))
+  (see the [polyfill status](https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport#status))
 
 ### If you changed the SDK public API
 
@@ -229,7 +229,8 @@ Before opening a PR, verify the following:
 
 ### If you changed the contract or bindings
 
-- [ ] `pnpm bindings:check` passes (generated TS bindings match the WASM)
+- [ ] `pnpm passport:check` passes (`contracts/passport` release WASM, ABI exports & error parity)
+- [ ] `pnpm bindings:check` passes (generated Round TS bindings match `contracts/round` WASM)
 - [ ] The event-snapshot golden fixture is updated
 - [ ] Snapshot drift tests (`pnpm snapshot:check`) pass
 
@@ -294,5 +295,5 @@ bumps all three.
 - **Deployment**: [`docs/DEPLOY.md`](./docs/DEPLOY.md) — env vars, hosting, security headers
 - **Limitations**: [`docs/LIMITATIONS.md`](./docs/LIMITATIONS.md) — honest scope boundaries
 
-For questions, open a [GitHub Discussion](https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/discussions)
+For questions, open a [GitHub Discussion](https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/discussions)
 or file an issue.

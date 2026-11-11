@@ -207,6 +207,48 @@ MAINNET_CONFIRM=SKILLS_PASSPORT_MAINNET KEEPER_SECRET=S… ROUND_CONTRACT_ID=C�
 4. For value-moving commands, set `MAINNET_CONFIRM=SKILLS_PASSPORT_MAINNET` and re-run readiness implicitly via deploy/micro/settle guards.
 5. After settlement, confirm contract native XLM SAC balance is **0** (settle script enforces this).
 
+## 6. Passport contract Testnet deployment & migration
+
+The project preserves the legacy `2026-10-27` deployment while running the hardened contract as a separate verified Testnet instance:
+
+- **Hardened (`2026-11-11`, active frontend/verifier default):** `CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2` ([`contracts/passport/deployed-testnet-hardened.json`](../contracts/passport/deployed-testnet-hardened.json)), WASM SHA-256 `f7975920f377927af8d803f87df3a3ade4e84cc012835868f004eca4105888bf` (verified against local release build, 17 confirmed Testnet lifecycle transactions).
+- **Legacy (`2026-10-27`, preserved unmodified):** `CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5` ([`contracts/passport/deployed-testnet.json`](../contracts/passport/deployed-testnet.json)), WASM SHA-256 `f7f29f6c3ab6f0e3524605b7d3bb1ff41c1de7fb015973719f50aed5ce480610`.
+
+| Var | Purpose |
+| --- | --- |
+| `PASSPORT_CONTRACT_ID` | Optional existing contract ID for post-deploy / E2E scripts |
+| `PASSPORT_ADMIN_SECRET` | Administrator `S…` signing key for initializing or administering the new deployment |
+| `PASSPORT_ISSUER_SECRET` | Optional institution `S…` signing key |
+| `CONFIRM_TESTNET_DEPLOY` | Set to `1` alongside `--execute` to broadcast live Testnet txs |
+| `CONFIRM_OVERWRITE_DEPLOYED` | Must be `1` to overwrite `contracts/passport/deployed-testnet.json` (leave unset so legacy `CAP3J5...` stays untouched) |
+| `ALLOW_EPHEMERAL_KEYS` | Set to `1` only if intentionally funding fresh ephemeral Testnet Friendbot keys for isolated testing |
+
+### Verification & redeployment steps
+
+1. **Verify both live Testnet contracts and manifest separation (read-only):**
+   ```bash
+   pnpm passport:check
+   pnpm passport:deploy:test
+   pnpm passport:verify:testnet:hardened
+   pnpm passport:verify:testnet
+   ```
+
+2. **Preflight before any new Testnet deployment:**
+   ```bash
+   pnpm passport:deploy:testnet -- --dry-run
+   pnpm passport:lifecycle:testnet -- --dry-run
+   ```
+   Dry-run mode performs **no** Friendbot calls and **no** ledger writes. It validates local WASM exports (`initialize`, `propose_admin`, `accept_admin`, `pause`, `unpause`, `rotate_issuer_key`, `get_learner_credentials_page`) and enforces overwrite locks protecting [`contracts/passport/deployed-testnet.json`](../contracts/passport/deployed-testnet.json).
+
+3. **Optional custom deployment + frontend override:**
+   ```bash
+   CONFIRM_TESTNET_DEPLOY=1 PASSPORT_ADMIN_SECRET=S… \
+     pnpm passport:deploy:testnet -- --execute
+
+   VITE_PASSPORT_CONTRACT_ID=C… pnpm web:build
+   ```
+   Never commit private keys or alter [`contracts/passport/deployed-testnet.json`](../contracts/passport/deployed-testnet.json) without explicit release approval.
+
 ## Security headers
 
 The project ships security-hardened HTTP response headers for the three major
@@ -223,7 +265,7 @@ behavior is consistent regardless of where the site is deployed.
 | `Content-Security-Policy` | See below | Restricts resource loading to trusted origins |
 
 The CSP allows:
-- **Scripts:** same-origin only with `'unsafe-inline'` (required by React event handlers)
+- **Scripts:** same-origin only (`script-src 'self'; object-src 'none'` — no `'unsafe-inline'`)
 - **Styles:** same-origin + Google Fonts
 - **Fonts:** Google Fonts CDN
 - **Connections:** Soroban RPC endpoints, Drand quicknet beacons

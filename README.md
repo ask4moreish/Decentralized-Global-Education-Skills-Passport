@@ -22,20 +22,24 @@
 
 **A decentralized, verifiable educational credential and skills passport platform built on Stellar Soroban.**
 
-The platform allows educational institutions, universities, training providers, learners, and employers to issue, manage, share, and independently verify educational credentials, certifications, and verified skills on the Stellar blockchain without depending entirely on any single institution's private database.
+The platform allows educational institutions, universities, training providers, learners, and employers to issue, manage, share, and independently verify educational credentials, certifications, and verified skills on the Stellar blockchain without depending on any single institution's private database.
 
-> **Core Philosophy:** People should be able to prove what they have learned and what they can do anywhere in the world, with zero personally identifiable information (PII) leaked on public ledgers, full cryptographic hash commitments, auditable on-chain revocation lifecycles, and W3C Verifiable Credentials interoperability.
+### Why Stellar & Soroban?
+- **Account-Native Sovereign Identity (`did:stellar:G...`)**: Learners hold portable credentials tied to standard Stellar Ed25519 keys, Freighter wallets, or Soroban smart accounts without vendor lock-in.
+- **Minimal Ledger Footprint & Deterministic Costs**: Each credential anchors only a 32-byte RFC 8785 JCS SHA-256 digest and metadata IDs in Persistent Soroban storage, keeping tuition/diploma issuance fast and predictable across Borders.
+- **Instant Global Revocation & Institutional Recovery**: Authorized issuers and admins control role-gated revocation, suspension, two-step admin transfer (`propose_admin` / `accept_admin`), emergency circuit-breaker `pause`, and `rotate_issuer_key` recovery.
+- **Standards-Based Interoperability**: Combines W3C Verifiable Credentials Data Model v1.1 and optional W3C Data Integrity (`eddsa-jcs-2022`) signatures with live Soroban RPC verification.
 
 ```bash
 pnpm install
-pnpm web:dev                  # Launches the Education Passport & Verifier UI
-pnpm test                     # Runs full test suite (contracts, SDK, web)
-pnpm lifecycle:passport       # Runs all 10 End-to-End Credential Lifecycle scenarios
-pnpm passport:lifecycle:testnet # Runs live on-chain lifecycle against Stellar Testnet
-pnpm passport:verify:testnet  # Direct Soroban RPC contract verifier (WASM hash, admin, issuer)
-pnpm passport:verify          # CLI Credential Verifier tool
-pnpm passport:test            # Soroban skills-passport-core contract tests (19 scenarios)
-pnpm contract:test            # All Soroban contract tests (77 tests total)
+pnpm web:dev                    # Launches the Education Passport & Verifier UI
+pnpm test                       # Runs contracts (90), SDK (123), and web (88) test suites
+pnpm passport:check             # Verifies contracts/passport WASM, 29 ABI exports & 20 error codes
+pnpm lifecycle:passport         # Runs all 10 End-to-End Credential Lifecycle scenarios
+pnpm passport:verify:testnet    # Direct Soroban RPC + Horizon verifier (WASM, 8 txs, admin, negative sims)
+pnpm passport:verify --demo     # CLI Credential Verifier tool
+pnpm passport:test              # Soroban skills-passport-core contract tests (32 tests)
+pnpm contract:test              # All Soroban contract tests (90 tests total: 32 passport + 58 round)
 ```
 
 ---
@@ -44,78 +48,66 @@ pnpm contract:test            # All Soroban contract tests (77 tests total)
 
 | Layer | Path | Purpose |
 | --- | --- | --- |
-| **Passport Contract** | [`contracts/passport`](contracts/passport) | **Core Soroban Primitive**: Authorized issuer registry, W3C credential hash commitments, revocation & suspension lifecycle, and independent on-chain verification |
-| **Allocation Contract** | [`contracts/round`](contracts/round) | **Sealed Allocation Primitive**: Confidential commit-reveal coordination round with Drand timelock & SAC settlement |
-| **TypeScript SDK** | [`packages/sdk`](packages/sdk) | Full W3C Verifiable Credential builder, JCS canonical hashing (SHA-256), selective disclosure, QR sharing, and `EducationPassportClient` |
-| **Web Application** | [`apps/web`](apps/web) | Interactive React 19 app featuring: **Learner Passport Vault**, **Institution Issuance & Revocation Console**, and **Employer Verifier Portal** |
+| **Passport Contract** | [`contracts/passport`](contracts/passport) | **Core Soroban Primitive**: Authorized issuer registry, two-step admin & pause controls, key rotation, W3C hash commitments, revocation & suspension |
+| **Allocation Contract** | [`contracts/round`](contracts/round) | **Sealed Allocation Primitive**: Separate commit-reveal coordination round contract with Drand timelock & SAC settlement |
+| **TypeScript SDK** | [`packages/sdk`](packages/sdk) | W3C VC v1.1 schema validator, RFC 8785 UTF-16 JCS hashing, salted claim disclosure, W3C `eddsa-jcs-2022` signing/verifying, ISO QR/URL sharing, and `EducationPassportClient` |
+| **Web Application** | [`apps/web`](apps/web) | Interactive React 19 app featuring **Learner Passport Vault** (optional `PBKDF2-SHA256` + `AES-256-GCM` browser encryption), **Institution Console**, and **Live Testnet Employer Verifier** |
 | **Crypto Package** | [`packages/tlock`](packages/tlock) | Drand timelock encryption and BLS12-381 verification utilities |
-| **Keeper Service** | [`services/keeper`](services/keeper) | Permissionless automated execution daemon for blockchain coordination rounds |
+| **Keeper Service** | [`services/keeper`](services/keeper) | Permissionless automated execution daemon for sealed coordination rounds |
 
 ---
 
 ## User Journeys
 
 ### 1. Learner Passport
-- Connect supported Stellar wallets (Freighter or simulated testnet keypairs).
-- View verified credentials, university degrees, certificates, and skills badges with cryptographic proof anchors.
-- Selectively disclose specific competencies without revealing unrelated transcript details.
-- Generate live SVG QR codes and shareable verification links for job applications.
-- Export interoperable W3C Verifiable Credential JSON files.
+- Connect Freighter wallet or inspect read-only demo profiles (`Elena Rostova`, `Alexandre Moreau`).
+- Protect local browser vault state at rest using optional **`PBKDF2-SHA256` (150,000 iterations) + `AES-256-GCM`** encryption and export/import encrypted `.skp-vault.json` recovery backups (replacing plaintext `localStorage` keys when enabled; see [`docs/LIMITATIONS.md`](./docs/LIMITATIONS.md) for demo vs. enclave boundaries).
+- Choose **Anchor Sharing Mode** (zero PII in link) or **Salted Selective Disclosure Mode** (`StellarSorobanSaltedClaims2026`, redacting omitted fields and salts while remaining cryptographically verifiable).
+- Generate scannable ISO/IEC 18004 SVG QR codes and export W3C Verifiable Credential JSON files.
 
 ### 2. Educational Institution & Issuer
-- Establish an authorized institutional identity in the Soroban issuer registry.
-- Issue tamper-evident credentials mapped to learner Stellar addresses (`did:stellar:...`).
-- Commit 32-byte SHA-256 cryptographic digests to Soroban storage while keeping student PII private.
-- Auditable revocation and temporary suspension controls with mandatory audit trail notes.
+- Issue W3C credentials anchored to the live Testnet contract ID with salted claim commitments enabled and recipient Stellar StrKey validation.
+- Query live Soroban Testnet `is_issuer_authorized` state directly or sign transactions via Freighter (raw `S...` keys are never stored in the browser; demo local toggles are clearly labeled as local overrides).
 
 ### 3. Employer & Verifier
-- Scan QR code or paste verification link / W3C VC JSON.
-- Verify credential authenticity against Soroban ledger state in milliseconds.
-- Clearly distinguishes:
-  - 🟢 **Valid & Authentic**: Cryptographically sound, issuer verified, active on ledger.
-  - 🔴 **Revoked**: Formally rescinded by the institution with recorded reason.
-  - 🟠 **Expired**: Past validity window.
-  - ⚠️ **Tampered / Forged**: Cryptographic hash mismatch detected!
-  - ⛔ **Untrusted Issuer**: Issuing entity is not authorized on-chain.
+- Toggle between **Live Stellar Testnet Soroban RPC** (`CDDP5O...` hardened build; legacy `CAP3J5...` preserved) and **Demo Local Cache** to verify zero-PII anchor URLs, selectively disclosed presentations, W3C `eddsa-jcs-2022` proofs, or uploaded `.json` credentials.
+- Clearly distinguishes `Valid`, `Revoked`, `Suspended`, `Expired`, `Tampered`, `Untrusted Issuer`, and `Unverifiable`.
 
 ---
 
 ## Privacy & Blockchain Architecture
 
-1. **Zero On-Chain PII**: Student names, national IDs, grades, and detailed descriptions are **never stored on public ledger storage**.
-2. **Deterministic Cryptographic Commitments**: Credentials follow the W3C Verifiable Credentials standard. The canonical JSON payload is hashed using SHA-256 (RFC 8785 JSON Canonicalization Scheme), and only the resulting 32-byte digest is anchored on Soroban.
-3. **Zero-PII Sharing Links (Anchor Mode)**:
-   - Verification links default to **On-Chain Anchor Mode** (`#/verify?cid=...&id=...&h=...`), encoding only the contract ID, credential ID, and hash commitment.
-   - **Zero Student PII** (names, grades, courses) is present in the URL, preventing leakage into browser histories, copied links, or server access logs.
-   - Parameters are confined strictly to the client-side URL hash fragment (`#`), ensuring they are never transmitted over the wire in HTTP request lines.
-4. **Auditable Revocation Lifecycle**: Institutions retain the ability to revoke or suspend compromised or erroneous credentials on-chain, immediately visible to verifiers worldwide with auditable reason logs.
-5. **Strict Soroban Authorization**: Only approved institution identities (`issuer.require_auth()`) or administrators can register templates, issue, revoke, or suspend credentials.
-6. **Selective Disclosure & Trust Boundaries**:
-   - **v1 Document-Level Presentation Filter & Anchor (Implemented)**: Learners can share Zero-PII anchor links or present isolated skill subsets for job applications. The presentation filters attributes in software while preserving the parent credential root identifier for ledger verification.
-   - **v2 Cryptographic Attribute Proofs (Planned)**: Full zero-knowledge selective disclosure using BBS+ signatures or ZK-SNARKs to prove individual claims without disclosing the parent credential preimage or root hash.
-   - For an exhaustive analysis of what the verifier proves, trusts, and does not prove, consult **[`docs/VERIFIER_TRUST_MODEL.md`](./docs/VERIFIER_TRUST_MODEL.md)**.
+1. **Off-Chain PII, Public Ledger Commitments**: Student names, grades, and descriptions are **never stored in Soroban storage or events**. Note that Stellar public keys (`issuer`, `recipient`), 32-byte `credential_id`, 32-byte `credential_hash`, `template_id`, timestamps, and revocation status/reasons **are publicly readable on ledger**.
+2. **Deterministic Canonicalization & W3C Data Integrity**: Payloads use RFC 8785 UTF-16 JCS canonicalization + SHA-256 (`StellarSorobanHashCommitment2026` / `StellarSorobanSaltedClaims2026`), and optionally W3C **`DataIntegrityProof` (`cryptosuite: "eddsa-jcs-2022"`)** Ed25519 signatures over `did:key` or `did:stellar`.
+3. **Privacy Bounds of Sharing Links & URL Fragments**:
+   - **Anchor Mode** (`#/passport/verify?cid=...&id=...&h=...`) keeps learner PII out of the URL, placing parameters in `#` (preventing HTTP `GET` query-line and `Referer` header leakage) and scrubbing `window.location.hash` after verification.
+   - **Honest Client Limits**: Hash fragments **do not** erase prior browser history entries, OS/cloud clipboards, messaging previews, forwarded links, screenshots, or same-origin script/extension visibility.
+4. **Salted Selective Disclosure != Zero-Knowledge Proofs**:
+   - `StellarSorobanSaltedClaims2026` commits each claim with a 128-bit CSPRNG salt so learners can strip unshared fields and salts from redacted views while keeping disclosed claims verifiable against the on-chain hash. However, presentations remain linkable via `credentialHash` / `credentialId`, and **ZK-SNARK / BBS+ unlinkable proofs are not implemented** (see **[`docs/VERIFIER_TRUST_MODEL.md`](./docs/VERIFIER_TRUST_MODEL.md)**).
 
 ---
 
 ## Complete Credential Lifecycle & Contract Interface
 
-The Soroban Education Passport contract (`contracts/passport`) provides a complete suite of lifecycle primitives:
+The Soroban Education Passport contract (`contracts/passport`) provides lifecycle, security, and recovery primitives ([`ERRORS.md`](./contracts/passport/ERRORS.md)):
 
 | Contract Function | Authorization | Description |
 | --- | --- | --- |
-| `initialize(admin)` | Admin | Deploys registry and sets contract administrator |
+| `initialize(admin)` | One-time Admin | Sets initial contract administrator |
+| `propose_admin(caller, new_admin)` / `accept_admin()` | Admin / Nominee | Two-step safe administrator key handover (`get_pending_admin` to inspect) |
+| `pause(caller)` / `unpause(caller)` / `is_paused()` | Admin / Read-only | Emergency circuit breaker pausing state-changing registry mutations |
 | `register_issuer(issuer, name, metadata_uri)` | Admin | Authorizes an educational institution or certifying body |
-| `update_issuer_metadata(issuer, name, metadata_uri)` | Issuer / Admin | Updates institution name or accreditation profile |
-| `deauthorize_issuer(issuer)` | Admin | Removes issuing authority; immediately marks existing credentials as untrusted |
-| `register_template(issuer, template_id, name, schema_uri)` | Issuer | Registers reusable credential schema (degree, diploma, badge) |
+| `deauthorize_issuer(issuer)` / `reactivate_issuer(issuer)` | Admin | Revokes/restores institutional issuing privileges; deauthorized issuers lose issuance, template, and lifecycle control |
+| `rotate_issuer_key(caller, old_issuer, new_issuer)` | Admin | Transfers active issuer authorization to a fresh key on key rotation/compromise |
+| `update_issuer_metadata(caller, issuer, name, metadata_uri)` | Active Issuer / Admin | Updates institution display name or metadata URI |
+| `register_template(issuer, template_id, name, schema_uri)` | Active Issuer | Registers reusable credential schema owned by that issuer |
 | `get_template(template_id)` | Read-only | Queries registered credential template metadata |
-| `issue_credential(issuer, recipient, credential_id, credential_hash, template_id, expires_at)` | Issuer | Issues tamper-evident credential hash commitment |
-| `batch_issue_credentials(issuer, credentials)` | Issuer | Atomically issues up to 50 credentials in a single transaction |
-| `revoke_credential(caller, credential_id, reason)` | Issuer / Admin | Permanently revokes a credential with auditable reason |
-| `suspend_credential(caller, credential_id, reason)` | Issuer / Admin | Temporarily suspends credential pending review |
-| `reactivate_credential(caller, credential_id)` | Issuer / Admin | Reactivates a suspended credential (revoked cannot be reactivated) |
-| `get_credential_status(credential_id)` | Read-only | High-speed tuple query: `(status, expires_at, revocation_reason)` |
-| `verify_credential(credential_id, claimed_hash)` | Read-only | Full cryptographic verification returning structured boolean flags |
+| `issue_credential(issuer, recipient, credential_id, credential_hash, template_id, expires_at)` | Active Issuer | Issues non-zero, non-duplicate, non-self-issued credential hash commitment |
+| `batch_issue_credentials(issuer, credentials)` | Active Issuer | Atomically issues up to `MAX_BATCH_SIZE = 50` validated credentials in one tx |
+| `revoke_credential(caller, credential_id, reason)` | Active Issuer / Admin | Permanently revokes a credential with mandatory audit reason |
+| `suspend_credential(caller, credential_id, reason)` / `reactivate_credential(...)` | Active Issuer / Admin | Temporarily suspends credential; reactivation rejects expired or revoked records |
+| `get_credential_status(credential_id)` / `get_learner_credentials_page(...)` | Read-only | Fast status tuple query and paginated learner index lookup |
+| `verify_credential(credential_id, claimed_hash)` | Read-only | Returns structured validity, hash match, issuer auth, expiry, and status flags |
 
 ### Automated 10-Scenario Verification Suite
 
@@ -154,14 +146,16 @@ Open `http://localhost:5173` to interact with the **Skills Passport**, **Institu
 
 | Layer | Command | Network | What it proves |
 | --- | --- | --- | --- |
-| **Education Passport E2E** | `pnpm lifecycle:passport` | Local / SDK | **All 10 core scenarios**: issuance, learner view, independent verifier, tampering detection, unauthorized rejection, revocation audit, expiration, selective disclosure, recovery |
-| **CLI Verifier** | `pnpm passport:verify --demo` | Local / CLI | Off-chain W3C VC parsing, RFC-8785 canonical hash computation, and status diagnostics |
-| **Passport Contract** | `pnpm passport:test` | Soroban VM | **19 unit tests**: registration, templates, batch issuance, revocation, suspension, fast status queries, replay/substitution protection |
-| **Full product** | `pnpm lifecycle:e2e` | Testnet | 2 bidders, USDC SAC, keeper settle → contract **0** |
-| **Multi-agent** | `pnpm agents:e2e` | Testnet | Mandate + x402 + keeper reveal + settle → **single UI trace** |
+| **Education Passport E2E** | `pnpm lifecycle:passport` | Local / SDK | **10 core scenarios**: issuance, learner view, independent verifier, tampering detection, unauthorized rejection, revocation audit, expiration, selective disclosure, recovery |
+| **CLI Verifier** | `pnpm passport:verify --demo` | Local / CLI | Off-chain W3C VC v1.1 schema validation, RFC-8785 JCS hashing, and status diagnostics (`--testnet` adds live RPC lookup) |
+| **Passport Contract** | `pnpm passport:test` | Soroban VM | **32 unit & security tests**: two-step admin transfer, circuit breaker `pause`, key rotation, batch atomicity, revocation/suspension, pagination, replay/substitution protection |
+| **Passport ABI Check** | `pnpm passport:check` | Local / CI | Verifies `contracts/passport` release WASM (`f7975920...`), 29 WASM ABI exports, and 20 `PassportError` mappings |
+| **Live Testnet Audit** | `pnpm passport:verify:testnet` | Testnet | Read-only verification of `CAP3J5...` WASM, all 8 historical lifecycle txs on Horizon/RPC, `get_admin`, `get_credential`, and 6 live negative simulations |
+| **Full product (Round)** | `pnpm lifecycle:e2e` | Testnet | 2 bidders, USDC SAC, keeper settle → contract **0** |
+| **Multi-agent (Round)** | `pnpm agents:e2e` | Testnet | Mandate + x402 + keeper reveal + settle → **single UI trace** |
 | **x402 appraisal** | `pnpm appraisal:e2e` | Testnet | HTTP 402 → on-chain USDC settle |
-| **Mainnet smoke** | `pnpm mainnet:deploy` + `pnpm mainnet:settle` | Mainnet | Deploy, BLS, settle on **real XLM** |
-| **Mainnet verify** | `pnpm mainnet:verify` | Mainnet | Read-only check of settled round 1 |
+| **Mainnet smoke (Round)** | `pnpm mainnet:deploy` + `pnpm mainnet:settle` | Mainnet | Deploy, BLS, settle `contracts/round` on **real XLM** |
+| **Mainnet verify (Round)** | `pnpm mainnet:verify` | Mainnet | Read-only check of settled round 1 |
 
 See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for honest scope boundaries.
 
@@ -171,45 +165,51 @@ See [docs/LIMITATIONS.md](./docs/LIMITATIONS.md) for honest scope boundaries.
 
 | Field | Value |
 | --- | --- |
-| Contract Type | Decentralized Education & Skills Passport Core |
-| Testnet Contract | [`CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5`](https://stellar.expert/explorer/testnet/contract/CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5) |
-| Testnet WASM Hash | `f7f29f6c3ab6f0e3524605b7d3bb1ff41c1de7fb015973719f50aed5ce480610` |
-| Admin Identity | `GCSKC6MWND2LHUE2PXITRPIUES52CODYWH5D6MBD7K5FD2GVIKLOCUUA` |
-| Authorized Issuer | `GCW3HMYU6W52RSTSTDBRYWON7SZIFXKJWVODJYYFWMK7WEVUTXAAVY3F` |
-| Test Coverage | **19/19 passing** (Soroban VM test harness) |
-| Lifecycle Scenarios | **10/10 passing** (`pnpm lifecycle:passport` local & `pnpm passport:lifecycle:testnet` on-chain) |
-| Status | **Deployed & Verified on Stellar Testnet** |
+| Contract Type | Decentralized Education & Skills Passport Core (distinct from `contracts/round`) |
+| **Hardened Testnet Contract (`2026-11-11`, Active Default)** | [`CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2`](https://stellar.expert/explorer/testnet/contract/CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2) ([`deployed-testnet-hardened.json`](./contracts/passport/deployed-testnet-hardened.json)) |
+| **Hardened WASM SHA-256 (Live & Local Match)** | `f7975920f377927af8d803f87df3a3ade4e84cc012835868f004eca4105888bf` (`42,382` bytes) |
+| Active Handover Admin / Rotated Issuer | Admin `GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ` · Issuer `GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT` |
+| **Legacy Testnet Contract (`2026-10-27`, Preserved)** | [`CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5`](https://stellar.expert/explorer/testnet/contract/CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5) ([`deployed-testnet.json`](./contracts/passport/deployed-testnet.json)) |
+| Legacy Deployed WASM Hash | `f7f29f6c3ab6f0e3524605b7d3bb1ff41c1de7fb015973719f50aed5ce480610` |
+| Local Test Coverage | **32/32 passing** (Soroban VM) · **123/123** SDK · **88/88** Web · **10/10** E2E |
+| Testnet Status | **Hardened build deployed & verified on Testnet** (`17` confirmed txs on `CDDP5O...`); legacy `CAP3J5...` preserved read-only |
 
 #### Independent On-Chain Verification (Direct Soroban RPC)
 
-If block explorers experience network latency or UI indexing delays, the contract instance, bytecode hash, and on-chain state can be **independently verified directly against the Soroban Testnet JSON-RPC endpoint**:
+Both the new hardened deployment and the preserved legacy deployment can be **verified directly against Soroban Testnet JSON-RPC & Horizon**:
 
 ```bash
-# Automated independent verification of WASM hash, admin, issuer, and credentials:
+# Verify hardened Testnet contract CDDP5O... (byte-for-byte WASM match, 17 confirmed txs, queries, and enforcing simulations):
+pnpm passport:verify:testnet:hardened
+
+# Verify preserved legacy Testnet contract CAP3J5... (2026-10-27 WASM & 8 historical Horizon txs):
 pnpm passport:verify:testnet
 ```
 
-Or query the contract instance ledger entry directly via raw `curl`:
+Or query the hardened contract instance ledger entry directly via raw `curl`:
 
 ```bash
 curl -s -X POST https://soroban-testnet.stellar.org \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"getContractData","params":{"contract":"CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5","key":"AAAABAAAAAE=","durability":"persistent"}}'
+  -d '{"jsonrpc":"2.0","id":1,"method":"getContractData","params":{"contract":"CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2","key":"AAAABAAAAAE=","durability":"persistent"}}'
 ```
 
-#### Testnet Verified Transaction Proofs
+#### Hardened Testnet Verified Transaction Proofs (`CDDP5O...`, Ledgers `5672045`–`5672062`)
 
-| Stage | Transaction Hash | Result |
+| Stage | Transaction Hash | Ledger / Result |
 | --- | --- | --- |
-| **WASM Upload** | [`d69d074b...`](https://stellar.expert/explorer/testnet/tx/d69d074b2f80637f2b33bae75c57bb9264a1cfcefc9bbc6b23a960a7db711916) | Bytecode installed (35,216 bytes) |
-| **Contract Deployment** | [`5b6424a3...`](https://stellar.expert/explorer/testnet/tx/5b6424a33e13fc1eeb87dd18a7972324e3ad09e319d3ac8ade8ce908f0677c5d) | Instance `CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5` |
-| **Admin Initialization** | [`59bad590...`](https://stellar.expert/explorer/testnet/tx/59bad59001b1f7c9e59b910afd299e9d773fce46eae91a8863917c8370964394) | Admin set to `GCSKC6...` |
-| **Issuer Authorization** | [`4f107688...`](https://stellar.expert/explorer/testnet/tx/4f107688e3be794f69ca4377dbbae440bddbb5adaf480270655891002222904f) | MIT Digital Credentials Institute authorized |
-| **Template Registration** | [`f39c6809...`](https://stellar.expert/explorer/testnet/tx/f39c6809d32499392684cfcb3196f3ddba9744ab36d8f2ed3a80598775adb27e) | `Degree` template registered |
-| **Credential Issuance** | [`0fac86a4...`](https://stellar.expert/explorer/testnet/tx/0fac86a487f55ecf79a1a675638faa972fa89d2fd8990f3d14535dbf69ee9827) | Issued with SHA-256 hash commitment |
-| **Credential Suspension** | [`84c8f791...`](https://stellar.expert/explorer/testnet/tx/84c8f791a1b30a9cfc326e9bfefc2c215f4a143d2c7d2973e59e41091711b2b6) | State set to Suspended (status = 3) |
-| **Credential Reactivation** | [`a20cadbf...`](https://stellar.expert/explorer/testnet/tx/a20cadbf98d950f3a74e42c5452a8b698a079b7fa47acd85e01ce07f21c0227b) | State restored to Active (status = 1) |
-| **Credential Revocation** | [`fbf1f4b6...`](https://stellar.expert/explorer/testnet/tx/fbf1f4b6e2c36a1daef4a421cba3db98dfadb707182b2626f36832f1c4dcef5d) | State permanently Revoked (status = 2) |
+| **WASM Upload (`f7975920...`)** | [`c0bfed72...`](https://stellar.expert/explorer/testnet/tx/c0bfed72346830857bb12296921ac04811c66c07597055e5508ae0a4bb1e90a7) | Ledger `5672045` · `42,382`-byte hardened bytecode installed |
+| **Contract Deployment** | [`40eb0773...`](https://stellar.expert/explorer/testnet/tx/40eb077321244a96b468acb4d2e4ff63c898c9332aa95b530f523ee0389b443c) | Ledger `5672046` · Instance `CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2` |
+| **Admin Initialization** | [`7314995d...`](https://stellar.expert/explorer/testnet/tx/7314995d4abbb347574630cfb4fbfefdce308ca325e952c961205b4846401c7b) | Ledger `5672047` · Initial admin `GBCL7YY...` |
+| **Two-Step Admin Propose / Accept** | [`5e49a894...`](https://stellar.expert/explorer/testnet/tx/5e49a894ab330db4dcb450e5d24ba5fc7ebedecf57806af9140dba4ae098c40b) / [`eaa8d5af...`](https://stellar.expert/explorer/testnet/tx/eaa8d5afc62d2f97d0a435b56e70bd398d324b31d2e2d24e66427d9c475e4547) | Ledgers `5672048`–`5672049` · Admin handed over to `GDPPXM3...` |
+| **Emergency Pause / Unpause** | [`5c0edf14...`](https://stellar.expert/explorer/testnet/tx/5c0edf14d3a31c9f0326024fdc3047b3c7064513f75e556683362893013b6499) / [`a7d7778b...`](https://stellar.expert/explorer/testnet/tx/a7d7778bbbf066a87ed5a956c8181adf16e9ce603b9079130659c4df7a6f0e01) | Ledgers `5672050`–`5672051` · Circuit breaker toggled & verified |
+| **Issuer & Template (`Degree`)** | [`84536350...`](https://stellar.expert/explorer/testnet/tx/84536350fae5925c10f7029011a3ed1f26aadb7e45eba0b63b0c783929c88332) / [`8d763b70...`](https://stellar.expert/explorer/testnet/tx/8d763b70af6a9b4494af489a6fc264832f404f83bbdb241477b023941ff6061f) | Ledgers `5672052`–`5672053` · Authorized `GBUWRYZ...` post-unpause |
+| **Single & 4-Item Batch Issuance** | [`83e91a30...`](https://stellar.expert/explorer/testnet/tx/83e91a30a2c4cc9620ce8499d028b0e3f6883d43b9efcec935988cdb0686f2ef) / [`c57b2e30...`](https://stellar.expert/explorer/testnet/tx/c57b2e303dcfffa079d2c1cfd3b5eeacbf172b3e01a923478319dd701e524a7a) | Ledgers `5672054`–`5672055` · `5` credentials verified across 3 pages |
+| **Suspend / Reactivate / Revoke** | [`d109a0c3...`](https://stellar.expert/explorer/testnet/tx/d109a0c3f3aa6d47e2a346788e59146ea34f33bad8bbf34f5b5b3924f7ed7f54) / [`c3ce0115...`](https://stellar.expert/explorer/testnet/tx/c3ce01158f940ce8005d89b8e26d4b05187a25002571d86e5746718988e82f43) / [`083432ae...`](https://stellar.expert/explorer/testnet/tx/083432ae418c732893ccac7abdf4b3e8129321a58e6c4b174ea190eec5e406b9) | Ledgers `5672057`–`5672059` · Status `3` → `1` → `2` (Revoked) |
+| **Dual-Signed Key Rotation (`rotate_issuer_key`)** | [`007c75c6...`](https://stellar.expert/explorer/testnet/tx/007c75c60b2a64611a4ff9b13ca6d85d5b413405455e5f0a92f5152240aee81a) | Ledger `5672060` · `GBUWRYZ...` rotated to `GAGLNXX...` |
+| **Post-Rotation `Cert` & Issuance** | [`54ffd1ba...`](https://stellar.expert/explorer/testnet/tx/54ffd1ba1f661078344ddeac20f035f9a9be884569e2da5775be5b9b884c4cfc) / [`64c06850...`](https://stellar.expert/explorer/testnet/tx/64c06850afd89966d0dc1640a579ad7027a5c87fdb01bfe2fe4cc9084e9b6799) | Ledgers `5672061`–`5672062` · Active post-rotation credential (`count = 6`) |
+
+Full transaction logs, read-only queries, enforcing negative simulations (`#3`, `#4`, `#5`, `#8`, `#14`, `#15`, `#17`, `#18`, `Auth InvalidAction`), and legacy `CAP3J5...` archive records are preserved in [`HARDENED_TESTNET_DEPLOYMENT_REPORT.md`](./HARDENED_TESTNET_DEPLOYMENT_REPORT.md).
 
 > [!WARNING]
 > **Independent Security Audit Requirement:** Passing automated unit tests and demonstrating Testnet deployment does **not** constitute an independent security audit. An external audit by qualified smart-contract security specialists is strictly mandatory before issuing real student records or processing production credentials. See [docs/SECURITY_REVIEW_REQUIREMENTS.md](./docs/SECURITY_REVIEW_REQUIREMENTS.md) for the audit checklist and threat matrix.
@@ -316,17 +316,13 @@ exercises, see **[`docs/VERTICALS.md`](./docs/VERTICALS.md)** — the authoritat
 ## Status
 
 ### Decentralized Education & Skills Passport
-- [x] Soroban Passport Contract + 19 unit tests (`contracts/passport`)
-- [x] 10/10 End-to-end credential lifecycle test suite (`pnpm lifecycle:passport`)
-- [x] CLI Credential Verifier tool (`pnpm passport:verify --demo`)
-- [x] TypeScript SDK with W3C VC builder, JCS canonical hashing, selective disclosure
-- [x] Interactive Web Portal (`apps/web`): Learner Vault, Issuer Console, Employer Verifier
-- [x] QR code generation and access-controlled credential sharing
-- [x] Auditable on-chain revocation, suspension, and reactivation lifecycles
-- [x] Zero-PII sharing architecture (Anchor Mode with 0 personal data in links, URL fragment protection)
-- [x] Direct Stellar Testnet contract verification (`pnpm passport:verify:testnet`) with 7/7 checks including tampered hash rejection
-- [x] Live Testnet lifecycle test with negative transaction rejection (`pnpm passport:lifecycle:testnet`)
-- [ ] **Independent Security Audit**: Outstanding prerequisite before processing real student educational data in production.
+- [x] Soroban Passport Contract (`contracts/passport`) + 32 security/unit tests + `pnpm passport:check` (29 ABI exports, 20 error codes)
+- [x] TypeScript SDK (`packages/sdk`, 123 tests): W3C VC v1.1 schema validator, RFC 8785 UTF-16 JCS, salted claim commitments, and W3C `eddsa-jcs-2022` Data Integrity (`did:key` / `did:stellar`)
+- [x] 10/10 End-to-End credential lifecycle scenarios (`pnpm lifecycle:passport`) & CLI verifier (`pnpm passport:verify --demo`)
+- [x] Interactive Web Portal (`apps/web`, 88 tests + CSP `script-src 'self'`): Learner Vault (`PBKDF2-SHA256` + `AES-256-GCM` optional encryption & ISO/IEC 18004 QR), Issuer Console, Live Testnet RPC Verifier
+- [x] Preserved Legacy Testnet Verification (`pnpm passport:verify:testnet`) of `CAP3J5...`: `2026-10-27` WASM hash `f7f29f6c...`, all 8 historical lifecycle txs, `get_admin`, `get_credential`, and 6 negative simulations
+- [x] **Hardened WASM (`f7975920...`) Deployed & Verified on Testnet (`CDDP5O...`)**: `17` confirmed Testnet transactions across ledgers `5672045`–`5672062` verifying two-step admin handover, emergency pause/unpause, dual-signed issuer key rotation, `4`-item batch issuance, multi-page pagination, and credential lifecycle controls (`pnpm passport:verify:testnet:hardened`)
+- [ ] **ZK Unlinkable Selective Disclosure (BBS+ / ZK-SNARKs)** & **Mainnet Launch / Independent Security Audit**: Required before processing real student educational records in production
 
 ### Sealed Allocation Round Primitive
 - [x] Round contract + 14 tests + on-chain Drand BLS

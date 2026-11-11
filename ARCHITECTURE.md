@@ -92,10 +92,11 @@ sequenceDiagram
 
 ## 4. Privacy Guarantees & Separation of Concerns
 
-1. **Zero On-Chain PII**: Learner names, national identification numbers, grades, course syllabi, and internal academic remarks are **never stored on public Stellar Soroban storage**.
-2. **Cryptographic Commitments**: Credentials adhere to the W3C Verifiable Credentials data model. The JSON payload is canonicalized using RFC 8785 (JSON Canonicalization Scheme) and hashed using SHA-256. Only the resulting 32-byte digest is anchored to the contract storage.
-3. **Selective Disclosure**: Learners can generate views containing only selected skills or competencies. Because the credential ID and issuer DID remain anchored, verifiers can inspect both the full credential and selective views while confirming that unselected records were not leaked.
-4. **Instant Revocation & Suspension**: Institutions can revoke or suspend credentials on-chain. When a credential is revoked, it becomes immediately invalid globally with an immutable reason string for auditable defense against academic fraud.
+1. **Zero On-Chain PII**: Learner names, national identification numbers, grades, course syllabi, and internal academic remarks are **never stored on public Stellar Soroban storage**. Note that Stellar public addresses (`issuer`, `recipient`), 32-byte `credential_id`, 32-byte `credential_hash`, `template_id`, timestamps, and revocation/suspension status + reasons remain publicly visible on ledger.
+2. **Cryptographic Commitments & Optional W3C Data Integrity**: Credentials follow W3C Verifiable Credentials Data Model v1.1, canonicalized with RFC 8785 (UTF-16 code-unit JCS) and hashed with SHA-256. Issuers may also attach standard W3C **`DataIntegrityProof` (`cryptosuite: "eddsa-jcs-2022"`)** Ed25519 signatures over the canonical document + proof configuration.
+3. **Salted Selective Disclosure vs. Zero-Knowledge Proofs**: Issuing with `selectiveDisclosure: true` (`StellarSorobanSaltedClaims2026`) commits each claim individually with a 128-bit CSPRNG salt. Learners can share redacted views omitting unneeded fields and their salts while remaining cryptographically verifiable against the on-chain root digest. This protects omitted claim preimages from dictionary guessing, **but** presentations remain linkable via `credentialHash` / `credentialId` (not ZK-SNARKs or BBS+ unlinkable proofs).
+4. **URL Fragment & Client Storage Hygiene**: Verification links place parameters in `#/passport/verify` (never HTTP query strings) and the web UI scrubs fragments via `window.history.replaceState` after load; however, URLs still appear in browser history/clipboard until cleared. Client storage defaults to demo `localStorage` with optional **PBKDF2-SHA256 (150k iterations) + AES-256-GCM** encrypted vault + `.skp-vault.json` backup export/import.
+5. **Instant Revocation & Suspension**: Authorized institutions can revoke or suspend credentials on-chain, and admins can execute two-step admin transfer (`propose_admin`/`accept_admin`), emergency `pause`/`unpause`, and `rotate_issuer_key`.
 
 ---
 
@@ -104,10 +105,11 @@ sequenceDiagram
 ### Education Passport (`contracts/passport`)
 | Tier | Key / Record | Contents | Lifetime |
 | --- | --- | --- | --- |
-| **Instance** | `Admin` | Primary contract administrator address | Contract lifetime |
-| **Persistent** | `Issuer(address)` | Authorized institution profile, status, accreditation URI | Until deauthorized |
-| **Persistent** | `Template(symbol)`| Credential schema definition, name, standard metadata | Indefinite |
+| **Instance** | `Admin`, `PendingAdmin`, `Paused` | Contract administrator, two-step transfer nominee, circuit-breaker pause flag | Contract lifetime |
+| **Persistent** | `Issuer(address)` | Authorized institution profile, status, accreditation URI | Until deauthorized / rotated |
+| **Persistent** | `Template(symbol)` | Credential schema definition, registering issuer owner, metadata | Indefinite |
 | **Persistent** | `Credential(id)` | 32-byte SHA-256 hash, issuer address, recipient address, status (`Active`, `Revoked`, `Suspended`), issued_at, expires_at, revocation_reason | Indefinite (verifiable historical record) |
+| **Persistent** | `LearnerCredentials(addr)` | Indexed credential ID list for learner lookups & pagination (`get_learner_credentials_page`) | Indefinite |
 
 ### Sealed Allocation Round (`contracts/round`)
 | Tier | Key / Record | Contents | Lifetime |
@@ -123,10 +125,10 @@ sequenceDiagram
 
 | Component | Trusted For | Not Trusted For |
 | --- | --- | --- |
-| **Passport Contract** | Cryptographic hash binding, authorized issuer list, revocation status | Off-chain transcript storage (kept off-chain) |
-| **Issuing Institution** | Conferred academic merit, accurate grades, honest credential issuance | Modifying credentials post-issuance (hashes cannot be retroactively changed) |
-| **Learner** | Storing private credential payloads, selecting what to share | Altering grades or substituting recipient DID (tampering breaks hash match) |
-| **Employer / Verifier** | Verifying authenticity against Soroban RPC | Fabricating proof results or overriding on-chain revocation |
+| **Passport Contract** | Cryptographic hash binding, issuer authorization, revocation/suspension finality | Off-chain transcript confidentiality or unlinkability |
+| **Issuing Institution** | Academic accuracy and custody of issuer signing keys (`rotate_issuer_key` recovery) | Altering committed credentials retroactively |
+| **Learner** | Vault passphrase custody, deliberate selective disclosure choices | Forging unshared attributes or reactivating revoked records |
+| **Employer / Verifier** | Verifying integrity + Soroban ledger status via RPC | Overriding on-chain revocation/deauthorization |
 | **Round Contract** | Escrow locking, commit hash binding, BLS verification, token distribution | Off-chain mandate enforcement |
 | **Drand Beacon** | Unbiased randomness and round-R BLS signatures | Guaranteeing round clearing liveness |
 | **Keeper Service** | Triggering open/reveal/clear/settle lifecycle calls | Secrecy before round R |
@@ -139,15 +141,21 @@ sequenceDiagram
 # 1. Full Workspace Tests (Rust contracts + TypeScript SDK + Web app)
 pnpm test
 
-# 2. Automated 10-Scenario End-to-End Passport Lifecycle
+# 2. Passport WASM, ABI & Error Map Parity Check (independent of contracts/round)
+pnpm passport:check
+
+# 3. Automated 10-Scenario End-to-End Passport Lifecycle
 pnpm lifecycle:passport
 
-# 3. Command-Line Credential Verifier
+# 4. Command-Line Credential Verifier
 pnpm passport:verify --demo
 
-# 4. Soroban Smart Contract Unit Tests
+# 5. Live Stellar Testnet Contract Verification (read-only RPC + Horizon + negative sims)
+pnpm passport:verify:testnet
+
+# 6. Soroban Smart Contract Unit Tests (90 total: 32 passport + 58 round)
 cargo test --workspace
 
-# 5. Typecheck All Workspace Packages
+# 7. Typecheck All Workspace Packages (10/10 packages with typecheck scripts)
 pnpm -r --workspace-concurrency=1 run typecheck
 ```
