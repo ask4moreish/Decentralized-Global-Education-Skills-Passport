@@ -17,6 +17,13 @@ pub enum PassportError {
     IssuerNotFound = 11,
     TemplateAlreadyExists = 12,
     TemplateNotFound = 13,
+    InvalidInput = 14,
+    BatchTooLarge = 15,
+    CredentialAlreadySuspended = 16,
+    ContractPaused = 17,
+    NoPendingAdmin = 18,
+    IssuerAlreadyDeauthorized = 19,
+    IssuerAlreadyActive = 20,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -94,4 +101,6 @@ pub enum DataKey {
     Template(Symbol),
     Credential(BytesN<32>),
     LearnerCredentials(Address),
+    PendingAdmin,
+    Paused,
 }

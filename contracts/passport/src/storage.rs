@@ -23,15 +23,55 @@ pub fn is_initialized(env: &Env) -> bool {
 }
 
 pub fn get_admin(env: &Env) -> Result<Address, PassportError> {
-    bump_instance(env);
-    env.storage()
+    let admin = env
+        .storage()
         .instance()
         .get(&DataKey::Admin)
-        .ok_or(PassportError::NotInitialized)
+        .ok_or(PassportError::NotInitialized)?;
+    bump_instance(env);
+    Ok(admin)
 }
 
 pub fn set_admin(env: &Env, admin: &Address) {
     env.storage().instance().set(&DataKey::Admin, admin);
+    bump_instance(env);
+}
+
+pub fn get_pending_admin(env: &Env) -> Option<Address> {
+    if env.storage().instance().has(&DataKey::PendingAdmin) {
+        bump_instance(env);
+        env.storage().instance().get(&DataKey::PendingAdmin)
+    } else {
+        None
+    }
+}
+
+pub fn set_pending_admin(env: &Env, pending_admin: &Address) {
+    env.storage()
+        .instance()
+        .set(&DataKey::PendingAdmin, pending_admin);
+    bump_instance(env);
+}
+
+pub fn clear_pending_admin(env: &Env) {
+    env.storage().instance().remove(&DataKey::PendingAdmin);
+    bump_instance(env);
+}
+
+pub fn is_paused(env: &Env) -> bool {
+    if env.storage().instance().has(&DataKey::Paused) {
+        bump_instance(env);
+        env.storage()
+            .instance()
+            .get(&DataKey::Paused)
+            .unwrap_or(false)
+    } else {
+        false
+    }
+}
+
+pub fn set_paused(env: &Env, paused: bool) {
+    env.storage().instance().set(&DataKey::Paused, &paused);
     bump_instance(env);
 }
 
