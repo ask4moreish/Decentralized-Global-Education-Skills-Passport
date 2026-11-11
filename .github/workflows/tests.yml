@@ -31,13 +31,18 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: "contracts/round"
+          workspaces: |
+            contracts/round
+            contracts/passport
 
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev libdbus-1-dev libudev-dev libsodium-dev
 
       - name: Run contract tests
         run: cargo test --workspace
+
+      - name: Check Passport WASM binary, ABI & error parity
+        run: pnpm passport:check
 
   node:
     name: TypeScript tests + typecheck
@@ -57,11 +62,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build internal workspace libraries (tlock, bindings, sdk)
+        run: pnpm --filter skills-passport-tlock build && pnpm --filter round-bindings build && pnpm --filter skills-passport-sdk build
+
       - name: SDK tests
         run: pnpm sdk:test
 
       - name: Passport lifecycle scenarios
         run: pnpm lifecycle:passport
+
+      - name: Passport CLI demo verification
+        run: pnpm passport:verify --demo
 
       - name: tlock tests (offline unit suite)
         run: pnpm --filter skills-passport-tlock test:unit
@@ -89,6 +100,9 @@ jobs:
 
       - name: Web tests (+ CSS token check)
         run: pnpm web:test
+
+      - name: Production web build
+        run: pnpm web:build
 
       - name: Typecheck all workspaces
         run: pnpm -r --workspace-concurrency=1 run typecheck

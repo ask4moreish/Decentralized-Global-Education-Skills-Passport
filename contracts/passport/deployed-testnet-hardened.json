@@ -1,0 +1,496 @@
+{
+  "contractId": "CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2",
+  "network": "testnet",
+  "networkPassphrase": "Test SDF Network ; September 2015",
+  "rpcUrl": "https://soroban-testnet.stellar.org",
+  "wasmHash": "f7975920f377927af8d803f87df3a3ade4e84cc012835868f004eca4105888bf",
+  "adminPublicKey": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+  "previousAdminPublicKey": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D",
+  "issuerPublicKey": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT",
+  "rotatedOutIssuerPublicKey": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+  "learnerPublicKey": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+  "deployedAt": "2026-11-11T07:59:17.973Z",
+  "explorerUrl": "https://stellar.expert/explorer/testnet/contract/CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2",
+  "compiler": {
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "target": "wasm32v1-none",
+    "profile": "release"
+  },
+  "legacyContractReference": {
+    "contractId": "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
+    "wasmHash": "f7f29f6c3ab6f0e3524605b7d3bb1ff41c1de7fb015973719f50aed5ce480610",
+    "deployedAt": "2026-10-27T07:34:34.227Z",
+    "manifestPath": "contracts/passport/deployed-testnet.json",
+    "note": "Preserved unmodified pre-hardening 2026-10-27 Testnet deployment."
+  },
+  "evidence": {
+    "network": "testnet",
+    "rpcUrl": "https://soroban-testnet.stellar.org",
+    "steps": {
+      "uploadWasm": {
+        "tx": "c0bfed72346830857bb12296921ac04811c66c07597055e5508ae0a4bb1e90a7",
+        "ledger": 5672045,
+        "wasmHash": "f7975920f377927af8d803f87df3a3ade4e84cc012835868f004eca4105888bf"
+      },
+      "deploy": {
+        "tx": "40eb077321244a96b468acb4d2e4ff63c898c9332aa95b530f523ee0389b443c",
+        "ledger": 5672046,
+        "contractId": "CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2"
+      },
+      "initialize": {
+        "tx": "7314995d4abbb347574630cfb4fbfefdce308ca325e952c961205b4846401c7b",
+        "ledger": 5672047
+      },
+      "proposeAdmin": {
+        "tx": "5e49a894ab330db4dcb450e5d24ba5fc7ebedecf57806af9140dba4ae098c40b",
+        "ledger": 5672048,
+        "proposedAdmin": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ"
+      },
+      "acceptAdmin": {
+        "tx": "eaa8d5afc62d2f97d0a435b56e70bd398d324b31d2e2d24e66427d9c475e4547",
+        "ledger": 5672049,
+        "acceptedAdmin": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ"
+      },
+      "pause": {
+        "tx": "5c0edf14d3a31c9f0326024fdc3047b3c7064513f75e556683362893013b6499",
+        "ledger": 5672050
+      },
+      "unpause": {
+        "tx": "a7d7778bbbf066a87ed5a956c8181adf16e9ce603b9079130659c4df7a6f0e01",
+        "ledger": 5672051
+      },
+      "registerIssuer": {
+        "tx": "84536350fae5925c10f7029011a3ed1f26aadb7e45eba0b63b0c783929c88332",
+        "ledger": 5672052,
+        "issuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "registerTemplate": {
+        "tx": "8d763b70af6a9b4494af489a6fc264832f404f83bbdb241477b023941ff6061f",
+        "ledger": 5672053,
+        "template": "Degree"
+      },
+      "issueCredential": {
+        "tx": "83e91a30a2c4cc9620ce8499d028b0e3f6883d43b9efcec935988cdb0686f2ef",
+        "ledger": 5672054,
+        "credentialId": "9d470cb57a0fac5c05b87628f8d438040753b6b085cf0f21f7b8ea2992044276",
+        "credentialHash": "66bcbe50afca2b8ea0a669a74d92308d88137e9923c9d049be56b51f70ce9bda"
+      },
+      "batchIssueCredentials": {
+        "tx": "c57b2e303dcfffa079d2c1cfd3b5eeacbf172b3e01a923478319dd701e524a7a",
+        "ledger": 5672055,
+        "count": 4
+      },
+      "suspendCredential": {
+        "tx": "d109a0c3f3aa6d47e2a346788e59146ea34f33bad8bbf34f5b5b3924f7ed7f54",
+        "ledger": 5672057
+      },
+      "reactivateCredential": {
+        "tx": "c3ce01158f940ce8005d89b8e26d4b05187a25002571d86e5746718988e82f43",
+        "ledger": 5672058
+      },
+      "revokeCredential": {
+        "tx": "083432ae418c732893ccac7abdf4b3e8129321a58e6c4b174ea190eec5e406b9",
+        "ledger": 5672059
+      },
+      "rotateIssuerKey": {
+        "tx": "007c75c60b2a64611a4ff9b13ca6d85d5b413405455e5f0a92f5152240aee81a",
+        "ledger": 5672060,
+        "oldIssuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "newIssuer": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT"
+      },
+      "registerCertTemplate": {
+        "tx": "54ffd1ba1f661078344ddeac20f035f9a9be884569e2da5775be5b9b884c4cfc",
+        "ledger": 5672061,
+        "template": "Cert"
+      },
+      "postRotationIssueCredential": {
+        "tx": "64c06850afd89966d0dc1640a579ad7027a5c87fdb01bfe2fe4cc9084e9b6799",
+        "ledger": 5672062,
+        "credentialId": "d77d96ee2a1bd5566ea7fb36cc02fbee4b6a5e1345290e97aa483997f2d84664",
+        "credentialHash": "37f5c9de4a0f1ec6d458e5af816db6eb304771a2d287346c520d2e8fcfc7c441"
+      }
+    },
+    "confirmedOperations": [
+      {
+        "operation": "uploadContractWasm",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D",
+        "txHash": "c0bfed72346830857bb12296921ac04811c66c07597055e5508ae0a4bb1e90a7",
+        "status": "SUCCESS",
+        "ledger": 5672045,
+        "resultingState": "WASM uploaded (sha256=f7975920f377927af8d803f87df3a3ade4e84cc012835868f004eca4105888bf)",
+        "expectedResult": "WASM uploaded on Testnet ledger",
+        "actualResult": "SUCCESS in ledger 5672045"
+      },
+      {
+        "operation": "createCustomContract",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D",
+        "txHash": "40eb077321244a96b468acb4d2e4ff63c898c9332aa95b530f523ee0389b443c",
+        "status": "SUCCESS",
+        "ledger": 5672046,
+        "resultingState": "Contract deployed at CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2",
+        "expectedResult": "New Soroban contract instance created pointing to hardened WASM",
+        "actualResult": "SUCCESS (CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, ledger 5672046)"
+      },
+      {
+        "operation": "initialize",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D",
+        "txHash": "7314995d4abbb347574630cfb4fbfefdce308ca325e952c961205b4846401c7b",
+        "status": "SUCCESS",
+        "ledger": 5672047,
+        "resultingState": "admin=GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D, is_paused=false",
+        "expectedResult": "Initial admin set and contract unpaused",
+        "actualResult": "SUCCESS (get_admin=GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D, is_paused=false)"
+      },
+      {
+        "operation": "propose_admin",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D",
+        "txHash": "5e49a894ab330db4dcb450e5d24ba5fc7ebedecf57806af9140dba4ae098c40b",
+        "status": "SUCCESS",
+        "ledger": 5672048,
+        "resultingState": "pending_admin=GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ (admin remains GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D)",
+        "expectedResult": "Pending admin nominated without immediate authority switch",
+        "actualResult": "SUCCESS (get_pending_admin=GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ)"
+      },
+      {
+        "operation": "accept_admin",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+        "txHash": "eaa8d5afc62d2f97d0a435b56e70bd398d324b31d2e2d24e66427d9c475e4547",
+        "status": "SUCCESS",
+        "ledger": 5672049,
+        "resultingState": "admin=GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ, pending_admin=None",
+        "expectedResult": "Proposed admin accepts role and clears PendingAdmin",
+        "actualResult": "SUCCESS (get_admin=GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ)"
+      },
+      {
+        "operation": "pause",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+        "txHash": "5c0edf14d3a31c9f0326024fdc3047b3c7064513f75e556683362893013b6499",
+        "status": "SUCCESS",
+        "ledger": 5672050,
+        "resultingState": "is_paused=true",
+        "expectedResult": "Admin enables circuit breaker; mutations rejected with ContractPaused (#17)",
+        "actualResult": "SUCCESS (is_paused=true, ledger 5672050)"
+      },
+      {
+        "operation": "unpause",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+        "txHash": "a7d7778bbbf066a87ed5a956c8181adf16e9ce603b9079130659c4df7a6f0e01",
+        "status": "SUCCESS",
+        "ledger": 5672051,
+        "resultingState": "is_paused=false",
+        "expectedResult": "Admin resumes normal registry mutations",
+        "actualResult": "SUCCESS (is_paused=false, ledger 5672051)"
+      },
+      {
+        "operation": "register_issuer",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+        "txHash": "84536350fae5925c10f7029011a3ed1f26aadb7e45eba0b63b0c783929c88332",
+        "status": "SUCCESS",
+        "ledger": 5672052,
+        "resultingState": "issuer=GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ is_active=true",
+        "expectedResult": "Authorized issuer persisted after unpause",
+        "actualResult": "SUCCESS (is_issuer_authorized=true, ledger 5672052)"
+      },
+      {
+        "operation": "register_template (Degree)",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "txHash": "8d763b70af6a9b4494af489a6fc264832f404f83bbdb241477b023941ff6061f",
+        "status": "SUCCESS",
+        "ledger": 5672053,
+        "resultingState": "template=Degree registered under issuer1",
+        "expectedResult": "Degree schema template bound to authorized issuer1",
+        "actualResult": "SUCCESS (ledger 5672053)"
+      },
+      {
+        "operation": "issue_credential",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "txHash": "83e91a30a2c4cc9620ce8499d028b0e3f6883d43b9efcec935988cdb0686f2ef",
+        "status": "SUCCESS",
+        "ledger": 5672054,
+        "resultingState": "credential_id=9d470cb57a0fac... status=Active(0)",
+        "expectedResult": "Active credential committed and verified via verify_credential()",
+        "actualResult": "SUCCESS (is_valid=true, hash_matches=true)"
+      },
+      {
+        "operation": "batch_issue_credentials (4 items)",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "txHash": "c57b2e303dcfffa079d2c1cfd3b5eeacbf172b3e01a923478319dd701e524a7a",
+        "status": "SUCCESS",
+        "ledger": 5672055,
+        "resultingState": "learner_credential_count=5",
+        "expectedResult": "4 credentials issued atomically within MAX_BATCH_SIZE=50",
+        "actualResult": "SUCCESS (count=5, ledger 5672055)"
+      },
+      {
+        "operation": "suspend_credential",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "txHash": "d109a0c3f3aa6d47e2a346788e59146ea34f33bad8bbf34f5b5b3924f7ed7f54",
+        "status": "SUCCESS",
+        "ledger": 5672057,
+        "resultingState": "status=Suspended(1), is_valid=false",
+        "expectedResult": "Credential suspended and fails verify_credential()",
+        "actualResult": "SUCCESS (status=3, is_valid=false)"
+      },
+      {
+        "operation": "reactivate_credential",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "txHash": "c3ce01158f940ce8005d89b8e26d4b05187a25002571d86e5746718988e82f43",
+        "status": "SUCCESS",
+        "ledger": 5672058,
+        "resultingState": "status=Active(0), is_valid=true",
+        "expectedResult": "Suspended credential restored to Active",
+        "actualResult": "SUCCESS (status=1, is_valid=true)"
+      },
+      {
+        "operation": "revoke_credential",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "txHash": "083432ae418c732893ccac7abdf4b3e8129321a58e6c4b174ea190eec5e406b9",
+        "status": "SUCCESS",
+        "ledger": 5672059,
+        "resultingState": "status=Revoked(2), is_valid=false, hash_matches=true",
+        "expectedResult": "Permanent revocation recorded on-chain",
+        "actualResult": "SUCCESS (status=2, is_valid=false)"
+      },
+      {
+        "operation": "rotate_issuer_key",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ + GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT (dual Soroban auth)",
+        "txHash": "007c75c60b2a64611a4ff9b13ca6d85d5b413405455e5f0a92f5152240aee81a",
+        "status": "SUCCESS",
+        "ledger": 5672060,
+        "resultingState": "issuer1=GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ (authorized=false), issuer2=GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT (authorized=true)",
+        "expectedResult": "Old issuer key deactivated and new issuer key activated atomically",
+        "actualResult": "SUCCESS (oldAuth=false, newAuth=true, ledger 5672060)"
+      },
+      {
+        "operation": "register_template (Cert)",
+        "authorizingAccount": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT",
+        "txHash": "54ffd1ba1f661078344ddeac20f035f9a9be884569e2da5775be5b9b884c4cfc",
+        "status": "SUCCESS",
+        "ledger": 5672061,
+        "resultingState": "template=Cert registered under rotated issuer2",
+        "expectedResult": "Rotated issuer key can register new template",
+        "actualResult": "SUCCESS (ledger 5672061)"
+      },
+      {
+        "operation": "issue_credential (post-rotation)",
+        "authorizingAccount": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT",
+        "txHash": "64c06850afd89966d0dc1640a579ad7027a5c87fdb01bfe2fe4cc9084e9b6799",
+        "status": "SUCCESS",
+        "ledger": 5672062,
+        "resultingState": "post_cred=d77d96ee2a1bd5... count=6",
+        "expectedResult": "Rotated issuer issues valid Active credential under Cert",
+        "actualResult": "SUCCESS (is_valid=true, totalCount=6)"
+      }
+    ],
+    "confirmedTransactions": {
+      "uploadContractWasm": {
+        "hash": "c0bfed72346830857bb12296921ac04811c66c07597055e5508ae0a4bb1e90a7",
+        "ledger": 5672045,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D"
+      },
+      "createCustomContract": {
+        "hash": "40eb077321244a96b468acb4d2e4ff63c898c9332aa95b530f523ee0389b443c",
+        "ledger": 5672046,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D"
+      },
+      "initialize": {
+        "hash": "7314995d4abbb347574630cfb4fbfefdce308ca325e952c961205b4846401c7b",
+        "ledger": 5672047,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D"
+      },
+      "propose_admin": {
+        "hash": "5e49a894ab330db4dcb450e5d24ba5fc7ebedecf57806af9140dba4ae098c40b",
+        "ledger": 5672048,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D"
+      },
+      "accept_admin": {
+        "hash": "eaa8d5afc62d2f97d0a435b56e70bd398d324b31d2e2d24e66427d9c475e4547",
+        "ledger": 5672049,
+        "status": "SUCCESS",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ"
+      },
+      "pause": {
+        "hash": "5c0edf14d3a31c9f0326024fdc3047b3c7064513f75e556683362893013b6499",
+        "ledger": 5672050,
+        "status": "SUCCESS",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ"
+      },
+      "unpause": {
+        "hash": "a7d7778bbbf066a87ed5a956c8181adf16e9ce603b9079130659c4df7a6f0e01",
+        "ledger": 5672051,
+        "status": "SUCCESS",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ"
+      },
+      "register_issuer": {
+        "hash": "84536350fae5925c10f7029011a3ed1f26aadb7e45eba0b63b0c783929c88332",
+        "ledger": 5672052,
+        "status": "SUCCESS",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ"
+      },
+      "register_template (Degree)": {
+        "hash": "8d763b70af6a9b4494af489a6fc264832f404f83bbdb241477b023941ff6061f",
+        "ledger": 5672053,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "issue_credential": {
+        "hash": "83e91a30a2c4cc9620ce8499d028b0e3f6883d43b9efcec935988cdb0686f2ef",
+        "ledger": 5672054,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "batch_issue_credentials (4 items)": {
+        "hash": "c57b2e303dcfffa079d2c1cfd3b5eeacbf172b3e01a923478319dd701e524a7a",
+        "ledger": 5672055,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "suspend_credential": {
+        "hash": "d109a0c3f3aa6d47e2a346788e59146ea34f33bad8bbf34f5b5b3924f7ed7f54",
+        "ledger": 5672057,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "reactivate_credential": {
+        "hash": "c3ce01158f940ce8005d89b8e26d4b05187a25002571d86e5746718988e82f43",
+        "ledger": 5672058,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "revoke_credential": {
+        "hash": "083432ae418c732893ccac7abdf4b3e8129321a58e6c4b174ea190eec5e406b9",
+        "ledger": 5672059,
+        "status": "SUCCESS",
+        "authorizingAccount": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ"
+      },
+      "rotate_issuer_key": {
+        "hash": "007c75c60b2a64611a4ff9b13ca6d85d5b413405455e5f0a92f5152240aee81a",
+        "ledger": 5672060,
+        "status": "SUCCESS",
+        "authorizingAccount": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ + GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT (dual Soroban auth)"
+      },
+      "register_template (Cert)": {
+        "hash": "54ffd1ba1f661078344ddeac20f035f9a9be884569e2da5775be5b9b884c4cfc",
+        "ledger": 5672061,
+        "status": "SUCCESS",
+        "authorizingAccount": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT"
+      },
+      "issue_credential (post-rotation)": {
+        "hash": "64c06850afd89966d0dc1640a579ad7027a5c87fdb01bfe2fe4cc9084e9b6799",
+        "ledger": 5672062,
+        "status": "SUCCESS",
+        "authorizingAccount": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT"
+      }
+    },
+    "readOnlyQueries": {
+      "initialAdmin": "GBCL7YYLZAF72NR3JBX25XI3SSFXLG5P4XMVZKOHUSR4BFHOQFS7AY6D",
+      "initialIsPaused": false,
+      "pendingAdminBeforeAccept": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+      "adminAfterHandover": "GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ",
+      "pendingAdminAfterAccept": null,
+      "isPausedWhilePaused": true,
+      "isPausedAfterUnpause": false,
+      "verifyValidCredential": {
+        "expires_at": null,
+        "hash_matches": true,
+        "is_expired": false,
+        "is_valid": true,
+        "issued_at": "1794383913",
+        "issuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "issuer_authorized": true,
+        "recipient": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+        "status": 1
+      },
+      "tamperedHashVerify": {
+        "expires_at": null,
+        "hash_matches": false,
+        "is_expired": false,
+        "is_valid": false,
+        "issued_at": "1794383913",
+        "issuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "issuer_authorized": true,
+        "recipient": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+        "status": 1
+      },
+      "paginationVerification": {
+        "totalCount": 5,
+        "page0Limit2Length": 2,
+        "page2Limit2Length": 2,
+        "page4Limit2Length": 1,
+        "page6Limit2Length": 0,
+        "uniqueCountAcrossAllPages": 5,
+        "matchesUnpaginatedOrderExact": true
+      },
+      "rollbackProbeCredentialAbsent": true,
+      "verifySuspended": {
+        "expires_at": null,
+        "hash_matches": true,
+        "is_expired": false,
+        "is_valid": false,
+        "issued_at": "1794383913",
+        "issuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "issuer_authorized": true,
+        "recipient": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+        "status": 3
+      },
+      "verifyReactivated": {
+        "expires_at": null,
+        "hash_matches": true,
+        "is_expired": false,
+        "is_valid": true,
+        "issued_at": "1794383913",
+        "issuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "issuer_authorized": true,
+        "recipient": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+        "status": 1
+      },
+      "verifyRevoked": {
+        "expires_at": null,
+        "hash_matches": true,
+        "is_expired": false,
+        "is_valid": false,
+        "issued_at": "1794383913",
+        "issuer": "GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ",
+        "issuer_authorized": true,
+        "recipient": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+        "status": 2
+      },
+      "oldIssuerAuthorizedAfterRotate": false,
+      "newIssuerAuthorizedAfterRotate": true,
+      "finalLearnerCredentialCount": 6,
+      "postRotationVerifyValid": {
+        "expires_at": null,
+        "hash_matches": true,
+        "is_expired": false,
+        "is_valid": true,
+        "issued_at": "1794383953",
+        "issuer": "GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT",
+        "issuer_authorized": true,
+        "recipient": "GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL",
+        "status": 1
+      }
+    },
+    "negativeSimulations": {
+      "oldAdminPauseRejected": "HostError: Error(Auth, InvalidAction) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Auth, InvalidAction)], data:\"escalating error to VM trap from failed host function call: require_auth\" 1: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Auth, InvalidAction)], data:[\"Unauthorized function call for address\", GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ] 2: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, pause], data:Void",
+      "oldAdminRegisterIssuerRejected": "HostError: Error(Auth, InvalidAction) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Auth, InvalidAction)], data:\"escalating error to VM trap from failed host function call: require_auth\" 1: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Auth, InvalidAction)], data:[\"Unauthorized function call for address\", GDPPXM3S7VWZ6DKOBHRTDKW35MPDAFLB5ONKVV2IQ2N43E3K3WO7M4MJ] 2: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, register_issuer], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, \"Old Admin Rogue University\", \"https://example.edu/rogue.json\"]",
+      "acceptAdminWithoutPendingRejected": "HostError: Error(Contract, #18) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #18)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, accept_admin], data:Void",
+      "pausedRegisterIssuerRejected": "HostError: Error(Contract, #17) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #17)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, register_issuer], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, \"Paused Check University\", \"https://example.edu/paused.json\"]",
+      "unauthorizedIssueRejected": "HostError: Error(Contract, #4) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #4)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, issue_credential], data:[GDMFO5VRUQCZBDKL4NIAQAI7723BBZDMYDFPLQFC43RMEEBGC27X54NY, GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, Bytes(135ccbf1a21db5e97b086347d9d39a6a2a5eae04022ea376be2cdd023afe30bd), Bytes(6e380e68c151ce978cfec1d6a313490adba017eb913b441f53356e4ecd87e02a), Degree, Void]",
+      "duplicateIssueRejected": "HostError: Error(Contract, #5) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #5)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, issue_credential], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, Bytes(9d470cb57a0fac5c05b87628f8d438040753b6b085cf0f21f7b8ea2992044276), Bytes(e69e0cbbc4987c0497e007ae6fa6916f965b8cc3433c2c45ae99c239a4c3aabc), Degree, Void]",
+      "paginationZeroLimitRejected": "HostError: Error(Contract, #14) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #14)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, get_learner_credentials_page], data:[GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, 0, 0]",
+      "batchTooLarge": "HostError: Error(Contract, #15) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #15)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, batch_issue_credentials], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, [{credential_hash: Bytes(5aaa28b002845c9fa98f89ba3be9c7cc8a2b04dd7a351f3d8adcab0b870e23e3), credential_id: Bytes(8c88a9f147610ce43c8e4c6d89f6172feed553e06e009d03d8955bf9e12305e2), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(510964cd821e7626cb85fb473c11e2fd9b200c06b89df32feea2c2e853f6fb05), credential_id: Bytes(975a1cec7e7f08c6192e6966085f616c716e085079040b23493d9cef0c819b12), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(983a84dc34f6e53f56a2d75c5e6f6d69fe3a630ab0746f44c7b5a97eb8db3350), credential_id: Bytes(f12ac86eac1fee4f966468eeb2f53980d2ca78a1312e0801d7b6304302672d4e), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(5ee64e17fcfc0a90628364adcdf9f6f414f715b9b9e3daafb447ed191f0bff0b), credential_id: Bytes(e6f49eaaa48277d8c6e3d797ed2604d9725d7f230915891e16a4f64969b49de8), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(a9cfd03b4a8e9aba70e00e88f4231e97cd750eb94f403c60f06a2cd091593416), credential_id: Bytes(fe029d1269a89a9a992d9e8fb7080126ebe511f9f242aacea7d7d8490e431d92), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(ff69bbd4c2637344c2891c8e43e63ce51b3c55f83a8850a1abb364120d6cfd7c), credential_id: Bytes(deb10a159012f3cd5fe802bce2e3b39ddcdfd6cbb9d5c6d5017f8b79fb2f3fc7), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(d902cc1087cb3cc2843561a96818b9a69f8e57f8cee2a1b1a29571ed24cf7262), credential_id: Bytes(abe371f5d1d775200a648aa79dfa106017e59d73bc19cb5f701cf8fe57595e24), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(4277910736e051c6ecb57daa2fe51f82307d5dce1db6bd460a5d4f51635629c4), credential_id: Bytes(51340a81704077dfe79b66be8607e0b6b99b27a5b290ba7dac3a92ceec3c59da), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(713d908a50e3509efafe87bcc86384d9cb98b02fac052e026554eb476db667ae), credential_id: Bytes(fc6f354870a2be94f92c1ef353947dba00afd3db9dc8f3b566947a6842f973d0), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(1b1da20d80f6cf02fc6b927b1db50a659a61f10dfd19151c33ffad808bb93ab7), credential_id: Bytes(dee025ec6d128e5b56507c1f6a7c20fd0f8ead547374edca0e5d8d5cc2bd31a2), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(724d418560583176b96cdb25dfe23e3c1fa0a468f30a1031fe1c22a41af83faa), credential_id: Bytes(a0e709027b54d6bd2499c4ee90e3e2c516bffd0ed7a33945e8ae5523683cfda8), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(c1c2e4c0946e46dfdb88ec48c8a53bb2d4eeea65fd57c5427c99546ed2f609ff), credential_id: Bytes(bbeb0b795c04fea3e5c60b20b197f7253417a4163d770332c03e880b3e68cee7), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(b0e31b502d0f32ab0a47675c25d22452e2d9984ea2111fcca849dc58b74b8997), credential_id: Bytes(d977cba5b90a908875e7f40449fd20d5f021008e36d95f0720fd7a1894d25580), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(80b7fa8c020f77ee8f05708a41a8975d5891e3576bc4833017346744822a69d1), credential_id: Bytes(ec34fdd1ab481e8e493e9a00bc709668b2e45743a2a8306bbef1dfd4c7f9f0d5), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(51bf22c7e2ee230c44830344a15410e0031daa88c96ae7f1453932d1aeca73c5), credential_id: Bytes(52a3b49182d9cf2d6f436c48a7134f996c9f95e06d64dce8b18f97c7e50b2ae7), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(f881f49f515edf78aa511bb55e5f9229632a3846c21385fa208c515663d111d8), credential_id: Bytes(d6e2de7b0543deca53dfd4fc0090a8680b63888387bb19079ba987dcf79e9337), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(f267ac07e2e1b9f10496b099f11f0ffae5d338d96923bb806fa92f1ad9528e92), credential_id: Bytes(dc7a83c836d6769bd6e1aec9fdc549910fe8bbd2ea33c2d7d8b2fe0dc074c829), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(84e779cbfe55d5ab7a3c1cd0cb12dcd28066bb03745e1bffd75db1cd00f0e831), credential_id: Bytes(439d27225ee34b230d7aba2f5adb3f1aa2429dd1e60bb23672f4926178e3bf8b), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(a451d61fc9662810487ecfe0c64b83fad096bddf0654ed71a0fdd4dacbe7074e), credential_id: Bytes(49f39ba1b5b7876916d5ce9bde8cbbf295b9634bc1a7a10ca00a6fce657fb2e6), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(d843f1ebd3e8af3734d316789058d7d06f96016634d0df1c37cefc090bfec28a), credential_id: Bytes(9edd3ef2a4845f8b1707bb29876c5bb3273139d5da623f627fb6f6ff652d1a46), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(e7011b4b4207bd1eaac53d5466dc9fa5bd8d0163a01afc71f8b43d3106182163), credential_id: Bytes(61bcd28275b52b1b3cd03de3507f7d39d2c5c888aaf7e15688c56330f6b14ebe), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(e6a28400e97c44694ac50b1da335e5fa29abb677e079221bfe917923b99767a9), credential_id: Bytes(d04001554ed6436c9df30dedbebb6f12a67f3077ea13e140a60950c0cf02ca28), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(08da60201fe6107b1f2881db9b03513c4ac8e0e6af0baa2b9952277901e237db), credential_id: Bytes(9949618c5711522dd4d4d90e5c772509ca8f30baf4a1d0c537bba8f357fd6919), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(7620fef064687c9a8e8fab5b0e504dc6cfc6672651df15011449a31f1afa9f56), credential_id: Bytes(c07d442fb0dc684c4e8d842d5635e025185fca7cb2cbcde370f92ea608a07c7b), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(5eb8f817451c46c1bdba8c9996329908b02185d36a03b94bb3c1af8b87f3eb7e), credential_id: Bytes(b2c3defc098bc0d4a02128c7527019e6ef4753575f3f24df9647f1a659ee72f0), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(92c1bc2daedbd265792def1adf0f987e3132961a95fd83d5fa6c217f5313f3c7), credential_id: Bytes(e835e78c0761f7da9b192e05e5be518f395fc799d787d70dd15d4afb734bded6), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(9708c5cd0b6aceef761778c63575b994e85c6bf5694caa887cd943b8aa2ff991), credential_id: Bytes(0d6a2934d85f348ce1fbcbaede880114dee3bc233f7ae8d3f341456db5512da7), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(fbb860218b5a3b579966dda08164b9fbb196e5afe42c3741556ddc08bc76106c), credential_id: Bytes(025e3d0a7b46f1dcb7e890a7bc730d1604f14ca6b3f2fce73318be32ecacd6db), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(af1cb802dc2927bd5b79397f65ea0f0417a7ef24f2a17b0376d43e3d685170c7), credential_id: Bytes(974bbbcfcb65b3f6e21db54efc2c59346f27fdf801e4b3f8c5539eb8e95c4fb8), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(3bc9ad04cb276d72ff8158289c6b48f880d5794e883bb4289fee5a84f9a10cc4), credential_id: Bytes(a987a213dcbee1863b94fed27ab362e143c0fbf67a5a9d72b7d57460c9cf415c), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(986b4f33a9ef1e417f1fe2910c640bff043163ff2e18f07db044e8f921d9381c), credential_id: Bytes(b246f76f3a7e40cc1fafdc0580104db1f4a66f488078049cdecdd8ec8bddd342), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(78e986915ccaee54376d55949448135474c99d8c9dd1cfa76173732eba92a875), credential_id: Bytes(0a91506d76ed82f784451f25d0e488479732030fb34509668f21ea430f472cf1), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(a3205a626904ed4da1df939de02e0bd3a1dc54087f4393e44de74301ce803b49), credential_id: Bytes(ef80beed7308ed137d6e2026d8d926c1e86db06a00037cc7cc3356a3cca718a3), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(0833eb96eb8e2e321da3344d6db30f15fae35d474893159904050e0d6e8442ed), credential_id: Bytes(0799a9f7dbed0c8a01d637f94a685fc7cb7b02dc6ff25ad8a2e8f9206320bf0e), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(601621dec1d21e098d983b59913b090cd68434e3eddeb1ca2c01de5458d6fcc5), credential_id: Bytes(0802da9efcc49df9c61094e6eb908dea3a6ba9b9442937823100dabb391f3be7), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(d23d774c5dbde76e3581daaf396de41a4e3e5428e3d9fb8b4b6842361f5f2c48), credential_id: Bytes(47503d94f16dfc1e5d10eeb0e93ddb96fbcec0da26a9711bd9e08df0e7a3561c), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(9b162fa5acfaaa9eab802aa09ae478c29fb59a61b54ce03e0a2c346c5be3ea2b), credential_id: Bytes(9d02064fb3fb96f4cb3f566baeb94090f55f7d2ee1f574b2e79875a044071ebb), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(af99bcdb6afd215fb702b271394006216eec53f611359868e9ec2ff182ee23ef), credential_id: Bytes(b912b577ce977efa976924824b805d1bca2cbf5c159fa73e09dd7136d0ded477), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(cb830fc24ec4cdf1b5ee7238b12549f9620f39a80db95bbab54f3314a2e950a1), credential_id: Bytes(fb9ff5c02ddd4b9890d56047d8703c821fd06cb4ca7f6f280c0424889fb12d0b), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(c236e5cb295c821651eff034d31fed7e70dc868429fb2ab3a0570a65fba796b5), credential_id: Bytes(88f51336fa706889c2958cd4c84dd630aef8a9473e637965bdb41a9d277b6277), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(fbcb0c2365e11243d87b4a2028cf2ed9e1cb78aeacf12f2a46d9733191db8208), credential_id: Bytes(14b67e57165761471fffd12099ce42b5b97cc14f92276a654f28c287e9e72346), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(13ee4c3bf0e5871dd1f09edd6c70695261c9f71d574b8553df0fde8dae784172), credential_id: Bytes(a87dcda5aeb859af5e8020a0838b94af31fecb94758d197550f073a90ea9e285), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(84864c0873f9c4b2c472c01071d30e6a292b03ecfc8444f6924464f551481494), credential_id: Bytes(b67f99e33329b357766923378aba18ff0c63dc9779bb10c213e81a996a2d687b), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(a86034c84bc74203bbcb28a53948af3e0fe6775890a4ab48001d86220d98106d), credential_id: Bytes(e56cb7aca8cfd2873f899a5b738193726b42d4f52fba322d00f4a3a7cbdc6f5b), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(566c09f03595814030a549f7762f5c247c682b81f2dea140dde17578d06c4175), credential_id: Bytes(c9b9da0fa54cdd3ff88bed57ca81244b5edefb728359638d164e6269c560839c), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(4913356e5b633e6b0717f679f1257d03c63bbf1022676cde4be9f99379e423b7), credential_id: Bytes(6c19d06803c3182573135bc41099f0b9566cfdcfe0276c1dcda064149e08d9fc), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(55d63a1f7fca336978c769768898ea511b8b4982593502ced3f6a9e1cdbb5890), credential_id: Bytes(6fd0b31ae807751768bf8b82741f2b86df8d80f91ebb739a4b250da18c567994), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(61945920f8496c90f5f6dce1c560395753c387f3b9804824c94a64beb2b97887), credential_id: Bytes(09d1be33dbd154f5c751016764197c11a11896d52fffca6ec5bc179a86cf48e1), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(72e5cb2ae47e6c4a536e51a945c39d4a47c2c91a7d8ee5db109854a1dddf1565), credential_id: Bytes(9f515eee18afb4f15baf36649cac58a09efac93b36b4ca5a2d4bdf105ca9ac41), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(64ffb279619251346f26b738134b2dc6893b5bcf524f8f4d91a531b9e34cde4a), credential_id: Bytes(8573b3bee60e57cda28cdb87b8b0b96fc7e54909bbcad23fd9b7256b768559a2), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(ccc6ac53c3711ea97d461632c4aec303d3466b338a14a06d102b9f51bd49b5c6), credential_id: Bytes(651a90989d903c5e736c655c2198e7bf3f81589725366fd2a2d6c58bb0c045be), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}]]",
+      "batchAtomicRollbackRejected": "HostError: Error(Contract, #5) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #5)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Contract Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[credential, issued, GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL], data:[Bytes(62dc71003b34a83e4a3e611590ed2cfad00aa83d3dc12699290a2ed3111ce045), GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, Bytes(190fb48eab6537a6112a171f34931f2db12f066cbc2313d1404772df8bdfb8a9)] 2: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, batch_issue_credentials], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, [{credential_hash: Bytes(190fb48eab6537a6112a171f34931f2db12f066cbc2313d1404772df8bdfb8a9), credential_id: Bytes(62dc71003b34a83e4a3e611590ed2cfad00aa83d3dc12699290a2ed3111ce045), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}, {credential_hash: Bytes(c3df991b84f9f5088df0126b341db2fe9ad715aeb22c702248a3290f888001dc), credential_id: Bytes(9d470cb57a0fac5c05b87628f8d438040753b6b085cf0f21f7b8ea2992044276), expires_at: Void, recipient: GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, template_id: Degree}]]",
+      "reactivateActiveRejected": "HostError: Error(Contract, #8) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #8)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, reactivate_credential], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, Bytes(9d470cb57a0fac5c05b87628f8d438040753b6b085cf0f21f7b8ea2992044276)]",
+      "reactivateRevokedRejected": "HostError: Error(Contract, #8) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #8)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, reactivate_credential], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, Bytes(9d470cb57a0fac5c05b87628f8d438040753b6b085cf0f21f7b8ea2992044276)]",
+      "unauthorizedRevokeRejected": "HostError: Error(Contract, #3) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #3)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, revoke_credential], data:[GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, Bytes(2d6025a47600864becacbaea7f883cc46bac29b24dad27ce22ee89d5a008fb84), \"Rogue revoke\"]",
+      "rotatedOutIssuerIssueRejected": "HostError: Error(Contract, #4) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #4)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, issue_credential], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, Bytes(064120a3fd016e5d1ce8b5a251aefd80eaca800a9c5b2bcefc1f7d2920290a5b), Bytes(c32c43c027fd915a1a9a25084809d3093e3bdbb6e1d2d44c995890d99bb420db), Degree, Void]",
+      "rotatedOutIssuerSuspendRejected": "HostError: Error(Contract, #4) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #4)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, suspend_credential], data:[GBUWRYZ4NKH4L4NYW7XZVZ2VZHDBFZQ2J2NRHACGHAJYG7LUWU2WSNEQ, Bytes(2d6025a47600864becacbaea7f883cc46bac29b24dad27ce22ee89d5a008fb84), \"Deauthorized caller attempt\"]",
+      "newIssuerSpoofOldTemplateRejected": "HostError: Error(Contract, #3) Event log (newest first): 0: [Diagnostic Event] contract:CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, topics:[error, Error(Contract, #3)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\" 1: [Diagnostic Event] topics:[fn_call, CDDP5OJDNOWD5QUIFVLQ6CFTUS72KGOOCLEVJTDPNJDIDOPFIMQ36OF2, issue_credential], data:[GAGLNXX4EV5DTA4CHD3XV2K4BCFKHQNKCD57XZ2Z4LEXG6MTCQKZSTQT, GC722TZXBDDRSNMBRNPGG7ON2GA4OTOVJAKXNXIJCSZ6CDHKXLAD6POL, Bytes(e03f725128a69ac1b957b21bf1be4c4a7ce0779576788edb43d27f463e3e9370), Bytes(e21538b9e483c34a03c7688c20db79dc2f0b24354d4b1352bb5e4f58e5ecadb5), Degree, Void]"
+    }
+  }
+}

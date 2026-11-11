@@ -22,7 +22,9 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: "contracts/round"
+          workspaces: |
+            contracts/round
+            contracts/passport
 
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev libdbus-1-dev libudev-dev libsodium-dev
@@ -42,5 +44,8 @@ jobs:
       - name: Install JS dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check generated bindings are up to date
+      - name: Check generated Round contract bindings
         run: pnpm bindings:check
+
+      - name: Check Passport contract WASM, ABI & error parity independently
+        run: pnpm passport:check

@@ -62,7 +62,7 @@ let onChainRecord;
 // ---------------------------------------------------------
 scenario(1, "Authorized Institution Registration & Credential Issuance", () => {
   const client = new EducationPassportClient({
-    contractId: "CDSPASSPORTREGISTRY2026STELLARGLOBALTESTNETKEY",
+    contractId: "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
   });
 
   // Institution registers template
@@ -290,7 +290,7 @@ scenario(8, "Learner Selective Disclosure & Private Record Isolation", () => {
 // ---------------------------------------------------------
 scenario(9, "Network Failures & Malformed Data Error Handling", () => {
   const client = new EducationPassportClient({
-    contractId: "CDSPASSPORTREGISTRY2026STELLARGLOBALTESTNETKEY",
+    contractId: "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
   });
 
   // Simulated unparseable SCVal / network failure recovery
