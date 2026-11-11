@@ -52,9 +52,6 @@ jobs:
       - name: Check Passport WASM binary, ABI & error parity
         run: pnpm passport:check
 
-      - name: Verify deployment manifests & safety guards
-        run: pnpm passport:deploy:test
-
   node:
     name: TypeScript tests + typecheck
     runs-on: ubuntu-latest
@@ -84,6 +81,9 @@ jobs:
 
       - name: Passport CLI demo verification
         run: pnpm passport:verify --demo
+
+      - name: Passport deployment manifests & safety guards
+        run: pnpm passport:deploy:test
 
       - name: tlock tests (offline unit suite)
         run: pnpm --filter skills-passport-tlock test:unit
