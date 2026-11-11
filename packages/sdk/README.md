@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/main/assets/decentralized-global-education-skills-passport-readme.png" width="180" alt="Decentralized Global Education & Skills Passport" />
+  <img src="https://raw.githubusercontent.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/main/assets/decentralized-global-education-skills-passport-readme.png" width="180" alt="Decentralized Global Education & Skills Passport" />
 </p>
 
 <h1 align="center">
@@ -13,14 +13,12 @@
   <a href="LICENSE">
     <img src="https://img.shields.io/npm/l/skills-passport-sdk" alt="license" />
   </a>
-  <a href="https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/actions/workflows/npm-publish.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/npm-publish.yml" alt="build" />
+  <a href="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/tests.yml">
+    <img src="https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/actions/workflows/tests.yml/badge.svg" alt="Tests" />
   </a>
 </p>
 
-**High-level SDK** for integrating sealed coordination rounds into Stellar and Soroban apps.
-
-Wraps the [generated contract bindings](../round-bindings) with a `SkillsPassportClient` that handles encoding, submission, preflight simulation, encrypted-blob validation, receipt export/verification, and optional OpenZeppelin Relayer Channels support.
+**TypeScript SDK** for the **Decentralized Global Education & Skills Passport** (`EducationPassportClient`, W3C Verifiable Credentials, salted selective disclosure, and `eddsa-jcs-2022` Data Integrity) and sealed coordination rounds (`SkillsPassportClient`).
 
 ---
 
@@ -30,11 +28,68 @@ Wraps the [generated contract bindings](../round-bindings) with a `SkillsPasspor
 npm install skills-passport-sdk
 ```
 
-Requires `skills-passport-tlock` for sealing bid values and `round-bindings` for the contract types. Both are declared as workspace dependencies and will be installed automatically.
+Requires `skills-passport-tlock` for sealing bid values and `round-bindings` for the sealed-round contract types. Both are declared as workspace dependencies and installed automatically.
 
 ---
 
-## Quick start
+## Education & Skills Passport API (`contracts/passport`)
+
+```ts
+import {
+  EducationPassportClient,
+  createVerifiableCredential,
+  attachW3CDataIntegrityProof,
+  createCredentialSharePackage,
+  credentialIdToBytes32Hex,
+  verifyEducationCredential,
+} from "skills-passport-sdk";
+
+// 1. Issue a W3C VC v1.1 credential with per-claim salted selective disclosure
+const vc = createVerifiableCredential({
+  credentialType: "DegreeCredential",
+  issuer: { address: issuerPubKey, name: "MIT Digital Credentials" },
+  recipient: { address: learnerPubKey, name: "Elena Rostova" },
+  title: "M.Sc. Distributed Systems",
+  institution: "MIT",
+  skills: ["Rust", "Soroban", "Applied Cryptography"],
+  grade: "4.0 GPA",
+  achievementDescription: "Completed graduate degree requirements.",
+  contractId: "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
+  selectiveDisclosure: true,
+});
+
+// 2. Optionally attach a standard W3C DataIntegrityProof (eddsa-jcs-2022)
+const dualProofVc = attachW3CDataIntegrityProof(vc, issuerSecretKey, {
+  verificationMethodFormat: "did:key",
+});
+
+// 3. Query live Soroban Testnet ledger state & verify
+const client = new EducationPassportClient({
+  contractId: "CAP3J5ZOKBQOMPWEBD42C7SEAK736JQLWVW4Y2MGQHSBYRFJWDNTOKE5",
+  rpcUrl: "https://soroban-testnet.stellar.org",
+});
+const onChainRecord = await client.fetchOnChainRecord(credentialIdToBytes32Hex(vc.id));
+const report = verifyEducationCredential(dualProofVc, onChainRecord);
+
+// 4. Create a privacy-minimizing share link (Anchor or Redacted Salted Payload)
+const share = createCredentialSharePackage(vc, {
+  mode: "payload",
+  selectedSkills: ["Soroban"],
+  redactRecipientName: true,
+  redactGrade: true,
+});
+```
+
+Key Passport exports:
+- **Client & Soroban RPC**: `EducationPassportClient` (`getAdmin`, `getPendingAdmin`, `isPaused`, `isIssuerAuthorized`, `getIssuer`, `getTemplate`, `getCredential`, `getCredentialStatus`, `getLearnerCredentials`, `getLearnerCredentialsPage`, `verifyCredentialOnChain`, `fetchOnChainRecord`, `buildIssueCredentialArgs`, `buildBatchIssueArgs`, `buildInvokeOperation`), `PASSPORT_CONTRACT_ERRORS`, `decodePassportContractError`, `PassportRpcError`
+- **Canonicalization & Selective Disclosure**: `canonicalizeJson` (RFC 8785 UTF-16 JCS), `computeCredentialHash`, `computeSaltedClaimDigest`, `createCredentialSharePackage`, `createSelectiveCredentialView`, `inspectShareUrlPrivacy`, `formatFragmentUrl`, `parseVerificationUrl`
+- **W3C Interoperability (`eddsa-jcs-2022`)**: `signDocumentEddsaJcs2022`, `verifyDocumentEddsaJcs2022`, `attachW3CDataIntegrityProof`, `validateVerifiableCredentialStructure`, `stellarPublicKeyToDidKey`, `resolveEd25519PublicKeyFromVerificationMethod`
+
+---
+
+## Quick start: Sealed Coordination Rounds (`contracts/round`)
+
+> The primary Passport contract uses `EducationPassportClient` above. The secondary `SkillsPassportClient` below integrates [generated bindings](../round-bindings) for `contracts/round` sealed grant/RFP/auction rounds.
 
 ### 1. Create a client
 

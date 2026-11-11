@@ -4,3 +4,4 @@ export * from "./vc.js";
 export * from "./verify.js";
 export * from "./sharing.js";
 export * from "./client.js";
+export * from "./w3c.js";

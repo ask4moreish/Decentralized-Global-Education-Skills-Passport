@@ -442,4 +442,197 @@ describe("Education & Skills Passport SDK", () => {
     assert.equal(diag.status, "suspended");
     assert.ok(diag.errors.some((e) => e.includes("suspended on-chain")));
   });
+
+  it("rejects invalid hex, zero IDs/hashes, self-issuance, oversized batches, and invalid contract IDs", async () => {
+    const {
+      credentialIdToBytes32Hex,
+      decodePassportContractError,
+      PassportRpcError,
+    } = await import("./index.js");
+    const { Address, nativeToScVal, xdr } = await import("@stellar/stellar-sdk");
+
+    assert.throws(() => hexToBytes32("z".repeat(64)), /Expected 64-character hex/);
+    assert.throws(
+      () => new EducationPassportClient({ contractId: issuerAddress }),
+      /valid Soroban contract id/i
+    );
+
+    const client = new EducationPassportClient({
+      contractId: "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+    });
+
+    assert.throws(
+      () =>
+        client.buildIssueCredentialArgs({
+          issuerAddress,
+          recipientAddress: issuerAddress, // self-issuance!
+          credentialIdHex: "1".repeat(64),
+          credentialHashHex: "2".repeat(64),
+          templateIdSymbol: "Degree",
+        }),
+      /cannot be identical/
+    );
+
+    assert.throws(
+      () =>
+        client.buildIssueCredentialArgs({
+          issuerAddress,
+          recipientAddress,
+          credentialIdHex: "0".repeat(64),
+          credentialHashHex: "2".repeat(64),
+          templateIdSymbol: "Degree",
+        }),
+      /cannot be all-zero/
+    );
+
+    assert.throws(
+      () =>
+        client.buildBatchIssueCredentialsArgs({
+          issuerAddress,
+          items: [],
+        }),
+      /between 1 and 50/
+    );
+
+    assert.throws(
+      () =>
+        client.buildRegisterTemplateArgs({
+          issuerAddress,
+          templateIdSymbol: "A".repeat(33),
+          name: "Too Long Symbol",
+          schemaUri: "https://example.org/schema.json",
+        }),
+      /1-32 characters/
+    );
+
+    // Non-UUID credential IDs hash cleanly instead of silently corrupting hex
+    const customBytesHex = credentialIdToBytes32Hex("urn:stellar:cred:university-2026-001");
+    assert.match(customBytesHex, /^[0-9a-f]{64}$/);
+    assert.notEqual(customBytesHex, "0".repeat(64));
+
+    // Contract error decoder maps codes cleanly
+    const decoded = decodePassportContractError("HostError: Error(Contract, #15)");
+    assert.equal(decoded?.variant, "BatchTooLarge");
+
+    // Mocked RPC transport handles valid read, CredentialNotFound -> null, and network failures -> PassportRpcError
+    const failingClient = new EducationPassportClient({
+      contractId: "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+      rpcServer: {
+        simulateTransaction: async () => {
+          throw new Error("RPC connection refused");
+        },
+      },
+    });
+    await assert.rejects(
+      () => failingClient.fetchOnChainRecord("1".repeat(64)),
+      (err: any) => err instanceof PassportRpcError && /network|RPC request failed/i.test(err.message)
+    );
+
+    const notFoundClient = new EducationPassportClient({
+      contractId: "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+      rpcServer: {
+        simulateTransaction: async () => ({ error: "HostError: Error(Contract, #6)" }),
+      },
+    });
+    assert.equal(await notFoundClient.verifyCredentialOnChain("1".repeat(64), "2".repeat(64)), null);
+
+    const authClient = new EducationPassportClient({
+      contractId: "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+      rpcServer: {
+        simulateTransaction: async () => ({
+          result: { retval: new Address(issuerAddress).toScVal() },
+        }),
+      },
+    });
+    assert.equal(await authClient.getAdmin(), issuerAddress);
+
+    // parseCredentialRecord ignores null/empty ScVal safely
+    assert.equal(authClient.parseCredentialRecord(xdr.ScVal.scvVoid()), null);
+    assert.equal(
+      authClient.parseCredentialRecord(nativeToScVal("not-a-record")),
+      null
+    );
+  });
+
+  it("rejects issuer mismatch, recipient mismatch, strict credentialId mismatch, malformed dates, and missing proof hashes", () => {
+    const vc = createVerifiableCredential({
+      credentialType: "DegreeCredential",
+      issuer: { address: issuerAddress, name: "MIT" },
+      recipient: { address: recipientAddress, name: "Alice" },
+      title: "BSc CS",
+      institution: "MIT",
+      skills: ["Rust"],
+      achievementDescription: "Completed degree.",
+      contractId: "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+    });
+
+    const otherAddress = Keypair.random().publicKey();
+    const baseOnChain = {
+      credentialId: "a".repeat(64),
+      issuer: issuerAddress,
+      recipient: recipientAddress,
+      credentialHash: vc.proof.credentialHash,
+      templateId: "Degree",
+      issuedAt: 1000,
+      status: "Active" as const,
+      issuerAuthorized: true,
+    };
+
+    // On-chain issuer mismatch
+    const wrongIssuerDiag = verifyEducationCredential(vc, {
+      ...baseOnChain,
+      issuer: otherAddress,
+    });
+    assert.equal(wrongIssuerDiag.isValid, false);
+    assert.equal(wrongIssuerDiag.tampered, true);
+    assert.ok(wrongIssuerDiag.errors.some((e) => e.includes("Issuer DID")));
+
+    // On-chain recipient mismatch
+    const wrongRecipientDiag = verifyEducationCredential(vc, {
+      ...baseOnChain,
+      recipient: otherAddress,
+    });
+    assert.equal(wrongRecipientDiag.isValid, false);
+    assert.equal(wrongRecipientDiag.tampered, true);
+    assert.ok(wrongRecipientDiag.errors.some((e) => e.includes("Recipient DID")));
+
+    // Strict credentialId mismatch
+    const wrongIdDiag = verifyEducationCredential(vc, baseOnChain, undefined, {
+      strictCredentialIdMatch: true,
+    });
+    assert.equal(wrongIdDiag.isValid, false);
+    assert.equal(wrongIdDiag.tampered, true);
+    assert.ok(wrongIdDiag.errors.some((e) => e.includes("Credential ID")));
+
+    // Contract ID mismatch
+    const wrongContractDiag = verifyEducationCredential(vc, baseOnChain, undefined, {
+      expectedContractId: "CBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    });
+    assert.equal(wrongContractDiag.isValid, false);
+    assert.equal(wrongContractDiag.tampered, true);
+
+    // Malformed expirationDate must NOT bypass expiration check
+    const badDateVc = createVerifiableCredential({
+      credentialType: "CertificateCredential",
+      issuer: { address: issuerAddress, name: "MIT" },
+      recipient: { address: recipientAddress },
+      title: "Cert",
+      institution: "MIT",
+      skills: ["Rust"],
+      achievementDescription: "Cert",
+      expirationDate: "not-a-valid-date",
+    });
+    const badDateDiag = verifyEducationCredential(badDateVc);
+    assert.equal(badDateDiag.isValid, false);
+    assert.equal(badDateDiag.tampered, true);
+    assert.ok(badDateDiag.errors.some((e) => e.includes("Malformed expirationDate")));
+
+    // Missing proof.credentialHash must return structured diagnostic instead of throwing
+    const noHashDiag = verifyEducationCredential({
+      ...vc,
+      proof: { ...vc.proof, credentialHash: undefined as any },
+    });
+    assert.equal(noHashDiag.isValid, false);
+    assert.equal(noHashDiag.tampered, true);
+  });
 });

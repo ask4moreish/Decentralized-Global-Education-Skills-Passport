@@ -17,13 +17,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport.git",
+    "url": "https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport.git",
     "directory": "packages/sdk"
   },
   "license": "MIT",
-  "homepage": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport#readme",
+  "homepage": "https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport#readme",
   "bugs": {
-    "url": "https://github.com/decentralized-global-education-skills-passport/decentralized-global-education-skills-passport/issues"
+    "url": "https://github.com/ask4moreish/Decentralized-Global-Education-Skills-Passport/issues"
   },
   "sideEffects": false,
   "main": "src/index.ts",
@@ -48,7 +48,7 @@
     }
   },
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "node -e \"import('node:fs').then(f=>f.rmSync('dist',{recursive:true,force:true}))\"",
     "build": "pnpm clean && tsc -p tsconfig.build.json",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsc --noEmit -p tsconfig.json",

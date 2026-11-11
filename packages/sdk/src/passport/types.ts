@@ -25,20 +25,46 @@ export interface CredentialSubject {
   customFields?: Record<string, unknown>;
 }
 
+export type PassportProofType =
+  | "StellarSorobanHashCommitment2026"
+  | "StellarSorobanSaltedClaims2026"
+  | "DataIntegrityProof";
+
+export interface SaltedClaimEntry {
+  /** 32-char lowercase hex (16 random bytes) protecting hidden/disclosed claims from dictionary guessing */
+  salt: string;
+  value: unknown;
+}
+
+export interface SaltedDisclosureData {
+  version: 1;
+  algorithm: "sha256-jcs-salted-v1";
+  /** Map of claim key (e.g. "recipientName", "grade", "skill:0") to 64-char hex salted SHA-256 digest */
+  commitments: Record<string, string>;
+  /** Disclosed claim plaintexts + salts; omitted keys remain hidden behind their opaque commitments */
+  disclosed: Record<string, SaltedClaimEntry>;
+}
+
 export interface CredentialProof {
-  type: "StellarSorobanHashCommitment2026";
+  type: PassportProofType;
   created: string;
   verificationMethod: string;
   proofPurpose: "assertionMethod";
   credentialHash: string; // 64-char hex SHA-256
   contractId?: string;
   stellarNetwork?: string;
+  /** Optional W3C Data Integrity cryptosuite (e.g. "eddsa-jcs-2022") */
+  cryptosuite?: string;
+  /** Optional multibase/base64url Ed25519 signature value for W3C DataIntegrityProof */
+  proofValue?: string;
+  /** Optional salted claim commitment bundle enabling verifiable attribute-level selective disclosure */
+  selectiveDisclosure?: SaltedDisclosureData;
 }
 
 export interface VerifiableEducationCredential {
   "@context": string[];
   id: string; // "urn:uuid:..." or "urn:stellar:cred:..."
-  type: ["VerifiableCredential", CredentialType];
+  type: ["VerifiableCredential", CredentialType] | string[];
   issuer: IssuerIdentity;
   issuanceDate: string; // ISO 8601
   expirationDate?: string; // ISO 8601
@@ -72,6 +98,7 @@ export interface VerificationDiagnostic {
   calculatedHash: string;
   claimedHash: string;
   errors: string[];
+  warnings?: string[];
   evidence: {
     hashMatched: boolean;
     issuerAuthorized: boolean;
@@ -81,7 +108,19 @@ export interface VerificationDiagnostic {
     recipientAddress: string;
     issuedAt: string;
     expiresAt?: string;
+    disclosedClaims?: string[];
+    hiddenClaimsCount?: number;
+    w3cSchemaValid?: boolean;
+    dataIntegrityVerified?: boolean;
   };
+}
+
+export interface SharePrivacyReport {
+  mode: "anchor" | "payload" | "unknown";
+  usesFragmentOnly: boolean;
+  containsPiiInUrl: boolean;
+  exposedUrlFields: string[];
+  warnings: string[];
 }
 
 export interface CredentialSharePackage {
@@ -90,4 +129,5 @@ export interface CredentialSharePackage {
   credential: VerifiableEducationCredential;
   verificationUrl?: string;
   qrPayload: string;
+  privacyReport?: SharePrivacyReport;
 }
