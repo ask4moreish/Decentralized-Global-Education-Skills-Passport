@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import { isConnected, requestAccess, getAddress, signTransaction } from "@stellar/freighter-api";
+import { StrKey, TransactionBuilder, rpc } from "@stellar/stellar-sdk";
 import {
-  computeCredentialHash,
+  EducationPassportClient,
   createVerifiableCredential,
+  credentialIdToBytes32Hex,
   type CredentialType,
   type OnChainCredentialRecord,
 } from "skills-passport-sdk";
 import {
+  DEFAULT_PASSPORT_CONTRACT_ID,
+  DEFAULT_PASSPORT_NETWORK_PASSPHRASE,
+  DEFAULT_PASSPORT_RPC_URL,
   DEMO_ISSUERS,
   DEMO_LEARNERS,
   loadStoredCredentials,
@@ -15,6 +21,7 @@ import {
   type IssuerProfile,
   type StoredCredentialItem,
 } from "./passportState";
+import { isSafeHttpOrIpfsUrl } from "./vaultCrypto";
 
 export function IssuerConsole() {
   const [issuers, setIssuers] = useState<IssuerProfile[]>(() =>
@@ -42,6 +49,10 @@ export function IssuerConsole() {
   );
   const [expirationDate, setExpirationDate] = useState("");
   const [issueSuccess, setIssueSuccess] = useState<string | null>(null);
+  const [issueError, setIssueError] = useState<string | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [liveIssuerStatus, setLiveIssuerStatus] = useState<string | null>(null);
+  const [submittingOnChain, setSubmittingOnChain] = useState(false);
 
   // Revocation State
   const [revokeTargetId, setRevokeTargetId] = useState<string | null>(null);
@@ -90,11 +101,73 @@ export function IssuerConsole() {
     expirationDate,
   ]);
 
-  function handleIssueCredential(e: React.FormEvent) {
+  async function handleConnectIssuerWallet() {
+    setIssueError(null);
+    try {
+      const connected = await isConnected();
+      if (connected?.isConnected) {
+        const access = await requestAccess();
+        if (access && !access.error) {
+          const addr = await getAddress();
+          if (addr?.address) {
+            setWalletAddress(addr.address);
+            return;
+          }
+        }
+      }
+      setWalletAddress(null);
+      setIssueError("Freighter browser extension not detected or access denied.");
+    } catch {
+      setWalletAddress(null);
+      setIssueError("Unable to connect to Freighter wallet in this browser.");
+    }
+  }
+
+  async function handleCheckLiveIssuerStatus() {
+    setIssueError(null);
+    setLiveIssuerStatus("Querying Stellar Testnet Soroban RPC...");
+    try {
+      const client = new EducationPassportClient({
+        contractId: DEFAULT_PASSPORT_CONTRACT_ID,
+        rpcUrl: DEFAULT_PASSPORT_RPC_URL,
+        networkPassphrase: DEFAULT_PASSPORT_NETWORK_PASSPHRASE,
+      });
+      const targetAddr = walletAddress || activeIssuer.address;
+      const authorized = await client.isIssuerAuthorized(targetAddr);
+      setLiveIssuerStatus(
+        authorized
+          ? `Live Soroban (${DEFAULT_PASSPORT_CONTRACT_ID.slice(0, 8)}...): ${targetAddr.slice(0, 8)}... is AUTHORIZED`
+          : `Live Soroban (${DEFAULT_PASSPORT_CONTRACT_ID.slice(0, 8)}...): ${targetAddr.slice(0, 8)}... is NOT an authorized issuer`
+      );
+    } catch (err: any) {
+      setLiveIssuerStatus(
+        `Live Testnet RPC check failed: ${err?.message || "network unavailable"}`
+      );
+    }
+  }
+
+  async function handleIssueCredential(e: React.FormEvent) {
     e.preventDefault();
+    setIssueError(null);
+    setIssueSuccess(null);
 
     if (!activeIssuer.isAuthorized) {
-      alert("Error: This institution is not authorized on the Soroban registry. Deauthorized or unverified issuers cannot issue credentials.");
+      setIssueError(
+        "Demo institution is marked unauthorized locally. Deauthorized or unverified issuers cannot issue credentials."
+      );
+      return;
+    }
+    if (!StrKey.isValidEd25519PublicKey(recipientAddress.trim())) {
+      setIssueError(
+        "Recipient address must be a valid Stellar Ed25519 public key (G...)."
+      );
+      return;
+    }
+    if (
+      activeIssuer.metadataUri &&
+      !isSafeHttpOrIpfsUrl(activeIssuer.metadataUri)
+    ) {
+      setIssueError("Issuer metadata URI must use https://, http://, or ipfs://");
       return;
     }
 
@@ -106,39 +179,104 @@ export function IssuerConsole() {
         url: activeIssuer.metadataUri,
       },
       recipient: {
-        address: recipientAddress,
-        name: recipientName,
+        address: recipientAddress.trim(),
+        name: recipientName.trim() || undefined,
       },
-      title,
+      title: title.trim(),
       institution: activeIssuer.name,
       skills: previewSkills,
-      grade: grade || undefined,
-      achievementDescription: description,
-      expirationDate: expirationDate || undefined,
-      contractId: "CDSPASSPORTREGISTRY2026STELLARGLOBALTESTNETKEY",
+      grade: grade.trim() || undefined,
+      achievementDescription: description.trim(),
+      expirationDate: expirationDate
+        ? new Date(`${expirationDate}T23:59:59.000Z`).toISOString()
+        : undefined,
+      contractId: DEFAULT_PASSPORT_CONTRACT_ID,
+      selectiveDisclosure: true,
     });
 
+    const credentialIdHex = credentialIdToBytes32Hex(vc.id);
+
+    // Optional live Testnet wallet submission path when Freighter is connected
+    if (walletAddress) {
+      setSubmittingOnChain(true);
+      try {
+        const server = new rpc.Server(DEFAULT_PASSPORT_RPC_URL);
+        const client = new EducationPassportClient({
+          contractId: DEFAULT_PASSPORT_CONTRACT_ID,
+          rpcUrl: DEFAULT_PASSPORT_RPC_URL,
+          networkPassphrase: DEFAULT_PASSPORT_NETWORK_PASSPHRASE,
+        });
+        const account = await server.getAccount(walletAddress);
+        const expiresAtSecs = expirationDate
+          ? Math.floor(Date.parse(`${expirationDate}T23:59:59.000Z`) / 1000)
+          : undefined;
+        const op = client.buildInvokeOperation(
+          "issue_credential",
+          client.buildIssueCredentialArgs({
+            issuerAddress: walletAddress,
+            recipientAddress: recipientAddress.trim(),
+            credentialIdHex,
+            credentialHashHex: vc.proof.credentialHash,
+            templateIdSymbol: templateType.replace("Credential", ""),
+            expiresAtTimestamp: expiresAtSecs,
+          })
+        );
+        const tx = new TransactionBuilder(account, {
+          fee: "100000",
+          networkPassphrase: DEFAULT_PASSPORT_NETWORK_PASSPHRASE,
+        })
+          .addOperation(op)
+          .setTimeout(30)
+          .build();
+        const prepared = await server.prepareTransaction(tx);
+        const signed = await signTransaction(prepared.toXDR(), {
+          networkPassphrase: DEFAULT_PASSPORT_NETWORK_PASSPHRASE,
+        });
+        if (signed.error) {
+          throw new Error(String(signed.error));
+        }
+        const submitted = await server.sendTransaction(
+          TransactionBuilder.fromXDR(
+            signed.signedTxXdr,
+            DEFAULT_PASSPORT_NETWORK_PASSPHRASE
+          )
+        );
+        setLiveIssuerStatus(
+          `Testnet tx submitted (${submitted.hash}): status=${submitted.status}`
+        );
+      } catch (err: any) {
+        setIssueError(
+          `On-chain Freighter submission halted (saved locally to demo cache only): ${
+            err?.message || "simulation or signature failed"
+          }`
+        );
+      } finally {
+        setSubmittingOnChain(false);
+      }
+    }
+
     const onChainRecord: OnChainCredentialRecord = {
-      credentialId: vc.id.replace("urn:uuid:", "").replace(/-/g, "").padEnd(64, "0").slice(0, 64),
+      credentialId: credentialIdHex,
       issuer: activeIssuer.address,
-      recipient: recipientAddress,
+      recipient: recipientAddress.trim(),
       credentialHash: vc.proof.credentialHash,
       templateId: templateType.replace("Credential", ""),
       issuedAt: Math.floor(Date.parse(vc.issuanceDate) / 1000),
-      expiresAt: expirationDate ? Math.floor(Date.parse(expirationDate) / 1000) : undefined,
+      expiresAt: expirationDate
+        ? Math.floor(Date.parse(`${expirationDate}T23:59:59.000Z`) / 1000)
+        : undefined,
       status: "Active",
       issuerAuthorized: true,
     };
 
-    const updated = [
-      { vc, onChain: onChainRecord },
-      ...credentials,
-    ];
+    const updated = [{ vc, onChain: onChainRecord }, ...credentials];
 
     setCredentials(updated);
     saveStoredCredentials(updated);
 
-    setIssueSuccess(`Successfully issued and committed credential "${title}" (Hash: ${vc.proof.credentialHash.slice(0, 16)}...)`);
+    setIssueSuccess(
+      `Issued credential "${title}" (ID: ${credentialIdHex.slice(0, 12)}..., Hash: ${vc.proof.credentialHash.slice(0, 16)}...)`
+    );
     setTimeout(() => setIssueSuccess(null), 6000);
   }
 
@@ -200,6 +338,10 @@ export function IssuerConsole() {
     saveStoredIssuers(updated);
   }
 
+  const safeMetadataUrl = isSafeHttpOrIpfsUrl(activeIssuer.metadataUri)
+    ? activeIssuer.metadataUri
+    : null;
+
   return (
     <div className="issuer-console">
       {/* Issuer Authority Card */}
@@ -215,7 +357,7 @@ export function IssuerConsole() {
                 }`}
               >
                 {activeIssuer.isAuthorized
-                  ? "✓ Authorized On-Chain Issuer"
+                  ? "✓ Authorized (Demo Registry)"
                   : "⚠ Deauthorized / Untrusted"}
               </span>
             </div>
@@ -224,21 +366,34 @@ export function IssuerConsole() {
             </p>
             <p className="inst-meta">
               Accreditation URI:{" "}
-              <a href={activeIssuer.metadataUri} target="_blank" rel="noreferrer">
-                {activeIssuer.metadataUri}
-              </a>
+              {safeMetadataUrl ? (
+                <a href={safeMetadataUrl} target="_blank" rel="noopener noreferrer">
+                  {safeMetadataUrl}
+                </a>
+              ) : (
+                <span>Unavailable (unsafe or malformed URI)</span>
+              )}
+            </p>
+            <p className="privacy-warning-note">
+              <strong>Demo Sandbox Notice:</strong> Local issuance toggles update only this
+              browser&apos;s demo store. Real on-chain registration requires the Soroban contract
+              admin, and live transactions require Freighter signing (no raw{" "}
+              <code>S...</code> secret keys are ever entered or stored here).
             </p>
           </div>
           <div className="issuer-selector-group">
-            <label htmlFor="select-issuer">Select Issuer Identity:</label>
+            <label htmlFor="select-issuer">Select Demo Issuer Identity:</label>
             <select
               id="select-issuer"
               value={selectedIssuerIdx}
-              onChange={(e) => setSelectedIssuerIdx(Number(e.target.value))}
+              onChange={(e) => {
+                setSelectedIssuerIdx(Number(e.target.value));
+                setLiveIssuerStatus(null);
+              }}
             >
               {issuers.map((iss, idx) => (
                 <option key={iss.address} value={idx}>
-                  {iss.name} {iss.isAuthorized ? "(Authorized)" : "(Revoked Auth)"}
+                  {iss.name} {iss.isAuthorized ? "(Authorized Demo)" : "(Revoked Demo)"}
                 </option>
               ))}
             </select>
@@ -247,11 +402,45 @@ export function IssuerConsole() {
               className="secondary-action compact auth-toggle-btn"
               onClick={handleToggleIssuerAuthorization}
             >
-              {activeIssuer.isAuthorized ? "Simulate Deauthorization" : "Authorize on Soroban"}
+              {activeIssuer.isAuthorized
+                ? "Demo-Only Local Deauthorize"
+                : "Demo-Only Local Override"}
             </button>
+            <button
+              type="button"
+              className="secondary-action compact"
+              onClick={handleCheckLiveIssuerStatus}
+            >
+              Query Live Testnet Issuer Auth
+            </button>
+            {!walletAddress ? (
+              <button
+                type="button"
+                className="primary-action compact"
+                onClick={handleConnectIssuerWallet}
+              >
+                Connect Issuer Freighter Wallet
+              </button>
+            ) : (
+              <span className="wallet-connected-pill">
+                <span className="dot online" />
+                Signer: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+              </span>
+            )}
           </div>
         </div>
+        {liveIssuerStatus && (
+          <div className="privacy-notice-banner" role="status">
+            <span>{liveIssuerStatus}</span>
+          </div>
+        )}
       </div>
+
+      {issueError && (
+        <div className="error-banner" role="alert">
+          <span>✕ {issueError}</span>
+        </div>
+      )}
 
       {issueSuccess && (
         <div className="success-banner" role="alert">
@@ -388,12 +577,22 @@ export function IssuerConsole() {
               <span className="preview-label">Deterministic SHA-256 Commitment (On-Chain):</span>
               <code className="preview-hash">{previewHash || "Calculating..."}</code>
               <p className="privacy-note">
-                🔒 <strong>Privacy Guarantee:</strong> PII and sensitive transcript fields remain strictly off-chain. Only this 32-byte cryptographic digest is anchored on the Stellar Soroban ledger.
+                🔒 <strong>Privacy Boundary:</strong> Credential attributes remain off-chain;
+                only the 32-byte commitment hash and metadata ID are sent to Soroban (whereas issuer
+                and recipient public addresses remain visible on-chain).
               </p>
             </div>
 
-            <button type="submit" className="primary-action submit-issue-btn">
-              Issue Credential & Commit On-Chain
+            <button
+              type="submit"
+              className="primary-action submit-issue-btn"
+              disabled={submittingOnChain}
+            >
+              {submittingOnChain
+                ? "Preparing Soroban Transaction..."
+                : walletAddress
+                ? "Sign with Freighter & Issue Credential"
+                : "Issue Credential (Demo Browser Store)"}
             </button>
           </form>
         </div>

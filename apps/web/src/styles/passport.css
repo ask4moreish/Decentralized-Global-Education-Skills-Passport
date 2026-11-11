@@ -1402,3 +1402,172 @@
     grid-template-columns: 1fr;
   }
 }
+
+.qr-code-fallback,
+.qr-consent-placeholder {
+  width: 220px;
+  min-height: 160px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--surface-2);
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.share-mode-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.share-mode-option,
+.redaction-checkbox,
+.consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.redaction-checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.privacy-warning-note {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  background: var(--surface-0);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-xs);
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.privacy-notice-banner {
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-xs);
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.45;
+}
+
+.vault-security-card {
+  background: var(--surface-1);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vault-security-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.vault-security-header h4 {
+  margin: 0;
+  font-size: 0.96rem;
+}
+
+.vault-storage-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--line-2);
+  white-space: nowrap;
+}
+
+.vault-storage-badge.vault-encrypted {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.vault-storage-badge.vault-locked,
+.vault-storage-badge.vault-demo {
+  border-color: var(--line-2);
+  color: var(--muted);
+}
+
+.vault-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.vault-passphrase-input {
+  flex: 1 1 240px;
+  min-width: 220px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-1);
+  color: var(--ink);
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  font-size: 0.84rem;
+}
+
+.vault-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.vault-backup-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.vault-backup-label input[type="file"] {
+  display: none;
+}
+
+.verifier-mode-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.sample-btn.active-source-btn {
+  border-color: var(--green);
+  color: var(--green);
+  font-weight: 600;
+}
+
+.verifier-provenance-banner {
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-xs);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}

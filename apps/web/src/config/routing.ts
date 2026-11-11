@@ -8,14 +8,45 @@ export interface RouteState {
   useCase: UseCaseId;
 }
 
-export function routeFromHash(): RouteState {
-  const hash = window.location.hash.replace(/^#\/?/, "");
+export type PassportTab = "learner" | "issuer" | "verifier";
+
+export function hasPassportQueryParams(query: string): boolean {
+  return /(^|&)(cid|id|h|data)=/.test(query);
+}
+
+export function passportTabFromHash(rawHash?: string): PassportTab {
+  const hash = (rawHash ?? (typeof window !== "undefined" ? window.location.hash : "")).replace(
+    /^#\/?/,
+    ""
+  );
+  const qIdx = hash.indexOf("?");
+  const path = qIdx >= 0 ? hash.slice(0, qIdx) : hash;
+  const query = qIdx >= 0 ? hash.slice(qIdx + 1) : "";
+  const segments = path.split("/").filter(Boolean);
+
+  if (segments[0] === "verify" && hasPassportQueryParams(query)) {
+    return "verifier";
+  }
+  if (segments[0] === "passport") {
+    if (segments[1] === "verify" || segments[1] === "verifier" || hasPassportQueryParams(query)) {
+      return "verifier";
+    }
+    if (segments[1] === "issuer") {
+      return "issuer";
+    }
+  }
+  return "learner";
+}
+
+export function routeFromHash(rawHash?: string): RouteState {
+  const hash = (rawHash ?? window.location.hash).replace(/^#\/?/, "");
   if (!hash || hash === "landing") {
     return { page: "landing", useCase: "grants" };
   }
 
-  const parts = hash.split("?").filter(Boolean);
-  const path = parts[0] ?? "";
+  const qIdx = hash.indexOf("?");
+  const path = qIdx >= 0 ? hash.slice(0, qIdx) : hash;
+  const query = qIdx >= 0 ? hash.slice(qIdx + 1) : "";
   const segments = path.split("/").filter(Boolean);
   const head = segments[0];
 
@@ -23,6 +54,9 @@ export function routeFromHash(): RouteState {
     return { page: "passport", useCase: "grants" };
   }
   if (head === "verify") {
+    if (hasPassportQueryParams(query)) {
+      return { page: "passport", useCase: "grants" };
+    }
     return { page: "verify", useCase: "grants" };
   }
   if (head === "architecture") {

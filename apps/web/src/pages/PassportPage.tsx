@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LearnerHub } from "../passport/LearnerHub";
 import { IssuerConsole } from "../passport/IssuerConsole";
 import { EmployerVerifier } from "../passport/EmployerVerifier";
+import { passportTabFromHash, type PassportTab } from "../config/routing";
 import { LOGO_SRC } from "../lib/chain";
 
-export type PassportTab = "learner" | "issuer" | "verifier";
+export type { PassportTab };
+export { passportTabFromHash };
 
 export function PassportPage({ goHome }: { goHome: () => void }) {
-  const [activeTab, setActiveTab] = useState<PassportTab>("learner");
+  const [activeTab, setActiveTab] = useState<PassportTab>(() => passportTabFromHash());
+
+  useEffect(() => {
+    const onHash = () => setActiveTab(passportTabFromHash());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  function selectTab(tab: PassportTab) {
+    setActiveTab(tab);
+    const targetHash =
+      tab === "verifier"
+        ? "#/passport/verify"
+        : tab === "issuer"
+        ? "#/passport/issuer"
+        : "#/passport/learner";
+    if (typeof window !== "undefined" && window.location.hash !== targetHash) {
+      window.history.replaceState(null, "", targetHash);
+    }
+  }
 
   return (
     <div className="passport-page-container">
@@ -28,21 +49,21 @@ export function PassportPage({ goHome }: { goHome: () => void }) {
             <button
               type="button"
               className={`nav-tab-btn ${activeTab === "learner" ? "active" : ""}`}
-              onClick={() => setActiveTab("learner")}
+              onClick={() => selectTab("learner")}
             >
               🎓 Learner Passport
             </button>
             <button
               type="button"
               className={`nav-tab-btn ${activeTab === "issuer" ? "active" : ""}`}
-              onClick={() => setActiveTab("issuer")}
+              onClick={() => selectTab("issuer")}
             >
               🏛️ Institution Portal
             </button>
             <button
               type="button"
               className={`nav-tab-btn ${activeTab === "verifier" ? "active" : ""}`}
-              onClick={() => setActiveTab("verifier")}
+              onClick={() => selectTab("verifier")}
             >
               🔍 Employer Verifier
             </button>
