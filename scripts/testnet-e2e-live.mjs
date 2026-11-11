@@ -339,6 +339,24 @@ async function main() {
   console.log(`  Network: ${NETWORK_PASSPHRASE}`);
   console.log("==================================================================\n");
 
+  if (NETWORK_PASSPHRASE !== Networks.TESTNET) {
+    throw new Error(
+      `Refusing non-Testnet passphrase (${NETWORK_PASSPHRASE}). This script targets Stellar Testnet only.`
+    );
+  }
+
+  if (EXECUTE_LIVE && process.env.ALLOW_EPHEMERAL_KEYS !== "1") {
+    throw new Error("Live E2E creates temporary Testnet test keypairs; set ALLOW_EPHEMERAL_KEYS=1 explicitly.");
+  }
+
+  const customOut = getArgValue("--out") || process.env.PASSPORT_OUT_META;
+  const outPath = customOut
+    ? resolve(ROOT, customOut)
+    : DEFAULT_HARDENED_META_PATH;
+  if (resolve(outPath) === resolve(LEGACY_META_PATH)) {
+    throw new Error("Refusing to overwrite legacy contracts/passport/deployed-testnet.json!");
+  }
+
   if (!existsSync(WASM_PATH)) {
     throw new Error(`WASM missing at ${WASM_PATH}. Build with cargo build -p skills-passport-core --target wasm32v1-none --release`);
   }
@@ -362,10 +380,6 @@ async function main() {
     console.log("  - Suspend, reactivation restrictions (#8), revoke, dual-signed rotate_issuer_key & post-rotation issuance");
     console.log("\nRun when authorized: CONFIRM_TESTNET_DEPLOY=1 ALLOW_EPHEMERAL_KEYS=1 node scripts/testnet-e2e-live.mjs --execute");
     return;
-  }
-
-  if (process.env.ALLOW_EPHEMERAL_KEYS !== "1") {
-    throw new Error("Live E2E creates temporary Testnet test keypairs; set ALLOW_EPHEMERAL_KEYS=1 explicitly.");
   }
 
   const evidence = {
@@ -1203,13 +1217,6 @@ async function main() {
   };
 
   const jsonReplacer = (_k, v) => (typeof v === "bigint" ? v.toString() : v);
-  const customOut = getArgValue("--out") || process.env.PASSPORT_OUT_META;
-  const outPath = customOut
-    ? resolve(ROOT, customOut)
-    : DEFAULT_HARDENED_META_PATH;
-  if (resolve(outPath) === resolve(LEGACY_META_PATH)) {
-    throw new Error("Refusing to overwrite legacy contracts/passport/deployed-testnet.json!");
-  }
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, JSON.stringify(summary, jsonReplacer, 2) + "\n");
   console.log(`\nLive Hardened E2E Completed! Contract=${contractId}, Report saved to: ${outPath}`);

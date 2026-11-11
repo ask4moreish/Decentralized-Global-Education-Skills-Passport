@@ -98,6 +98,16 @@ async function main() {
     );
   }
 
+  const providedSecret = (process.env.PASSPORT_ADMIN_SECRET || process.env.OPERATOR_SECRET || "").trim();
+  if (providedSecret && !StrKey.isValidEd25519SecretSeed(providedSecret)) {
+    throw new Error("PASSPORT_ADMIN_SECRET / OPERATOR_SECRET is not a valid Stellar S... seed");
+  }
+  if (EXECUTE_REQUESTED && !providedSecret && process.env.ALLOW_EPHEMERAL_KEYS !== "1") {
+    throw new Error(
+      "Refusing live deployment without PASSPORT_ADMIN_SECRET / OPERATOR_SECRET or ALLOW_EPHEMERAL_KEYS=1"
+    );
+  }
+
   // 1. Validate local WASM build and compare with existing Testnet record
   if (!existsSync(WASM_PATH)) {
     throw new Error(
@@ -145,13 +155,9 @@ async function main() {
     );
   }
 
-  // 2. Validate signing configuration WITHOUT touching or printing secret values
-  const providedSecret = process.env.PASSPORT_ADMIN_SECRET || process.env.OPERATOR_SECRET;
-  if (providedSecret !== undefined && providedSecret !== "") {
-    if (!StrKey.isValidEd25519SecretSeed(providedSecret.trim())) {
-      throw new Error("PASSPORT_ADMIN_SECRET / OPERATOR_SECRET is not a valid Stellar S... seed");
-    }
-    const pub = Keypair.fromSecret(providedSecret.trim()).publicKey();
+  // 2. Log signing configuration WITHOUT touching or printing secret values
+  if (providedSecret) {
+    const pub = Keypair.fromSecret(providedSecret).publicKey();
     if (frozenMeta && pub === frozenMeta.adminPublicKey) {
       console.log(`      [NOTE] Provided admin public key matches previous deployment admin (${pub}).`);
     } else {
@@ -195,9 +201,9 @@ async function main() {
 
   // 4. Authorized Live Execution Path
   let adminKeypair;
-  if (providedSecret && providedSecret.trim()) {
-    adminKeypair = Keypair.fromSecret(providedSecret.trim());
-  } else if (process.env.ALLOW_EPHEMERAL_KEYS === "1") {
+  if (providedSecret) {
+    adminKeypair = Keypair.fromSecret(providedSecret);
+  } else {
     adminKeypair = Keypair.random();
     console.log(`\n[*] Provisioning ephemeral Testnet admin keypair: ${adminKeypair.publicKey()}`);
     const friendbotRes = await fetch(
@@ -206,10 +212,6 @@ async function main() {
     if (!friendbotRes.ok) {
       throw new Error(`Friendbot funding failed: ${friendbotRes.statusText}`);
     }
-  } else {
-    throw new Error(
-      "Refusing live deployment without PASSPORT_ADMIN_SECRET / OPERATOR_SECRET or ALLOW_EPHEMERAL_KEYS=1"
-    );
   }
 
   const server = new rpc.Server(RPC_URL);

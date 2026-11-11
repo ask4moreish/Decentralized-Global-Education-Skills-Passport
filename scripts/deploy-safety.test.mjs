@@ -139,4 +139,46 @@ test("deployment scripts enforce overwrite locks and non-Testnet safeguards safe
     },
     /ALLOW_EPHEMERAL_KEYS=1/
   );
+
+  assert.throws(
+    () => {
+      execFileSync(
+        process.execPath,
+        [
+          resolve(ROOT, "scripts/testnet-e2e-live.mjs"),
+          "--execute",
+          "--out",
+          "contracts/passport/deployed-testnet.json",
+        ],
+        {
+          cwd: ROOT,
+          env: {
+            ...process.env,
+            CONFIRM_TESTNET_DEPLOY: "1",
+            ALLOW_EPHEMERAL_KEYS: "1",
+          },
+          stdio: "pipe",
+        }
+      );
+    },
+    /Refusing to overwrite legacy/
+  );
+
+  assert.throws(
+    () => {
+      execFileSync(
+        process.execPath,
+        [resolve(ROOT, "scripts/testnet-e2e-live.mjs"), "--dry-run"],
+        {
+          cwd: ROOT,
+          env: {
+            ...process.env,
+            NETWORK_PASSPHRASE: "Public Global Stellar Network ; September 2015",
+          },
+          stdio: "pipe",
+        }
+      );
+    },
+    /Refusing non-Testnet passphrase/
+  );
 });
